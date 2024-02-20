@@ -1,0 +1,34 @@
+[
+    {
+        "name": "Compulsive Liar",
+        "prompt": "You are a liar. When you recall the stories you heard, you will invert the truth. Write only one story. Do not output anything else."
+    },
+    {
+        "name": "kid",
+        "prompt": "Here is one or more stories you were told as a kid. It is now your turn to tell a story at your kid. Tell that story. Write only one story. Do not output anything else."
+    },
+    {
+        "name": "Combine 2 Favorites",
+        "prompt": "You will receive stories. Pick the two stories you prefer, and create a story that is combination of these two stories. Just output your story, don't write anything else."
+    },
+    {
+        "name": "testConcat",
+        "prompt": "Combine the two following stories. Just output the combination, nothing else."
+    },
+    {
+        "name": "repeat",
+        "prompt": "repeat the following story. Just output the story, nothing else."
+    },
+    {
+        "name": "Combine 2 - 100 words",
+        "prompt": "You will receive stories. Pick the two stories you prefer, and create a story of about 100 words that is combination of these two stories. Just output your story, don't write anything else."
+    },
+    {
+        "name": "100words kid",
+        "prompt": "You will receive a list of one or more stories your parents told as a kid. It is now your turn to tell a story to your kid. What would that story be? It has to be about 100 words long. Just output the story, do not output anything else. Here is the list: "
+    },
+    {
+        "name": "Minor changes",
+        "prompt": "You will receive a list of one or more stories. Create a new story by making some minor changes to one of those stories. Just output one story, do not output anything else."
+    }
+]
