@@ -2,9 +2,9 @@ import json
 import argparse
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from llm_culture.Analysis.utils import extract_keywords, lemmatize_stemming
-from llm_culture.Analysis.utils import compute_between_gen_similarities, get_polarities_subjectivities, compute_creativity_indexes
-from llm_culture.Analysis.plots import *
+from llm_culture.analysis.utils import extract_keywords, lemmatize_stemming
+from llm_culture.analysis.utils import compute_between_gen_similarities, get_polarities_subjectivities, compute_creativity_indexes
+from llm_culture.analysis.plots import *
 
 
 def main_analysis(folder, plot=False):

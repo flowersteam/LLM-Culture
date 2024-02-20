@@ -1,31 +1,15 @@
 import os
 import json
 import argparse
-import json
 from pathlib import Path
 
 import networkx as nx
-import numpy as np
-
-from llm_culture.Simulation.utils import init_agents, update_step, run_simul
-
-
-# from Utils.analysis import get_all_figures
-
 import matplotlib.pyplot as plt
 
-
-
+from llm_culture.simulation.utils import run_simul
 
 
 def parse_arguments():
-
-    json_prompt_init = 'llm_culture/Data/parameters/prompt_init.json'
-    json_prompt_update = 'llm_culture/Data/parameters/prompt_update.json'
-    json_structure = 'llm_culture/Data/parameters/network_structure.json'
-    json_personnalities = 'llm_culture/Data/parameters/personnalities.json'
-
-
     parser = argparse.ArgumentParser(description='Run a simulation.')
     parser.add_argument('-na', '--n_agents', type=int, default=2, help='Number of agents.')
     parser.add_argument('-nt', '--n_timesteps', type=int, default=2, help='Number of timesteps.')
@@ -42,16 +26,15 @@ def parse_arguments():
     # select a personality from the list of personalities (no choices)
     parser.add_argument('-pl', '--personality_list', type=str, default= ["Empty", "Empty"],
                         help='Personality list.')
-
     # optional argument for the number of cliques in case we use the caveman graph
     parser.add_argument('-nc', '--n_cliques', type=int, default=3, help='Number of cliques.')
     # add an option output folder to save the results
     parser.add_argument('-o', '--output', type=str, default='Results/default_folder', help='Output folder.')
     # create optional argument for the output file name to save in the output folder
     parser.add_argument('-of', '--output_file', type=str, default='output.json', help='Output file name.')
-
     parser.add_argument('--debug', action='store_true', help='Enable debug mode.')
     parser.add_argument('-url', '--access_url', type=str, default='', help='URL to send the prompt to.')
+
     return parser.parse_args()
 
 
@@ -61,11 +44,10 @@ def prepare_simu(args):
 
 def main(args=None):
 
-    json_prompt_init = 'llm_culture/Data/parameters/prompt_init.json'
-    json_prompt_update = 'llm_culture/Data/parameters/prompt_update.json'
-    json_structure = 'llm_culture/Data/parameters/network_structure.json'
-    json_personnalities = 'llm_culture/Data/parameters/personnalities.json'
-
+    json_prompt_init = 'llm_culture/data/parameters/prompt_init.json'
+    json_prompt_update = 'llm_culture/data/parameters/prompt_update.json'
+    json_structure = 'llm_culture/data/parameters/network_structure.json'
+    json_personnalities = 'llm_culture/data/parameters/personnalities.json'
 
 
     if args is None:

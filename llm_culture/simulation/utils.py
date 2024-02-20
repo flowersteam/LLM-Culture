@@ -1,8 +1,7 @@
 # This file contains the main functions to run the simulation. 
 #It is called by the run_simulation.py file.
+from llm_culture.simulation.agent import Agent
 
-
-from llm_culture.Simulation.agent import Agent
 
 def init_agents(n_agents, network_structure, prompt_init, prompt_update, personality_list, access_url,
                 sequence=False, debug=False):

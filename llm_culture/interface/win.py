@@ -1,5 +1,5 @@
 import tkinter as tk
-from llm_culture.Interface.Notebook import CustomNotebookFrame
+from llm_culture.interface.notebook import CustomNotebookFrame
 
 class AppWin(tk.Tk):
     def __init__(self, *args, **kwargs):

@@ -1,6 +1,6 @@
 # This file contains the Agent class which is used to create the agents in the simulation.
 
-from llm_culture.Simulation.server_answer import get_answer
+from llm_culture.simulation.server_answer import get_answer
 
 
 class Agent:

@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 
 class DataFrame(tk.Frame):
     """Frame affichant les attributs de type string d'un objet."""

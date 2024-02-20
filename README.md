@@ -1,12 +1,13 @@
 # LLM-Culture
 
+### TODO : Add a quick description of the Repo, what can be done with it ... 
 
 ## Installation 
 
 1- Get the repository
 
 ```bash
-git clone git@github.com:jeremyperez2/LLM-Culture.git
+git git@github.com:jeremyperez2/LLM-Culture.git
 cd LLM-Culture/
 ```
 2- Install the dependencies 
@@ -17,29 +18,18 @@ source myvenv/bin/activate
 pip install -r requirements.txt
 ```
 
-TOOD, check if need to run this from a new install (I had to do it on a new venv) :
-
-```bash
-python -m spacy download en_core_web_lg
-```
-
 ## Usage
 
-Run a simulation : 
-TODO : add the good command 
+Run a simulation with your desired parameters (see a complete list in [run_simulation.py](run_simulation.py)): 
 
 ```bash
-example command : run_simu.py --exp_name experiment_name
+python3 run_simulation.py --output_file simulation_test
 ```
 
-The results of the experiment will be stored in a directory called Results/experiment_name 
-
-Analyze the results and save the figures with : 
+The results of the experiment will be stored in a directory called ```Results/simulation_test```. You can then analyze the texts produced with this command : 
 
 ```bash
-python3 visualization/analyze_results.py
+python3 run_analysis --dir Results/simulation_test
 ```
 
-Or do an analysis step by step with [this kind of jupyter notebook](caveman_10_6.ipynb)
-
-TODO : Make a quick tutorial to show how to do it with the graphical interface 
+### TODO : Make a tutorial to explain how to do the same thing with the GUI
