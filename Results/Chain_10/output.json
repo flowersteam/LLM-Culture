@@ -1,0 +1,174 @@
+{
+    "adjacency_matrix": [
+        [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ]
+    ],
+    "prompt_init": [
+        "Imagine that you are telling a story to your kid. What would that sory be? It has to be about 100 words long. Just output the story, do not output anything else. "
+    ],
+    "prompt_update": [
+        "You will receive a list of one or more stories your parents told as a kid. It is now your turn to tell a story to your kid. What would that story be? It has to be about 100 words long. Just output the story, do not output anything else. Here is the list: "
+    ],
+    "personality_list": [
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " ",
+        " "
+    ],
+    "stories": [
+        [
+            "Once upon a time, in a magical land filled with vibrant rainbows and talking animals, there was a little rabbit named Ralph. Ralph loved to explore, but he was afraid of the dark forest. One day, he met a wise old owl named Oliver. Oliver shared tales of adventure and encouraged Ralph to face his fears. Ralph embarked on a journey, discovered the forest's beauty, and returned home a brave bunny. From then on, he spread joy and courage to all, inspiring others to overcome their fears."
+        ],
+        [
+            "Once upon a time, in a land of Whispering Willows and Starry Skies, lived a small fox named Frodo. Frodo was shy, his fur a soft shade of gray. A mysterious dragon egg, found in the forest, changed his tale. One being hatched, named Sparkle, friendship bloomed bright. They journeyed together, lessons learned in each mile. Frodo pledged to never let fear dictate life, sharing his story, inspiring all, bravely."
+        ],
+        [
+            "Once upon a time, in a land of Singing Seas and Moonlit Meadows, lived a lively tortoise named Tilly. Tilly, with her shell a vibrant blue, was known for her curious streak. Uncovered a hidden, glowing pearl in the ocean depths, it changed her world. A wise mermaid hatched from it, named Pearl, bonded instantly. They embarked on adventures, discovering love in unexpected corners. Tilly learned to embrace her curiosity, offering her tale, instilling courage, courageously."
+        ],
+        [
+            "Once upon a time, in a magical forest filled with Whispering Wisps and Starry Skies, lived a curious bunny named Benny. With fur as soft as the first snowfall, he was unlike any bunny. One sunny day, Benny found an enchanted acorn. It glowed with a warm, golden light. A friendly fairy named Freddie emerged, hatched from the acorn. They became the best of friends, embarking on exciting journeys. Benny understood the importance of curiosity, sharing his tale with you, igniting your imagination."
+        ],
+        [
+            "Once upon a time, in a desert far, far away, there was a little camel named Cleo. Cleo had humps like stated mountains, but a gentle spirit. One scorching day, she discovered a mysterious oasis. Under the mirage shimmered an ancient treasure chest. A wise old genie named Gina emerged, freed from the chest's golden locks. They shared stories, laughter, and newfound wisdom. Cleo learned the value of courage and curiosity, wisdom she carried throughout her life. And so, she shared this tale with you, sparking your adventure within."
+        ],
+        [
+            "Once upon a time, in a magical forest, lived a small, bright rabbit called Ruby. Ruby had sparkling eyes, a fluffy tail, and a heart full of kindness. One sunny morning, she discovered an enchanted tree with a golden apple. Out came a talking fox named Felix, who offered her a riddle. Solving it unlocked a world of secrets and hidden treasures. Ruby learned the power of intelligence and slyness. And so, she shares this tale with you, igniting your imagination."
+        ],
+        [
+            "Once upon a time, in a land of wonder, lived a brave little dragon named Ziggy. With scales shimmering like emeralds, and wings as fiery red as sunset, Ziggy was beloved by all. One starlit night, he embarked on a quest for the elusive Star of Courage, guarded by a cunning dark sorcerer. With courage, cunning, and an indomitable spirit, Ziggy overcame challenges, learning the true meaning of bravery. And so, I share this tale with you, dear one, may it fill your heart with boundless courage."
+        ],
+        [
+            "Once upon a time, in a land of magic and marvel, lived a wise old tortoise named Tuktu. With a golden shell and kindness in his Olden eyes, Tuktu taught all to laugh and live. One crisp autumn day, he embarked on a journey to the mystic Whispering Woods, seeking knowledge from ancient elders. Through perseverance and patience, Tuktu gained wisdom, understanding that wisdom is the bridge where knowledge and understanding meet. And so, I share this tale with you, dear one, may it inspire you to explore the vast seas of knowledge and wisdom."
+        ],
+        [
+            "Once upon a time, in a shining world of wonder, lived a brave little rabbit named Hoppy. With a heart full of courage and curiosity, Hoppy embarked on a journey to find a hidden treasure. He met a clever fox, who shared the secret \u2013 the true treasure was not gold, but kindness and wisdom. Hoppy learned this valuable lesson from a wise old owl in the enchanted forest. And so, dear child, I share this tale with you, may it inspire you to seek wisdom and kindness in all your adventures."
+        ],
+        [
+            "Once upon a time, in a land of magic and make-believe, lived a tiny, tenacious tortoise named Timmy. Despite his small size, Timmy had a big heart and an insatiable curiosity. One day, he found a map to a legendary, golden apple tree. Instead of rushing off, Timmy befriended a wise old elephant named Elvie. She taught him that true wealth is not gold, but kindness and patience. Timmy left with a full heart and a new friend, understanding that the best adventures are those filled with empathy and compassion."
+        ]
+    ]
+}

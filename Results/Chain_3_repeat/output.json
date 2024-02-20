@@ -1,0 +1,41 @@
+{
+    "adjacency_matrix": [
+        [
+            0.0,
+            1.0,
+            0.0
+        ],
+        [
+            0.0,
+            0.0,
+            1.0
+        ],
+        [
+            0.0,
+            0.0,
+            0.0
+        ]
+    ],
+    "prompt_init": [
+        "Imagine that you are telling a story to your kid. What would that sory be? It has to be about 100 words long. Just output the story, do not output anything else. "
+    ],
+    "prompt_update": [
+        "repeat the following story. Just output the story, nothing else."
+    ],
+    "personality_list": [
+        " ",
+        " ",
+        " "
+    ],
+    "stories": [
+        [
+            "Once upon a time, in a magical land filled with colorful flowers and talking animals, lived a small, curious rabbit named Reese. Reese loved exploring his garden home, but he yearned for adventure. One sunny day, he found a golden key hidden under a rainbow mushroom. With excitement, he unlocked a door in a hidden corner of the forest leading to a wondrous world filled with laughter, magic, and friendship. Alongside a wise old owl and a playful puppy fox, Reese embarked on an unforgettable journey. They solved riddles, hopped across rivers, and even rescued a king's missing crown, earning them the gratitude of all the woodland creatures. Reese realized that true happiness is not in material possessions, but in the memories we make and the love we share with others. And so, their adventure continued, one magical day at a time."
+        ],
+        [
+            "\"Once upon a time, in a magical land filled with colorful flowers and talking animals, lived a small, curious rabbit named Reese. Reese loved exploring his garden home, but he yearned for adventure. One sunny day, he found a golden key hidden under a rainbow mushroom. With excitement, he unlocked a door in a hidden corner of the forest leading to a wondrous world filled with laughter, magic, and friendship. Alongside a wise old owl and a playful puppy fox, Reese embarked on an unforgettable journey. They solved riddles, hopped across rivers, and even rescued a king's missing crown, earning them the gratitude of all the woodland creatures. Reese realized that true happiness is not in material possessions, but in the memories we make and the love we share with others. And so, their adventure continued, one magical day at a time.\""
+        ],
+        [
+            "\"Once upon a time, in a magical land filled with colorful flowers and talking animals, lived a small, curious rabbit named Reese. Reese loved exploring his garden home, but he yearned for adventure. One sunny day, he found a golden key hidden under a rainbow mushroom. With excitement, he unlocked a door in a hidden corner of the forest leading to a wondrous world filled with laughter, magic, and friendship. Alongside a wise old owl and a playful puppy fox, Reese embarked on an unforgettable journey. They solved riddles, hopped across rivers, and even rescued a king's missing crown, earning them the gratitude of all the woodland creatures. Reese realized that true happiness is not in material possessions, but in the memories we make and the love we share with others. And so, their adventure continued, one magical day at a time.\""
+        ]
+    ]
+}

@@ -1,0 +1,27 @@
+{
+    "adjacency_matrix": [
+        [
+            0.0,
+            1.0
+        ],
+        [
+            0.0,
+            0.0
+        ]
+    ],
+    "prompt_init": [
+        "Imagine that you are telling a story to your kid. What would that story be? Just output the story, nothing else."
+    ],
+    "prompt_update": [
+        "Here is one or more stories you were told as a kid. It is now your turn to tell a story at your kid. Tell that story. Write only one story. Do not output anything else."
+    ],
+    "personality_list": [
+        " ",
+        " "
+    ],
+    "stories": [
+        [
+            "Once upon a time, in a land filled with vibrant colors and wondrous creatures, there was a magical forest known as Whisperwood. In this forest, every tree had a heart that beat gently, whispering tales of adventure to the wind.\n\nIn the heart of Whisperwood lived a tiny, curious creature named Sprout. Sprout was a Blinkner, a magical being with big, blanket-like wings and eyes that shimmered like the stars. Blinkners were known for their keen sense of adventure and endless curiosity.\n\nSprout longed to explore the vast forest, but Mother Tree warned him of the fearsome Shadowhelm, a menacing creature that roamed the forest, eager to steal the magic from young creatures like Sprout.\n\nUndeterred, Sprout decided to embark on a quest to find the legendary Starwarden, a powerful guardian who could help him protect the forest against Shadowhelm.With the help of his friend, a wise old owl named Hoot, Sprout set off on his journey.\n\nAs they traveled deep into Whisperwood, they encountered various challenges - racing against the swift Riverlark, crossing the treacherous Rainbowbridge, and even braving the dark depths of the Gloomsome Grotto.\n\nBut their greatest challenge awaited in the enchanted Glitterglen, where the Starwarden dwelled. Shadowhelm, sensing Sprout's presence, sent his minions to stop them. Sprout and Hoot used their talents to outwit and outmaneuver the minions, finally reaching the Glitterglen.\n\nThere, the Starwarden welcomed them warmly, offering Sprout a Starpendant - a luminous charm that could shield him against the Shadowhelm's dark magic. With the Starpendant in hand, Sprout returned to Whisperwood.\n\nShadowhelm, feeling his power threatened, came rampaging after Sprout. But when the Blinkner-expedition stood together, the forest's magic amplified, making Sprout stronger. Together, they banished Shadowhelm, restoring peace to Whisperwood and earning Sprout's place among the forest's guardians.\n\nAnd so, the enchanting tale of Sprout's courageous quest was whispered again through the heart-beats of the trees, reminding all young Blinkners of the power of friendship, following their dreams, and guarding the magic in their hearts. The end."
+        ]
+    ]
+}

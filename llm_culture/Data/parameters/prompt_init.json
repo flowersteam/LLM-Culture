@@ -1,0 +1,26 @@
+[
+    {
+        "name": "story teller",
+        "prompt": "Create a story. Just output the story, nothing else."
+    },
+    {
+        "name": "kid",
+        "prompt": "Imagine that you are telling a story to your kid. What would that story be? Just output the story, nothing else."
+    },
+    {
+        "name": "translator",
+        "prompt": "Create a story in English."
+    },
+    {
+        "name": "ShortTest",
+        "prompt": "Output a two-sentences story. Just output the story, nothing else."
+    },
+    {
+        "name": "100words story",
+        "prompt": "Create a story of about 100 words. Just output the story, nothing else."
+    },
+    {
+        "name": "100words kid",
+        "prompt": "Imagine that you are telling a story to your kid. What would that sory be? It has to be about 100 words long. Just output the story, do not output anything else. "
+    }
+]
