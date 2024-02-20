@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from llm_culture.Interface.Simulation import SimulationFrame
-from llm_culture.Interface.Figures import FiguresFrame
+from llm_culture.interface.simulation import SimulationFrame
+from llm_culture.interface.figures import FiguresFrame
 
 
 class CustomNotebookFrame(tk.Frame):

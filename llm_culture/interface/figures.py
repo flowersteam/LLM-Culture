@@ -1,18 +1,6 @@
-import argparse
-import tkinter as tk
-from pathlib import Path
-from tkinter import ttk
-
-import json
-
-import networkx as nx
-from matplotlib import pyplot as plt
-
-import run_simulation
-from PIL import Image, ImageTk
-
-from llm_culture.Interface.utils import create_combobox_from_json,  append_to_json, add_item_dialog, remove_item, reveal_content, DotSelector, reveal_add_item, browse_folder
 import os 
+import tkinter as tk
+from tkinter import ttk
 
 
 class FiguresFrame(tk.Frame):

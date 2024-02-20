@@ -2,27 +2,26 @@ import argparse
 import tkinter as tk
 from pathlib import Path
 from tkinter import ttk
-
-import json
+from PIL import Image
 
 import networkx as nx
 from matplotlib import pyplot as plt
 
 import run_simulation
-from PIL import Image, ImageTk
-
-from llm_culture.Interface.utils import create_combobox_from_json,  append_to_json, add_item_dialog, remove_item, reveal_content, DotSelector, reveal_add_item, browse_folder
+from llm_culture.interface.utils import create_combobox_from_json,  append_to_json, add_item_dialog, remove_item, reveal_content, DotSelector, reveal_add_item, browse_folder
 from run_analysis import main_analysis
+
 
 class SimulationFrame(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
 
         self.parent = parent
+        self.empty_img_path = 'llm_culture/data/temp/empty_image.png'
 
         # Create an empty white image
         empty_image = Image.new('RGB', (200, 200), 'white')
-        empty_image.save('llm_culture/Data/temp/empty_image.png')
+        empty_image.save(self.empty_img_path)
 
         # Create the first horizontal frame
         horizontal_frame1 = tk.Frame(self)
@@ -34,7 +33,7 @@ class SimulationFrame(tk.Frame):
         self.vertical_frame1.pack(side='left', fill=tk.BOTH, expand=True)
 
         # Create the second horizontal frame with the empty image
-        self.horizontal_frame2 = GraphImagesFrame(self.vertical_frame1, ['llm_culture/Data/temp/empty_image.png'])
+        self.horizontal_frame2 = GraphImagesFrame(self.vertical_frame1, [self.empty_img_path])
         self.horizontal_frame2.grid(row = 4, column= 6)
 
         vertical_frame2 = GraphImagesFrame(horizontal_frame1, [])
@@ -86,13 +85,13 @@ class SimulationFrame(tk.Frame):
         try:
             plt.savefig(output_folder_path + '/network_structure.png')  # Save the plot as an image file
         except:
-            plt.savefig('llm_culture/Data/temp/network_structure.png')  # Save the plot as an image file
+            plt.savefig(self.empty_img_path)  # Save the plot as an image file
         plt.clf()
         # Add the image to the GraphImagesFrame
         try:
             self.horizontal_frame2.update_image(0, output_folder_path + '/network_structure.png')
         except:
-            self.horizontal_frame2.update_image(0, 'llm_culture/Data/temp/network_structure.png')
+            self.horizontal_frame2.update_image(0, self.empty_img_path)
         # Call the main function from main_simu with the args namespace
             
             
@@ -143,10 +142,10 @@ class ParametersFrame(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
 
-        json_file_prompt_init = 'llm_culture/Data/parameters/prompt_init.json'
-        json_file_prompt_update = 'llm_culture/Data/parameters/prompt_update.json'
-        json_file_structure = 'llm_culture/Data/parameters/network_structure.json'
-        json_file_personnalities = 'llm_culture/Data/parameters/personnalities.json'
+        json_file_prompt_init = 'llm_culture/data/parameters/prompt_init.json'
+        json_file_prompt_update = 'llm_culture/data/parameters/prompt_update.json'
+        json_file_structure = 'llm_culture/data/parameters/network_structure.json'
+        json_file_personnalities = 'llm_culture/data/parameters/personnalities.json'
 
         self.parent = parent
 

@@ -1,4 +1,4 @@
-from llm_culture.Interface.Win import AppWin
+from llm_culture.interface.win import AppWin
 
 
 def main():

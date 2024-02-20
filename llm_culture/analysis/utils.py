@@ -26,7 +26,7 @@ else:
 nltk.download('punkt')
 nltk.download('wordnet')
 nltk.download('stopwords')
-nlp = spacy.load('en_core_web_lg')
+nlp = spacy.load('en_core_web_sm')
 
 def display_graph(network_structure):
     pos = nx.spring_layout(network_structure)  # positions for all nodes
