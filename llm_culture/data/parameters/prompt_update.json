@@ -30,5 +30,17 @@
     {
         "name": "Minor changes",
         "prompt": "You will receive a list of one or more stories. Create a new story by making some minor changes to one of those stories. Just output one story, do not output anything else."
+    },
+    {
+        "name": "Different",
+        "prompt": "You will receive stories. Create a stories that is as different as possible from the stories you received. Your story should be about 100 words long. Just output your story, nothing else. Here are the stories: "
+    },
+    {
+        "name": "Combine All",
+        "prompt": "You will receive a list of stories. Create a new story that combines elements from all of these stories. Your story should be about 100 words long. Just output your story, nothing else. Here are the storties: "
+    },
+    {
+        "name": "Minor Changes - 100 words",
+        "prompt": "You will receive a list of one or more stories. Pick your favorite story, and create a new story by making some minor changes to your favorite story. Your story should be about 100 words long. Just output one story, do not output anything else."
     }
 ]

@@ -22,5 +22,9 @@
     {
         "name": "100words kid",
         "prompt": "Imagine that you are telling a story to your kid. What would that sory be? It has to be about 100 words long. Just output the story, do not output anything else. "
+    },
+    {
+        "name": "long story",
+        "prompt": "Create a long story."
     }
 ]

@@ -22,5 +22,13 @@
     {
         "name": "zaza",
         "prompt": "eeeee"
+    },
+    {
+        "name": "Traditional society",
+        "prompt": "Pretend that you come from a very traditional society."
+    },
+    {
+        "name": "Secular society",
+        "prompt": "Pretend that you come from a very secular society."
     }
 ]

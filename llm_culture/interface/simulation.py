@@ -106,6 +106,7 @@ class SimulationFrame(tk.Frame):
         personality_list = [perso.get() for perso in self.vertical_frame1.personalities]
         output_folder_path = self.vertical_frame1.output_folder_path.get().strip()  # Get the output folder path
         access_url = self.vertical_frame1.access_url.get().strip()
+        n_cliques = self.vertical_frame1.n_cliques.get()
 
         # Create an instance of argparse.Namespace and set its attributes
         args = argparse.Namespace()
@@ -122,6 +123,7 @@ class SimulationFrame(tk.Frame):
         args.debug = False
         args.preset = None  # Add the preset attribute
         args.access_url = access_url
+        args.n_cliques = n_cliques
 
         if network_structure_type == 'sequence':
             network_structure = nx.DiGraph()
