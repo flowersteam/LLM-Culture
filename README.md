@@ -33,10 +33,10 @@ The results of the experiment will be stored in a directory called ```Results/si
 python3 run_analysis.py --dir simulation_test
 ```
 
-To compare the results of several experiments, you can can run this command : 
+To compare the results of several experiments, you can can run this command (with the experiment names separated by '+' symbols) : 
 
 ```bash
-python3 run_comparison_analysis --dirs experiment_1 experiment_2 experiment_3
+python3 run_comparison_analysis --dirs experiment_1+experiment_2+experiment_3
 ```
 
 It will store the analysis figures in a directory called ```Results/Comparisons/experiment_1-experiment_2-experiment_3/```
