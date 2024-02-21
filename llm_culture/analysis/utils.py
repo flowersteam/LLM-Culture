@@ -1,19 +1,18 @@
+import json
+
 import nltk
 import gensim
 import spacy
 import numpy as np
 import ssl
-import matplotlib.pyplot as plt
 
 from nltk.stem import *
 from nltk.stem.porter import *
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
-from gensim.models import Word2Vec
-from sklearn.decomposition import PCA
+from sklearn.feature_extraction.text import TfidfVectorizer
 from textblob import TextBlob
-import networkx as nx   
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context
@@ -28,52 +27,35 @@ nltk.download('wordnet')
 nltk.download('stopwords')
 nlp = spacy.load('en_core_web_sm')
 
-def display_graph(network_structure):
-    pos = nx.spring_layout(network_structure)  # positions for all nodes
 
-    # nodes
-    nx.draw_networkx_nodes(network_structure, pos, node_size=700)
+def get_stories(folder):
+    json_file  = folder + '/output.json'
+    with open(json_file, 'r') as file:
+            data = json.load(file)
+            stories = data['stories']
+            return stories
+    
 
-    # edges
-    nx.draw_networkx_edges(network_structure, pos,
-                           arrowstyle='->',
-                           arrowsize=30)  # Increase the arrowsize value
-
-    # labels
-    nx.draw_networkx_labels(network_structure, pos, font_size=20, font_family='sans-serif')
-
-    plt.axis('off')
-    plt.show()
+def get_plotting_infos(stories):  
+    n_gen, n_agents = len(stories), len(stories[0])
+    x_ticks_space = n_gen // 10 if n_gen >= 20 else 1
+    return n_gen, n_agents, x_ticks_space
 
 
-def PCA_plot_words(text_list):
-    model = Word2Vec(text_list, min_count=1)
-    model.train
-    X = model.wv[model.wv.key_to_index.keys()]
-    pca = PCA(n_components=2)
-    result = pca.fit_transform(X)
-    plt.scatter(result[:, 0], result[:, 1])
-    words = list(model.wv.key_to_index.keys())
-    for i, word in enumerate(words):
-        plt.annotate(word, xy=(result[i, 0], result[i, 1]))
-    plt.show()
+def preprocess_stories(stories):
+    flat_stories = [stories[i][j] for i in range(len(stories)) for j in range(len(stories[0]))]
+    keywords = [list(map(extract_keywords, s)) for s in stories]
+    stem_words = [[list(map(lemmatize_stemming, keyword)) for keyword in keyword_list] for keyword_list in keywords]
+
+    return flat_stories, keywords, stem_words
 
 
-def compute_similarity_between_texts(data_text_1, data_text_2):
-    words_list_1, vectors_list_1 = data_text_1
-    words_list_2, vectors_list_2 = data_text_2
+def get_similarity_matrix(flat_stories):
+    vect = TfidfVectorizer(min_df=1, stop_words="english")     
+    tfidf = vect.fit_transform(flat_stories)                                                                                                                                                                                                                       
+    similarity_matrix = tfidf * tfidf.T 
+    return similarity_matrix.toarray()
 
-    max_sims = [] 
-
-    similarities = np.zeros((len(words_list_1), len(words_list_2)))
-    for i in range(len(vectors_list_1)):
-        for j in range(len(vectors_list_2)): 
-            sim = get_similarity(vectors_list_1[i], vectors_list_2[j])
-            similarities[i, j] = sim
-        max_sim = (np.max(similarities[i, :]))
-        max_sims.append(max_sim)
-
-    return np.mean(max_sims), similarities
 
 
 def extract_keywords(text, num_keywords=30):

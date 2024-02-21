@@ -2,43 +2,19 @@ import json
 import argparse
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from llm_culture.analysis.utils import extract_keywords, lemmatize_stemming
+from llm_culture.analysis.utils import get_stories, get_plotting_infos, preprocess_stories, get_similarity_matrix
 from llm_culture.analysis.utils import compute_between_gen_similarities, get_polarities_subjectivities, compute_creativity_indexes
 from llm_culture.analysis.plots import *
 
 
 def main_analysis(folder, plot=False):
-    #  # Plot the network structure
-    # plt.figure(figsize=(1, 1))
-    # # TODO : What is network structure
-    # nx.draw(network_structure, with_labels=True)
-    # plt.savefig(folder + '/network_structure.png')  # Save the plot as an image file
-    # plt.clf()
+    # Extract data from stories
+    stories = get_stories(folder)
+    n_gen, n_agents, x_ticks_space = get_plotting_infos(stories)
 
-    ## Retrive stories
-    json_file  = folder + '/output.json'
-    with open(json_file, 'r') as file:
-            data = json.load(file)
-            stories = data['stories']
-
-    n_gen = len(stories)
-    n_agents = len(stories[0])
-    x_ticks_space = n_gen // 10 if n_gen >= 20 else 1
-
-
-    flat_stories = [stories[i][j] for i in range(len(stories)) for j in range(len(stories[0]))]
-    all_stories_words = [stories[i][j].split(' ') for i in range(len(stories)) for j in range(len(stories[0]))]
-    
-        
-    keywords = [list(map(extract_keywords, s)) for s in stories]
-    stem_words = [[list(map(lemmatize_stemming, keyword)) for keyword in keyword_list] for keyword_list in keywords]
-    flat_keywords = list(map(extract_keywords,flat_stories))
-
-    vect = TfidfVectorizer(min_df=1, stop_words="english")     
-    tfidf = vect.fit_transform(flat_stories)                                                                                                                                                                                                                       
-    similarity_matrix = tfidf * tfidf.T 
-    similarity_matrix = similarity_matrix.toarray()
-
+    flat_stories, keywords, stem_words = preprocess_stories(stories)
+    similarity_matrix = get_similarity_matrix(flat_stories)
+   
     # Plot all the desired graphs :
 
     plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot)
@@ -72,10 +48,11 @@ def main_analysis(folder, plot=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dir", type=str, default="Results/Chain_20")
+    parser.add_argument("--dir", type=str, default="Chain_20")
     parser.add_argument("--plot", action="store_true")
     args = parser.parse_args()
 
-    print(f"\nLaunching analysis on the {args.dir} results")
+    analyzed_dir = f"Results/{args.dir}"
+    print(f"\nLaunching analysis on the {analyzed_dir} results")
     print(f"plot = {args.plot}")
-    main_analysis(args.dir, args.plot)
+    main_analysis(analyzed_dir, args.plot)
