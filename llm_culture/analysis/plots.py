@@ -154,7 +154,7 @@ def plot_subjectivity_evolution(subjectivities, folder, plot, x_ticks_space, sav
     plt.plot(gen_subjectivities)
 
     if save:
-        plt.savefig(folder + '/positivity_evolution.png')
+        plt.savefig(folder + '/subjectivity_evolution.png')
         print("Saved subjectivity_evolution.png")
 
     if plot:
