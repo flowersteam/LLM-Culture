@@ -3,7 +3,7 @@ import argparse
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from llm_culture.analysis.utils import get_stories, get_plotting_infos, preprocess_stories, get_similarity_matrix
-from llm_culture.analysis.utils import compute_between_gen_similarities, get_polarities_subjectivities, compute_creativity_indexes
+from llm_culture.analysis.utils import compute_between_gen_similarities, get_polarities_subjectivities, get_creativity_indexes
 from llm_culture.analysis.plots import *
 
 
@@ -16,8 +16,9 @@ def main_analysis(folder, plot=False):
     similarity_matrix = get_similarity_matrix(flat_stories)
     between_gen_similarity_matrix = compute_between_gen_similarities(similarity_matrix, n_gen, n_agents)
     polarities, subjectivities = get_polarities_subjectivities(stories)
+    creativities = get_creativity_indexes(stories, folder)
 
-   
+
     # Plot all the desired graphs :
 
     plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot)
@@ -38,8 +39,6 @@ def main_analysis(folder, plot=False):
 
     plot_word_chains(stem_words, folder, plot, x_ticks_space)
 
-    print("Computing creativity indexes of stories ...")
-    creativities = compute_creativity_indexes(stories)
 
     # TODO : Change the function because 1 = low creativity and 0 = high 
     plot_creativity_evolution(creativities, folder, plot, x_ticks_space)
