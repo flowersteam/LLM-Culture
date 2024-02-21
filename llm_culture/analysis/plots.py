@@ -91,7 +91,6 @@ def plot_within_gen_similarities(between_gen_similarity_matrix, folder, plot, x_
 
 def plot_successive_generations_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, save=True):
     plt.figure(figsize=(10, 6))
-    successive_sim = [between_gen_similarity_matrix[i, i+1] for i in range(between_gen_similarity_matrix.shape[0] - 1)]
     plt.title('Successive generations similarities')
     plt.xlabel('Generations')
     plt.ylabel('Similarity between successive generations')
@@ -99,6 +98,7 @@ def plot_successive_generations_similarities(between_gen_similarity_matrix, fold
     plt.yticks(np.linspace(0, 1, 11))
     plt.grid()
     plt.ylim(0, 1)
+    successive_sim = [between_gen_similarity_matrix[i, i+1] for i in range(between_gen_similarity_matrix.shape[0] - 1)]
     plt.plot(successive_sim)
 
     if save:

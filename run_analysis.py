@@ -14,12 +14,13 @@ def main_analysis(folder, plot=False):
 
     flat_stories, keywords, stem_words = preprocess_stories(stories)
     similarity_matrix = get_similarity_matrix(flat_stories)
+    between_gen_similarity_matrix = compute_between_gen_similarities(similarity_matrix, n_gen, n_agents)
+    polarities, subjectivities = get_polarities_subjectivities(stories)
+
    
     # Plot all the desired graphs :
 
     plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot)
-
-    between_gen_similarity_matrix = compute_between_gen_similarities(similarity_matrix, n_gen, n_agents)
 
     plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space)
 
@@ -30,8 +31,6 @@ def main_analysis(folder, plot=False):
     plot_within_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space)
 
     plot_successive_generations_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space)
-
-    polarities, subjectivities = get_polarities_subjectivities(stories)
 
     plot_positivity_evolution(polarities, folder, plot, x_ticks_space)
 
