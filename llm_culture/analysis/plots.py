@@ -294,3 +294,16 @@ def plot_word_chains(word_lists, folder, plot, x_ticks_space, save=True):
     if plot:
         plt.show()
         
+
+def display_graph(network_structure):
+    pos = nx.spring_layout(network_structure)  # positions for all nodes
+
+    nx.draw_networkx_nodes(network_structure, pos, node_size=700)
+    nx.draw_networkx_edges(network_structure, pos,
+                           arrowstyle='->',
+                           arrowsize=30)  # Increase the arrowsize value
+
+    nx.draw_networkx_labels(network_structure, pos, font_size=20, font_family='sans-serif')
+
+    plt.axis('off')
+    plt.show()
