@@ -1,4 +1,5 @@
 import json
+import pickle
 
 import nltk
 import gensim
@@ -137,7 +138,7 @@ def get_polarities_subjectivities(stories):
 
 
 # Pretty long to compute 
-def compute_creativity_indexes(stories):
+def get_creativity_indexes(stories, folder):
 
     def story_creativity_index(story_input):
         words_story = story_input.lower().split()
@@ -151,12 +152,25 @@ def compute_creativity_indexes(stories):
                 similarity_scores.append(similarity)
         return np.mean(similarity_scores)
     
-    creativities = []
-    for gen in stories:
-        gen_creativity = []
-        for story in gen:
-            gen_creativity.append(story_creativity_index(story))
-        creativities.append(gen_creativity)
+    try:
+        # Load existing data 
+        file = open(f"{folder}/creativities.obj",'rb')
+        creativities = pickle.load(file)
+        file.close()
+    except:
+        # Compute creativity idx and save it 
+        print(f"Computing creativity indexes of stories for {folder} dir...")
+        creativities = []
+        for gen in stories:
+            gen_creativity = []
+            for story in gen:
+                gen_creativity.append(story_creativity_index(story))
+            creativities.append(gen_creativity)
+
+        # Save the results in the texts folder
+        filehandler = open(f"{folder}/creativities.obj","wb")
+        pickle.dump(creativities, filehandler)
+        filehandler.close()
         
     return  creativities
             
