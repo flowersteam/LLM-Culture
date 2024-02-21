@@ -57,11 +57,11 @@ def main_analysis(folders, plot=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # Enter the names of the experiments separated by spaces
-    parser.add_argument("--dirs", type=str, default="Chain_20 Chain_50")
+    parser.add_argument("--dirs", type=str, default="Chain_20+Chain_50")
     parser.add_argument("--plot", action="store_true")
     args = parser.parse_args()
 
-    analyzed_dirs = args.dirs.split(' ')
+    analyzed_dirs = args.dirs.split('+')
     dirs_list = [f"Results/{dir_name}" for dir_name in analyzed_dirs]
 
     print(f"\nLaunching analysis on the {args.dirs} results")

@@ -40,7 +40,7 @@ def compare_init_generation_similarity_evolution(data, plot, saving_folder=None)
     
 def compare_within_generation_similarity_evolution(data, plot, saving_folder=None):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of similarity with the initial generation')
+    plt.title('Evolution of similarity within generations')
     plt.xlabel('Generations')
     plt.ylabel('Similarity within generations')
     
