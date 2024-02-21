@@ -103,7 +103,7 @@ class SimulationFrame(tk.Frame):
         prompt_update = self.vertical_frame1.prompt_update.get().strip()
         network_structure_type = self.vertical_frame1.network_structure.get()
         personality_unique = self.vertical_frame1.personality.get()
-        personality_list = [perso.get() for perso in self.vertical_frame1.personalities]
+        personality_list = self.vertical_frame1.get_personalities()
         output_folder_path = self.vertical_frame1.output_folder_path.get().strip()  # Get the output folder path
         access_url = self.vertical_frame1.access_url.get().strip()
         n_cliques = self.vertical_frame1.n_cliques.get()
@@ -115,9 +115,13 @@ class SimulationFrame(tk.Frame):
         args.prompt_init = prompt_init
         args.prompt_update = prompt_update
         args.network_structure = network_structure_type
-        if self.vertical_frame1.same_personnalities:
+        if self.vertical_frame1.same_personnalities.get():
+            print('here2')
+
             args.personality_list = [personality_unique for _ in range(n_agents)]
         else:
+            print('here')
+            print(personality_list)
             args.personality_list = personality_list
         args.output = Path(output_folder_path).absolute()
         args.debug = False
@@ -204,8 +208,10 @@ class ParametersFrame(tk.Frame):
         # Define the parameters with labels and input fields
         agent_entry = self.create_integer_input('N-agents:', 0, self.n_agents_var)
         
+       
+
         def update_perso_list(event):
-            return self.create_personnality_list(int(self.n_agents_var.get()), json_file_personnalities)
+            _ , _ , self.personalities = self.create_personnality_list(int(self.n_agents_var.get()), json_file_personnalities)
 
         agent_entry.bind('<FocusOut>', update_perso_list )
         self.create_integer_input('N-timesteps:', 1, self.n_timesteps_var)
@@ -305,7 +311,14 @@ class ParametersFrame(tk.Frame):
         self.access_url = tk.Entry(self, width= 10)
 
         self.create_text_input('Server Access URL:', 12, self.access_url,
-                               "")  
+                              "")  
+        
+
+    def get_personalities(self):
+        print(self.personalities)
+        return [perso.get() for perso in self.personalities]
+    
+
     def create_personnality_list(self, n_agents, json_file):
         perso_frame = ttk.Frame(self)
         perso_frame.grid(row = 6, column = 0, columnspan=4, sticky= 'w')
