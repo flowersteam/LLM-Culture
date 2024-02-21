@@ -17,6 +17,7 @@ def parse_arguments():
     # argument to select the network structure
     parser.add_argument('-ns', '--network_structure', type=str, default='sequence',
                         choices=['sequence','fully_connected' 'circle', 'caveman'], help='Network structure.')
+    parser.add_argument('-nc', '--n_cliques', type=int, default=2, help='Number of cliques for the Caveman graph')
     # argument to select the prompt_init from the list of prompts
     parser.add_argument('-pi', '--prompt_init', type=str, default='kid',
                         help='Initial prompt.')
