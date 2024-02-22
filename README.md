@@ -2,6 +2,8 @@
 
 This repository provides a comprehensive framework for studying the cultural evolution of linguistic content through the utilization of Large Language Model agents. 
 
+It allows organizing LLM agents into networks wherein each agent interacts with neighboring agents by exchanging stories. Each agent can be assigned specific personalities and transmission instructions, serving as prompts for generating new stories from their neighbors’ narratives. Once the network structure and agent characteristics are defined, you can simulate the cultural evolution of texts across generations of agents. After that, you can easiely analyze the evolution of texts produced and compare the results of different experiment configurations.
+
 ## Installation 
 
 1- Get the repository
@@ -39,5 +41,3 @@ python3 run_comparison_analysis --dirs experiment_1+experiment_2+experiment_3
 ```
 
 It will store the analysis figures in a directory called ```Results/Comparisons/experiment_1-experiment_2-experiment_3/```
-
-### TODO : Make a tutorial to explain how to do the same thing with the GUI
