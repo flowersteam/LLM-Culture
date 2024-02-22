@@ -5,11 +5,11 @@ from llm_culture.analysis.utils import compute_between_gen_similarities, get_pol
 from llm_culture.analysis.comparison_plots import *
 
 
-def main_analysis(folders, plot, scale_y_axis):
+def main_analysis(folders, plot, scale_y_axis, labels):
     saving_folder = '-'.join(os.path.basename(folder) for folder in folders)
     data = {}
         
-    for folder in folders:
+    for i, folder in enumerate(folders):
         # Compute all the metric that will be used for plotting
         stories = get_stories(folder)
         n_gen, n_agents, x_ticks_space = get_plotting_infos(stories)
@@ -18,6 +18,7 @@ def main_analysis(folders, plot, scale_y_axis):
         between_gen_similarity_matrix = compute_between_gen_similarities(similarity_matrix, n_gen, n_agents)
         polarities, subjectivities = get_polarities_subjectivities(stories)
         creativities = get_creativity_indexes(stories, folder)
+        label = labels[i]
 
         data[folder] = {
             'stories': stories,
@@ -31,7 +32,9 @@ def main_analysis(folders, plot, scale_y_axis):
             'between_gen_similarity_matrix': between_gen_similarity_matrix,
             'polarities': polarities,
             'subjectivities': subjectivities,
-            'creativities': creativities
+            'creativities': creativities,
+            'label': label
+
         }
    
     # Plot all the desired graphs :
@@ -55,11 +58,13 @@ if __name__ == "__main__":
     parser.add_argument("--dirs", type=str, default="Chain_20+Chain_50")
     parser.add_argument("--plot", action="store_true")
     parser.add_argument("--scale_y_axis", action="store_true")
+    parser.add_argument("--labels", type=str, default= "Chain_20+Chain_50")
     args = parser.parse_args()
 
     analyzed_dirs = args.dirs.split('+')
+    labels = args.labels.split('+')
     dirs_list = [f"Results/{dir_name}" for dir_name in analyzed_dirs]
 
     print(f"\nLaunching analysis on the {args.dirs} results")
     print(f"plot = {args.plot}")
-    main_analysis(dirs_list, args.plot, args.scale_y_axis)
+    main_analysis(dirs_list, args.plot, args.scale_y_axis, labels)
