@@ -1,6 +1,6 @@
 # LLM-Culture
 
-### TODO : Add a quick description of the Repo, what can be done with it ... 
+This repository provides a comprehensive framework for studying the cultural evolution of linguistic content through the utilization of Large Language Model agents. 
 
 ## Installation 
 
@@ -20,8 +20,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-Run a simulation with your desired parameters (see a complete list in [run_simulation.py](run_simulation.py)): 
-### TODO : Change --output_dir 
+Run a simulation with your desired parameters (number of agents, generations, network structure ...) see a complete list in [run_simulation.py](run_simulation.py)): 
 
 ```bash
 python3 run_simulation.py --output_file simulation_test
