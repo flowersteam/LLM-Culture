@@ -12,12 +12,12 @@ def get_answer(access_url, prompt, debug=False):
 
     history = []
 
-    prompt = '<s>[INST]' + prompt + '[/INST]'
+    #prompt = '<|im_start|>user' + prompt + '<|im_end|> <|im_start|>assistant'
 
     history.append({"role": "user", "content": prompt})
     data = {
         "mode": "chat",
-        "character": "Assistant",
+        "role": "assistant",
         "messages": history
     }
 
@@ -38,3 +38,5 @@ def get_answer(access_url, prompt, debug=False):
 
 
   
+# if __name__ == "__main__":
+#     print(get_answer('https://sides-create-born-institute.trycloudflare.com', "Tell me a joke"))
