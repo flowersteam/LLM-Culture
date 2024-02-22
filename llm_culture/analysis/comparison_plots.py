@@ -26,7 +26,8 @@ def compare_init_generation_similarity_evolution(data, plot, saving_folder=None,
     for folder in data:
         num_points = data[folder]['between_gen_similarity_matrix'].shape[0]
         value = data[folder]['between_gen_similarity_matrix'][0, 1:]
-        plt.plot(range(1, num_points), value, label=folder)
+        label = data[folder]['label']
+        plt.plot(range(1, num_points), value, label=label)
 
     plt.legend()
     
@@ -62,7 +63,9 @@ def compare_within_generation_similarity_evolution(data, plot, saving_folder=Non
 
     for folder in data:
         value = np.diag(data[folder]['between_gen_similarity_matrix'])
-        plt.plot(value, label=folder, alpha=0.7)
+        label = data[folder]['label']
+
+        plt.plot(value, label=label, alpha=0.7)
 
     plt.legend()
     
@@ -99,7 +102,9 @@ def compare_successive_generations_similarities(data, plot, saving_folder=None, 
     for folder in data:
         between_gen_similarity_matrix = data[folder]['between_gen_similarity_matrix']
         successive_sim = [between_gen_similarity_matrix[i, i+1] for i in range(between_gen_similarity_matrix.shape[0] - 1)]
-        plt.plot(successive_sim, label=folder, alpha=0.7)
+        label = data[folder]['label']
+
+        plt.plot(successive_sim, label=label, alpha=0.7)
 
     plt.legend()
     
@@ -138,7 +143,9 @@ def compare_positivity_evolution(data, plot, saving_folder=None, scale_y_axis=Fa
         gen_positivities = []
         for gen_polarities in data[folder]['polarities']:
             gen_positivities.append(np.mean(gen_polarities))
-        plt.plot(gen_positivities, label=folder, alpha=0.7)
+        label = data[folder]['label']
+
+        plt.plot(gen_positivities, label=label, alpha=0.7)
 
     plt.legend()
     
@@ -177,7 +184,10 @@ def compare_subjectivity_evolution(data, plot, saving_folder=None, scale_y_axis=
         gen_positivities = []
         for gen_polarities in data[folder]['subjectivities']:
             gen_positivities.append(np.mean(gen_polarities))
-        plt.plot(gen_positivities, label=folder, alpha=0.7)
+        
+        label = data[folder]['label']
+
+        plt.plot(gen_positivities, label=label, alpha=0.7)
 
     plt.legend()
     
@@ -214,7 +224,9 @@ def compare_creativity_evolution(data, plot, saving_folder=None, scale_y_axis=Fa
 
     for folder in data:
         gen_creativities = [np.mean(gen_creativity) for gen_creativity in data[folder]['creativities']]
-        plt.plot(gen_creativities, label=folder, alpha=0.7)
+        label = data[folder]['label']
+
+        plt.plot(gen_creativities, label=label, alpha=0.7)
 
     plt.legend()
     
