@@ -42,5 +42,13 @@
     {
         "name": "Minor Changes - 100 words",
         "prompt": "You will receive a list of one or more stories. Pick your favorite story, and create a new story by making some minor changes to your favorite story. Your story should be about 100 words long. Just output one story, do not output anything else."
+    },
+    {
+        "name": "Different2",
+        "prompt": "You will receive stories. Create a stories that is as different as possible from the stories you received. Just output your story, nothing else."
+    },
+    {
+        "name": "pick repeat",
+        "prompt": "You will receive stories. Select only one of these story, and repeat it. Just output the story,  don't write anything else. "
     }
 ]

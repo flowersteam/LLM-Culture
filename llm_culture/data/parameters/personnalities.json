@@ -30,5 +30,9 @@
     {
         "name": "Secular society",
         "prompt": "Pretend that you come from a very secular society."
+    },
+    {
+        "name": "Positive",
+        "prompt": "For what follows, pretend that you are a very positive person. "
     }
 ]
