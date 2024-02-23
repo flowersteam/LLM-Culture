@@ -5,9 +5,9 @@ This repository provides a comprehensive framework for studying the cultural evo
 It allows organizing LLM agents into networks wherein each agent interacts with neighboring agents by exchanging stories. Each agent can be assigned specific personalities and transmission instructions, serving as prompts for generating new stories from their neighbors’ narratives. Once the network structure and agent characteristics are defined, you can simulate the cultural evolution of texts across generations of agents. We also provide built-in metrics and vizualizations to analyze the results.
 
 
-![Alt text](/Images/Fig1.png?raw=true)
+![Alt text](/Images/Fig1a.png?raw=true)
 
-![Alt text](/Images/FigS1.png?raw=true)
+![Alt text](/Images/Fig1b.png?raw=true)
 
 
 ![Alt text](/Images/Fig2a.png?raw=true)
