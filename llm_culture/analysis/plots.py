@@ -233,7 +233,10 @@ def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, save=True
 
 def plot_word_chains(word_lists, folder, plot, x_ticks_space, save=True):
 
-    flatten_list_of_lists = [np.array(l).flatten() for l in word_lists]
+    # flatten_list_of_lists = [np.array(l).flatten() for l in word_lists]
+    flatten_list_of_lists = [item for sublist in word_lists for item in sublist]
+
+
     known_words = {}
 
     for i, word_list in enumerate(flatten_list_of_lists):
