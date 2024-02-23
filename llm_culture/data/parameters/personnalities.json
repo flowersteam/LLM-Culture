@@ -34,5 +34,17 @@
     {
         "name": "Positive",
         "prompt": "For what follows, pretend that you are a very positive person. "
+    },
+    {
+        "name": "Negative",
+        "prompt": "For what follows, pretend that you are a very negative person."
+    },
+    {
+        "name": "Very creative",
+        "prompt": "For what follows, pretend that you are a very creative person."
+    },
+    {
+        "name": "Not Creative",
+        "prompt": "For what follows, pretend that you are not a very creative person."
     }
 ]
