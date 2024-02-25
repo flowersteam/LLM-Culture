@@ -5,7 +5,7 @@ from llm_culture.analysis.utils import compute_between_gen_similarities, get_pol
 from llm_culture.analysis.comparison_plots import *
 
 
-def main_analysis(folders, plot, scale_y_axis, labels):
+def main_analysis(folders, plot, scale_y_axis, labels, sizes):
     saving_folder = '-'.join(os.path.basename(folder) for folder in folders)
     data = {}
         
@@ -34,37 +34,42 @@ def main_analysis(folders, plot, scale_y_axis, labels):
             'subjectivities': subjectivities,
             'creativities': creativities,
             'label': label
-
-        }
+            }
    
     # Plot all the desired graphs :
 
-    compare_init_generation_similarity_evolution(data, plot, saving_folder, scale_y_axis)
-
-    compare_within_generation_similarity_evolution(data, plot, saving_folder, scale_y_axis)
-
-    compare_successive_generations_similarities(data, plot, saving_folder, scale_y_axis)
-
-    compare_positivity_evolution(data, plot, saving_folder, scale_y_axis)
-
-    compare_subjectivity_evolution(data, plot, saving_folder, scale_y_axis)
-
-    compare_creativity_evolution(data, data, saving_folder, scale_y_axis)
+    compare_init_generation_similarity_evolution(data, plot, sizes, saving_folder, scale_y_axis)
+    compare_within_generation_similarity_evolution(data, plot, sizes, saving_folder, scale_y_axis)
+    compare_successive_generations_similarities(data, plot, sizes, saving_folder, scale_y_axis)
+    compare_positivity_evolution(data, plot, sizes, saving_folder, scale_y_axis)
+    compare_subjectivity_evolution(data, plot, sizes, saving_folder, scale_y_axis)
+    compare_creativity_evolution(data, plot, sizes, saving_folder, scale_y_axis)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # Enter the names of the experiments separated by '+'
-    parser.add_argument("--dirs", type=str, default="Chain_20+Chain_50")
+    parser.add_argument("--dirs", type=str, default="FC_10_10_combine_crea_not_crea+FC_10_10_combine_creative_2")
     parser.add_argument("--plot", action="store_true")
     parser.add_argument("--scale_y_axis", action="store_true")
-    parser.add_argument("--labels", type=str, default= "Chain_20+Chain_50")
+    parser.add_argument("--labels", type=str, default="FC_10_10_combine_crea_not_crea+FC_10_10_combine_creative_2")
+    parser.add_argument("--ticks_font_size", type=int, default=12)
+    parser.add_argument("--labels_font_size", type=int, default=13)
+    parser.add_argument("--legend_font_size", type=int, default=12)
+    parser.add_argument("--title_font_size", type=int, default=15)
     args = parser.parse_args()
 
     analyzed_dirs = args.dirs.split('+')
     labels = args.labels.split('+')
+    font_sizes = {'ticks': args.ticks_font_size,
+                  'labels': args.labels_font_size,
+                  'legend': args.legend_font_size,
+                  'title': args.title_font_size}
+    print(font_sizes)
     dirs_list = [f"Results/{dir_name}" for dir_name in analyzed_dirs]
+    for el in font_sizes:
+        print(type(font_sizes[el]))
 
     print(f"\nLaunching analysis on the {args.dirs} results")
     print(f"plot = {args.plot}")
-    main_analysis(dirs_list, args.plot, args.scale_y_axis, labels)
+    main_analysis(dirs_list, args.plot, args.scale_y_axis, labels, font_sizes)
