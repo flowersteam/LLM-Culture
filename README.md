@@ -5,16 +5,7 @@ This repository provides a comprehensive framework for studying the cultural evo
 It allows organizing LLM agents into networks wherein each agent interacts with neighboring agents by exchanging stories. Each agent can be assigned specific personalities and transmission instructions, serving as prompts for generating new stories from their neighbors’ narratives. Once the network structure and agent characteristics are defined, you can simulate the cultural evolution of texts across generations of agents. We also provide built-in metrics and vizualizations to analyze the results.
 
 
-![Alt text](/Images/Fig1a.png?raw=true)
-
-![Alt text](/Images/Fig1b.png?raw=true)
-
-
-![Alt text](/Images/Fig2a.png?raw=true)
-
-![Alt text](/Images/Fig2b.png?raw=true)
-
-![Alt text](/Images/Fig2c.png?raw=true)
+![Alt text](/Images/intro_fig.png)
 
 
 ## Installation 
@@ -48,6 +39,9 @@ python3 run_interface.py
 
 This will open the GUI. You can then select the simulation parameters. 
 
+
+![Alt text](/Images/Fig1b.png?raw=true)
+
 <details>
   
   <summary> Display parameters details</summary>
@@ -67,7 +61,7 @@ This will open the GUI. You can then select the simulation parameters.
   - Simulation name: Give a name to your simulation. This will be the name of the folder when the simulation results are stored.
     
   - Server access URL: URL to which the requests will be sent to get answers from the LLM. In our case, we generated such an URL using oogabooga (https://github.com/oobabooga/text-generation-webui) and we provide a step-by-step guide below.
-    </details>
+</details>
 
 <details>
     
@@ -90,7 +84,7 @@ This will open the GUI. You can then select the simulation parameters.
   7. Click on Load to load the model. 
 
   8. Once the model is loaded, you can go back to the LLM-Culture GUI and run your simulations!
-    </details>
+</details>
     
 
 
@@ -125,7 +119,8 @@ python3 run_simulation.py --output_file simulation_test
   - "-o" : Name of the folder in which to store results (str).
 
   - "-url": URL to send the prompt to (str).
-    </details>
+
+</details>
 
 The results of the experiment will be stored in a directory called ```Results/simulation_test/```. You can then analyze the texts produced with this command : 
 
@@ -140,3 +135,16 @@ python3 run_comparison_analysis --dirs experiment_1+experiment_2+experiment_3
 ```
 
 It will store the analysis figures in a directory called ```Results/Comparisons/experiment_1-experiment_2-experiment_3/```
+
+
+## Figures : 
+
+TODO : Add a list of analysis figures with their corresponding plots here ? 
+
+
+
+![Alt text](/Images/Fig2a.png?raw=true)
+
+![Alt text](/Images/Fig2b.png?raw=true)
+
+![Alt text](/Images/Fig2c.png?raw=true)
