@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt 
 
 
-def compare_init_generation_similarity_evolution(data, plot, saving_folder=None, scale_y_axis=False):
+def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of similarity with the initial generation')
-    plt.xlabel('Generations')
-    plt.ylabel('Similarity with first generation')
+    plt.title('Evolution of similarity with the initial generation', fontsize=sizes['title'])
+    plt.xlabel('Generations', fontsize=sizes['labels'])
+    plt.ylabel('Similarity with first generation', fontsize=sizes['labels'])
     
     max_num_ticks = 0 
 
@@ -17,10 +17,10 @@ def compare_init_generation_similarity_evolution(data, plot, saving_folder=None,
             max_num_ticks = num_ticks
             x_ticks_space = data[folder]['x_ticks_space']
 
-    plt.xticks(range(0, max_num_ticks, x_ticks_space))
+    plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
     if scale_y_axis:
         plt.ylim(0, 1)
-        plt.yticks(np.linspace(0, 1, 11))
+        plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.grid()
 
     for folder in data:
@@ -29,7 +29,7 @@ def compare_init_generation_similarity_evolution(data, plot, saving_folder=None,
         label = data[folder]['label']
         plt.plot(range(1, num_points), value, label=label)
 
-    plt.legend()
+    plt.legend(fontsize=sizes['legend'])
     
     if saving_folder:
         saving_name = '/similarity_first_gen_comparison.png'
@@ -40,11 +40,11 @@ def compare_init_generation_similarity_evolution(data, plot, saving_folder=None,
     if plot:
         plt.show()
     
-def compare_within_generation_similarity_evolution(data, plot, saving_folder=None, scale_y_axis=False):
+def compare_within_generation_similarity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of similarity within generations')
-    plt.xlabel('Generations')
-    plt.ylabel('Similarity within generations')
+    plt.title('Evolution of similarity within generations', fontsize=sizes['title'])
+    plt.xlabel('Generations', fontsize=sizes['labels'])
+    plt.ylabel('Similarity within generations', fontsize=sizes['labels'])
     
     max_num_ticks = 0 
 
@@ -56,9 +56,9 @@ def compare_within_generation_similarity_evolution(data, plot, saving_folder=Non
 
     if scale_y_axis:
         plt.ylim(-0.1, 1.1)
-        plt.yticks(np.linspace(0, 1, 11))
+        plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
 
-    plt.xticks(range(0, max_num_ticks, x_ticks_space))
+    plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
     plt.grid()
 
     for folder in data:
@@ -67,7 +67,7 @@ def compare_within_generation_similarity_evolution(data, plot, saving_folder=Non
 
         plt.plot(value, label=label, alpha=0.7)
 
-    plt.legend()
+    plt.legend(fontsize=sizes['legend'])
     
     if saving_folder:
         saving_name = '/similarity_within_gen_comparison.png'
@@ -79,11 +79,11 @@ def compare_within_generation_similarity_evolution(data, plot, saving_folder=Non
         plt.show()
 
 
-def compare_successive_generations_similarities(data, plot, saving_folder=None, scale_y_axis=False):
+def compare_successive_generations_similarities(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of similarity with previous generation')
-    plt.xlabel('Generations')
-    plt.ylabel('Similarity with previous generation')
+    plt.title('Evolution of similarity with previous generation', fontsize=sizes['title'])
+    plt.xlabel('Generations', fontsize=sizes['labels'])
+    plt.ylabel('Similarity with previous generation', fontsize=sizes['labels'])
     
     max_num_ticks = 0 
 
@@ -95,8 +95,8 @@ def compare_successive_generations_similarities(data, plot, saving_folder=None, 
 
     if scale_y_axis:
         plt.ylim(-0.1, 1.1)
-        plt.yticks(np.linspace(0, 1, 11))
-    plt.xticks(range(0, max_num_ticks, x_ticks_space))
+        plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
+    plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
     plt.grid()
 
     for folder in data:
@@ -106,7 +106,7 @@ def compare_successive_generations_similarities(data, plot, saving_folder=None, 
 
         plt.plot(successive_sim, label=label, alpha=0.7)
 
-    plt.legend()
+    plt.legend(fontsize=sizes['legend'])
     
     if saving_folder:
         saving_name = '/similarity_successive_gen_comparison.png'
@@ -118,11 +118,11 @@ def compare_successive_generations_similarities(data, plot, saving_folder=None, 
         plt.show()
 
 
-def compare_positivity_evolution(data, plot, saving_folder=None, scale_y_axis=False):
+def compare_positivity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of positivity within generations')
-    plt.xlabel('Generations')
-    plt.ylabel('Positivity value')
+    plt.title('Evolution of positivity within generations', fontsize=sizes['title'])
+    plt.xlabel('Generations', fontsize=sizes['labels'])
+    plt.ylabel('Positivity value', fontsize=sizes['labels'])
     
     max_num_ticks = 0 
 
@@ -134,9 +134,9 @@ def compare_positivity_evolution(data, plot, saving_folder=None, scale_y_axis=Fa
 
     if scale_y_axis:
         plt.ylim(-1, 1)
-        plt.yticks(np.linspace(-1, 1, 11))
+        plt.yticks(np.linspace(-1, 1, 11), fontsize=sizes['ticks'])
 
-    plt.xticks(range(0, max_num_ticks, x_ticks_space))
+    plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
     plt.grid()
 
     for folder in data:
@@ -147,7 +147,7 @@ def compare_positivity_evolution(data, plot, saving_folder=None, scale_y_axis=Fa
 
         plt.plot(gen_positivities, label=label, alpha=0.7)
 
-    plt.legend()
+    plt.legend(fontsize=sizes['legend'])
     
     if saving_folder:
         saving_name = '/positivity_gen_comparison.png'
@@ -159,11 +159,11 @@ def compare_positivity_evolution(data, plot, saving_folder=None, scale_y_axis=Fa
         plt.show()
         
 
-def compare_subjectivity_evolution(data, plot, saving_folder=None, scale_y_axis=False):
+def compare_subjectivity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of subjectivity within generations')
-    plt.xlabel('Generations')
-    plt.ylabel('Subjectivity value')
+    plt.title('Evolution of subjectivity within generations', fontsize=sizes['title'])
+    plt.xlabel('Generations', fontsize=sizes['labels'])
+    plt.ylabel('Subjectivity value', fontsize=sizes['labels'])
     
     max_num_ticks = 0 
 
@@ -175,9 +175,9 @@ def compare_subjectivity_evolution(data, plot, saving_folder=None, scale_y_axis=
 
     if scale_y_axis:
         plt.ylim(0, 1)
-        plt.yticks(np.linspace(0, 1, 11))
+        plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
 
-    plt.xticks(range(0, max_num_ticks, x_ticks_space))
+    plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
     plt.grid()
 
     for folder in data:
@@ -189,7 +189,7 @@ def compare_subjectivity_evolution(data, plot, saving_folder=None, scale_y_axis=
 
         plt.plot(gen_positivities, label=label, alpha=0.7)
 
-    plt.legend()
+    plt.legend(fontsize=sizes['legend'])
     
     if saving_folder:
         saving_name = '/subjectivity_gen_comparison.png'
@@ -201,11 +201,11 @@ def compare_subjectivity_evolution(data, plot, saving_folder=None, scale_y_axis=
         plt.show()
 
 
-def compare_creativity_evolution(data, plot, saving_folder=None, scale_y_axis=False):
+def compare_creativity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of creativity within generations')
-    plt.xlabel('Generations')
-    plt.ylabel('Creativity index')
+    plt.title('Evolution of creativity within generations', fontsize=sizes['title'])
+    plt.xlabel('Generations', fontsize=sizes['labels'])
+    plt.ylabel('Creativity index', fontsize=sizes['labels'])
     
     max_num_ticks = 0 
 
@@ -217,9 +217,9 @@ def compare_creativity_evolution(data, plot, saving_folder=None, scale_y_axis=Fa
 
     if scale_y_axis:
         plt.ylim(0, 1)
-        plt.yticks(np.linspace(0, 1, 11))
+        plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
 
-    plt.xticks(range(0, max_num_ticks, x_ticks_space))
+    plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
     plt.grid()
 
     for folder in data:
@@ -228,7 +228,7 @@ def compare_creativity_evolution(data, plot, saving_folder=None, scale_y_axis=Fa
 
         plt.plot(gen_creativities, label=label, alpha=0.7)
 
-    plt.legend()
+    plt.legend(fontsize=sizes['legend'])
     
     if saving_folder:
         saving_name = '/creativity_gen_comparison.png'
