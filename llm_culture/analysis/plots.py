@@ -3,11 +3,8 @@ import networkx as nx
 import matplotlib.pyplot as plt 
 
 
-<<<<<<< Updated upstream
-def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, sizes, save=True):
-=======
-def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, save=True, seed = 0):
->>>>>>> Stashed changes
+
+def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, sizes, save=True, seed = 0):
     plt.figure(figsize=(8, 8))
     plt.imshow(similarity_matrix, vmin=0, vmax=1, cmap='viridis')
 
@@ -41,11 +38,8 @@ def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, sav
         plt.show()
 
 
-<<<<<<< Updated upstream
-def plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True):
-=======
-def plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, save=True, seed = 0):
->>>>>>> Stashed changes
+
+def plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True, seed = 0):
     plt.figure(figsize=(8, 8))
     plt.xlabel('Generation idx', fontsize=sizes['labels'])
     plt.ylabel('Generation idx', fontsize=sizes['labels'])
@@ -64,27 +58,16 @@ def plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x
         plt.show()
 
 
-<<<<<<< Updated upstream
-def plot_init_generation_similarity_evolution(between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True):
-=======
-def plot_init_generation_similarity_evolution(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, save=True, scale_y_axis = False):
->>>>>>> Stashed changes
+def plot_init_generation_similarity_evolution(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True, scale_y_axis = False):
     plt.figure(figsize=(10, 6))
     plt.title('Evolution of similarity with the initial generation', fontsize=sizes['title'])
     plt.xlabel('Generations', fontsize=sizes['labels'])
     plt.ylabel('Similarity with first generation', fontsize=sizes['labels'])
 
-<<<<<<< Updated upstream
     plt.ylim(0, 1)
-    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.xticks(range(0, all_seeds_between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
-=======
-    if scale_y_axis:
-        plt.ylim(0, 1)
-        plt.yticks(np.linspace(0, 1, 11))
 
-    plt.xticks(range(0, all_seeds_between_gen_similarity_matrix[0].shape[0], x_ticks_space))
->>>>>>> Stashed changes
     plt.grid()
 
     mean_line, = plt.plot(range(1, all_seeds_between_gen_similarity_matrix[0].shape[0]), np.mean(all_seeds_between_gen_similarity_matrix, axis = 0)[0, 1:], label='Similarity with First History')
@@ -104,26 +87,15 @@ def plot_init_generation_similarity_evolution(all_seeds_between_gen_similarity_m
         plt.show()
     
 
-<<<<<<< Updated upstream
-def plot_within_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes,save=True):
+def plot_within_gen_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes,save=True, scale_y_axis = False):
     plt.figure(figsize=(10, 6))
     plt.title('Within generations texts similarities', fontsize=sizes['title'])
     plt.xlabel('Generations', fontsize=sizes['labels'])
     plt.ylabel('Within-generation similarity', fontsize=sizes['labels'])
-    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.xticks(range(0, all_seeds_between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.ylim(0 , 1.1)
-=======
-def plot_within_gen_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, save=True, scale_y_axis = False):
-    plt.figure(figsize=(10, 6))
-    plt.title('Within generations texts similarities')
-    plt.xlabel('Generations')
-    plt.ylabel('Within-generation similarity')
-    plt.xticks(range(0, all_seeds_between_gen_similarity_matrix[0].shape[0], x_ticks_space))
-    if scale_y_axis:
-        plt.ylim(0 , 1.1)
-        plt.yticks(np.linspace(0, 1, 11))
->>>>>>> Stashed changes
+
     plt.grid()
 
 
@@ -149,27 +121,14 @@ def plot_within_gen_similarities(all_seeds_between_gen_similarity_matrix, folder
         plt.show()
 
 
-<<<<<<< Updated upstream
-def plot_successive_generations_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True):
+def plot_successive_generations_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True, scale_y_axis = False):
     plt.figure(figsize=(10, 6))
     plt.title('Successive generations similarities', fontsize=sizes['title'])
     plt.xlabel('Generations', fontsize=sizes['labels'])
     plt.ylabel('Similarity between successive generations', fontsize=sizes['labels'])
-    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.xticks(range(0, all_seeds_between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
-=======
-def plot_successive_generations_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, save=True, scale_y_axis = False):
-    plt.figure(figsize=(10, 6))
-    plt.title('Successive generations similarities')
-    plt.xlabel('Generations')
-    plt.ylabel('Similarity between successive generations')
-    plt.xticks(range(1, all_seeds_between_gen_similarity_matrix[0].shape[0], x_ticks_space))
-    n_seeds = len(all_seeds_between_gen_similarity_matrix)
-    if scale_y_axis:
-        plt.yticks(np.linspace(0, 1, 11))
-        plt.ylim(0, 1)
 
->>>>>>> Stashed changes
     plt.grid()
 
     all_seeds_successive_sim = [[all_seeds_between_gen_similarity_matrix[seed][i, i+1] for i in range(all_seeds_between_gen_similarity_matrix[0].shape[0] - 1)] for seed in range(n_seeds)]
@@ -194,11 +153,8 @@ def plot_successive_generations_similarities(all_seeds_between_gen_similarity_ma
         plt.show()
 
 
-<<<<<<< Updated upstream
-def plot_positivity_evolution(polarities, folder, plot, x_ticks_space, sizes, save=True):
-=======
-def plot_positivity_evolution(all_seeds_positivities, folder, plot, x_ticks_space, save=True, scale_y_axis = False):
->>>>>>> Stashed changes
+
+def plot_positivity_evolution(all_seeds_positivities, folder, plot, x_ticks_space, sizes, save=True, scale_y_axis = False):
     plt.figure(figsize=(10, 6))
     # 1 = positive, -1 = negative on the y axis
     all_seeds_gen_positivities = []
@@ -212,17 +168,11 @@ def plot_positivity_evolution(all_seeds_positivities, folder, plot, x_ticks_spac
     plt.ylabel("Positivity", fontsize=sizes['labels'])
     plt.ylabel("Generation", fontsize=sizes['labels'])
 
-<<<<<<< Updated upstream
     plt.xticks(range(0, len(gen_positivities), x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(-1, 1, 11), fontsize=sizes['ticks'])
     plt.grid()
     plt.ylim(-1, 1)
-=======
-    plt.xticks(range(0, len(gen_positivities), x_ticks_space))
-    if scale_y_axis:
-        plt.yticks(np.linspace(-1, 1, 11))
-        plt.ylim(-1, 1)
->>>>>>> Stashed changes
+
 
     plt.grid()
 
@@ -244,11 +194,8 @@ def plot_positivity_evolution(all_seeds_positivities, folder, plot, x_ticks_spac
         plt.show()
 
 
-<<<<<<< Updated upstream
-def plot_subjectivity_evolution(subjectivities, folder, plot, x_ticks_space, sizes, save=True):
-=======
-def plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_space, save=True, scale_y_axis = False):
->>>>>>> Stashed changes
+
+def plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_space, sizes, save=True, scale_y_axis = False):
     """Subjectivity is the output that lies within [0,1] and refers to personal opinions and judgments"""
     plt.figure(figsize=(10, 6))
     all_see_gen_subjectivities = []
@@ -265,12 +212,6 @@ def plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_
 <<<<<<< Updated upstream
     plt.xticks(range(0, len(gen_subjectivities), x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
-=======
-    plt.xticks(range(0, len(gen_subjectivities), x_ticks_space))
-    if scale_y_axis:
-        plt.yticks(np.linspace(0, 1, 11))
-        plt.ylim(0, 1)
->>>>>>> Stashed changes
     plt.grid()
 
     mean_line, = plt.plot(np.mean(all_see_gen_subjectivities, axis = 0))
@@ -291,11 +232,8 @@ def plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_
         plt.show()
 
     
-<<<<<<< Updated upstream
-def plot_creativity_evolution(creativity_indices, folder, plot, x_ticks_space, sizes, save=True):
-=======
-def plot_creativity_evolution(all_seeds_creativity_indices, folder, plot, x_ticks_space, save=True, scale_y_axis = False):
->>>>>>> Stashed changes
+
+def plot_creativity_evolution(all_seeds_creativity_indices, folder, plot, x_ticks_space, sizes, save=True, scale_y_axis = False):
     """!!! Warning here 1 = low creativity and 0 = high creativity !!!"""
     """^-not anymore-^, now 1 = high creativity and 0 = low creativity"""
     
@@ -307,22 +245,13 @@ def plot_creativity_evolution(all_seeds_creativity_indices, folder, plot, x_tick
 
     plt.figure(figsize=(10, 6))
     
-<<<<<<< Updated upstream
     plt.title("Creativity index evolution", fontsize=sizes['title'])
     plt.xlabel("Generation", fontsize=sizes['labels'])
     plt.ylabel("Creativity Index", fontsize=sizes['labels'])
     plt.xticks(range(0, len(creativity_indices), x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.ylim(0, 1)
-=======
-    plt.title("Creativity Evolution")
-    plt.xlabel("Generation")
-    plt.ylabel("Creativity Index")
-    plt.xticks(range(0, len(creativity_indices), x_ticks_space))
-    if scale_y_axis:
-        plt.yticks(np.linspace(0, 1, 11))
-        plt.ylim(0, 1)
->>>>>>> Stashed changes
+
     plt.grid()
 
     mean_line, = plt.plot(np.mean(all_seeds_gen_creativities, axis = 0))
@@ -343,11 +272,8 @@ def plot_creativity_evolution(all_seeds_creativity_indices, folder, plot, x_tick
 
 
 
-<<<<<<< Updated upstream
-def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, sizes, save=True):
-=======
-def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, save=True, seed = 0):
->>>>>>> Stashed changes
+
+def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, sizes, save=True, seed = 0):
     plt.figure(figsize=(8, 8))
     n_generations = between_gen_similarity_matrix.shape[0]
 
@@ -392,12 +318,9 @@ def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, save=True
     return G
 
 
-<<<<<<< Updated upstream
 # TODO : See how to do for word chains ticks_sizes
 def plot_word_chains(word_lists, folder, plot, ticks_space, sizes, save=True):
-=======
-def plot_word_chains(word_lists, folder, plot, x_ticks_space, save=True, seed = 0):
->>>>>>> Stashed changes
+
 
     flatten_list_of_lists = [item for sublist in word_lists for item in sublist]
     known_words = {}
@@ -445,13 +368,9 @@ def plot_word_chains(word_lists, folder, plot, x_ticks_space, save=True, seed = 
     ax2.set_xticks(range(1, len(xtick_labels), 2))
     ax2.set_xticklabels(lower_xtick_labels[1::2], rotation=90, ha='center')
 
-<<<<<<< Updated upstream
     plt.yticks(range(0, len(word_lists), ticks_space))
-=======
-    plt.yticks(range(0, len(word_lists), x_ticks_space))
     plt.tight_layout()
 
->>>>>>> Stashed changes
     
     # See if we wanna keep the grids
     ax.grid()
