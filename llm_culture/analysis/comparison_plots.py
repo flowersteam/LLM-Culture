@@ -2,12 +2,15 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt 
 
+PAD = 20
+LABEL_PAD = 10
+MATRIX_SIZE = 10
 
 def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of similarity with the initial generation', fontsize=sizes['title'])
-    plt.xlabel('Generations', fontsize=sizes['labels'])
-    plt.ylabel('Similarity with first generation', fontsize=sizes['labels'])
+    plt.title('Evolution of similarity with the initial generation', fontsize=sizes['title'], pad=PAD)
+    plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+    plt.ylabel('Similarity with first generation', fontsize=sizes['labels'], labelpad=LABEL_PAD)
     
     max_num_ticks = 0 
 
@@ -42,9 +45,10 @@ def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folde
     
 def compare_within_generation_similarity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of similarity within generations', fontsize=sizes['title'])
-    plt.xlabel('Generations', fontsize=sizes['labels'])
-    plt.ylabel('Similarity within generations', fontsize=sizes['labels'])
+    plt.subplots_adjust(top=0.9)
+    plt.title('Evolution of similarity within generations', fontsize=sizes['title'], pad=PAD)
+    plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+    plt.ylabel('Similarity within generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
     
     max_num_ticks = 0 
 
@@ -81,9 +85,9 @@ def compare_within_generation_similarity_evolution(data, plot, sizes, saving_fol
 
 def compare_successive_generations_similarities(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of similarity with previous generation', fontsize=sizes['title'])
-    plt.xlabel('Generations', fontsize=sizes['labels'])
-    plt.ylabel('Similarity with previous generation', fontsize=sizes['labels'])
+    plt.title('Evolution of similarity with previous generation', fontsize=sizes['title'], pad=PAD)
+    plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+    plt.ylabel('Similarity with previous generation', fontsize=sizes['labels'], labelpad=LABEL_PAD)
     
     max_num_ticks = 0 
 
@@ -120,9 +124,9 @@ def compare_successive_generations_similarities(data, plot, sizes, saving_folder
 
 def compare_positivity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of positivity within generations', fontsize=sizes['title'])
-    plt.xlabel('Generations', fontsize=sizes['labels'])
-    plt.ylabel('Positivity value', fontsize=sizes['labels'])
+    plt.title('Evolution of positivity within generations', fontsize=sizes['title'], pad=PAD)
+    plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+    plt.ylabel('Positivity value', fontsize=sizes['labels'], labelpad=LABEL_PAD)
     
     max_num_ticks = 0 
 
@@ -161,9 +165,9 @@ def compare_positivity_evolution(data, plot, sizes, saving_folder=None, scale_y_
 
 def compare_subjectivity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of subjectivity within generations', fontsize=sizes['title'])
-    plt.xlabel('Generations', fontsize=sizes['labels'])
-    plt.ylabel('Subjectivity value', fontsize=sizes['labels'])
+    plt.title('Evolution of subjectivity within generations', fontsize=sizes['title'], pad=PAD)
+    plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+    plt.ylabel('Subjectivity value', fontsize=sizes['labels'], labelpad=LABEL_PAD)
     
     max_num_ticks = 0 
 
@@ -203,9 +207,9 @@ def compare_subjectivity_evolution(data, plot, sizes, saving_folder=None, scale_
 
 def compare_creativity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of creativity within generations', fontsize=sizes['title'])
-    plt.xlabel('Generations', fontsize=sizes['labels'])
-    plt.ylabel('Creativity index', fontsize=sizes['labels'])
+    plt.title('Evolution of creativity within generations', fontsize=sizes['title'], pad=PAD)
+    plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+    plt.ylabel('Creativity index', fontsize=sizes['labels'], labelpad=LABEL_PAD)
     
     max_num_ticks = 0 
 
@@ -236,5 +240,42 @@ def compare_creativity_evolution(data, plot, sizes, saving_folder=None, scale_y_
         plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
         print(f"Saved {saving_name}")
     
+    if plot:
+        plt.show()
+
+
+
+def plot_similarity_matrix(similarity_matrix, label, n_gen, n_agents, plot, sizes, saving_folder=None):
+    plt.figure(figsize=(MATRIX_SIZE, MATRIX_SIZE))
+    plt.imshow(similarity_matrix, vmin=0, vmax=1, cmap='viridis')
+
+    n_texts = similarity_matrix.shape[0]
+    if n_texts < 20:
+        x_ticks_space = 1
+    elif n_texts >= 50:
+        x_ticks_space = 10
+    else:
+        x_ticks_space = 5
+    
+    plt.xlabel('History idx', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+    plt.ylabel('History idx', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+    plt.title(f'Stories similarity matrix for {label}', fontsize=sizes['title'], pad=PAD)
+    
+    # Add black lines to delimit generations
+    for i in range(n_gen):      
+        plt.axvline(x = i * n_agents - 0.5, color = 'black')
+        plt.axhline(y = i * n_agents - 0.5, color = 'black')
+
+    plt.xticks(range(0, similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.yticks(range(0, similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+
+    cbar = plt.colorbar(pad=0.02, shrink=0.84)
+
+    if saving_folder:
+        saving_name = f'/stories_similarity_matrix_{label}.png'
+        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        print(f"Saved {saving_name}")
+
     if plot:
         plt.show()

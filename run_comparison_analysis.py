@@ -2,7 +2,9 @@ import argparse
 
 from llm_culture.analysis.utils import get_stories, get_plotting_infos, preprocess_stories, get_similarity_matrix
 from llm_culture.analysis.utils import compute_between_gen_similarities, get_polarities_subjectivities, get_creativity_indexes
+from llm_culture.analysis.plots import plot_similarity_matrix
 from llm_culture.analysis.comparison_plots import *
+
 
 
 def main_analysis(folders, plot, scale_y_axis, labels, sizes):
@@ -19,6 +21,8 @@ def main_analysis(folders, plot, scale_y_axis, labels, sizes):
         polarities, subjectivities = get_polarities_subjectivities(stories)
         creativities = get_creativity_indexes(stories, folder)
         label = labels[i]
+        # Plot the individual similarity matrix in the same folder
+        plot_similarity_matrix(similarity_matrix, label, n_gen, n_agents, plot, sizes, saving_folder)
 
         data[folder] = {
             'stories': stories,
@@ -52,11 +56,11 @@ if __name__ == "__main__":
     parser.add_argument("--dirs", type=str, default="FC_10_10_combine_crea_not_crea+FC_10_10_combine_creative_2")
     parser.add_argument("--plot", action="store_true")
     parser.add_argument("--scale_y_axis", action="store_true")
-    parser.add_argument("--labels", type=str, default="FC_10_10_combine_crea_not_crea+FC_10_10_combine_creative_2")
-    parser.add_argument("--ticks_font_size", type=int, default=12)
-    parser.add_argument("--labels_font_size", type=int, default=13)
-    parser.add_argument("--legend_font_size", type=int, default=12)
-    parser.add_argument("--title_font_size", type=int, default=15)
+    parser.add_argument("--labels", type=str, default="None")
+    parser.add_argument("--ticks_font_size", type=int, default=16)
+    parser.add_argument("--labels_font_size", type=int, default=18)
+    parser.add_argument("--legend_font_size", type=int, default=16)
+    parser.add_argument("--title_font_size", type=int, default=24)
     args = parser.parse_args()
 
     analyzed_dirs = args.dirs.split('+')
