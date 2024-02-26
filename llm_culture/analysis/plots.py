@@ -209,7 +209,6 @@ def plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_
     plt.ylabel("Positivity", fontsize=sizes['labels'])
     plt.ylabel("Generation", fontsize=sizes['labels'])
 
-<<<<<<< Updated upstream
     plt.xticks(range(0, len(gen_subjectivities), x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.grid()
