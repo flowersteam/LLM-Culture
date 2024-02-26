@@ -1,0 +1,21 @@
+{
+    "adjacency_matrix": [
+        [
+            1.0
+        ]
+    ],
+    "prompt_init": [
+        "Output a two-sentences story. Just output the story, nothing else."
+    ],
+    "prompt_update": [
+        "repeat the following story. Just output the story, nothing else."
+    ],
+    "personality_list": [
+        " "
+    ],
+    "stories": [
+        [
+            "Once upon a time in a small village, there lived a young and curious girl named Emily. One sunny afternoon, she discovered a hidden cave near the edge of the woods, leading to a world filled with magical creatures and surreal wonders.\n\nEmily never found the courage to venture inside before this summer day, but the fierce call of adventure was echoing in her heart. As the sun slowly set, she delved into the cave, opening a portal to the unseen. Behind the illuminated curtains, an enchanting world bloomed before her eyes, casting a spell of hope and discovery that would change her life forever."
+        ]
+    ]
+}

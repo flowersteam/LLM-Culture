@@ -14,6 +14,7 @@ from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
 from sklearn.feature_extraction.text import TfidfVectorizer
 from textblob import TextBlob
+import os
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context
@@ -30,11 +31,16 @@ nlp = spacy.load('en_core_web_sm')
 
 
 def get_stories(folder):
-    json_file  = folder + '/output.json'
-    with open(json_file, 'r') as file:
-            data = json.load(file)
-            stories = data['stories']
-            return stories
+    json_files = [file for file in os.listdir(folder) if file.endswith('.json')]
+    all_stories = []
+    # json_file  = folder + '/output.json'
+    for json_file in json_files:
+        with open(folder + '/' + json_file, 'r') as file:
+                data = json.load(file)
+                stories = data['stories']
+                all_stories.append(stories)
+    
+    return all_stories
     
 
 def get_plotting_infos(stories):  
@@ -42,20 +48,37 @@ def get_plotting_infos(stories):
     x_ticks_space = n_gen // 10 if n_gen >= 20 else 1
     return n_gen, n_agents, x_ticks_space
 
-
-def preprocess_stories(stories):
+def preprocess_single_seed(stories):
     flat_stories = [stories[i][j] for i in range(len(stories)) for j in range(len(stories[0]))]
     keywords = [list(map(extract_keywords, s)) for s in stories]
     stem_words = [[list(map(lemmatize_stemming, keyword)) for keyword in keyword_list] for keyword_list in keywords]
-
     return flat_stories, keywords, stem_words
 
+def preprocess_stories(all_seeds_stories):
+    all_seeds_flat_stories = []
+    all_seeds_keywords = []
+    all_seeds_stem_words = []
+    for stories in all_seeds_stories:
+        flat_stories, keywords, stem_words = preprocess_single_seed(stories)
+        all_seeds_flat_stories.append(flat_stories)
+        all_seeds_keywords.append(keywords)
+        all_seeds_stem_words.append(stem_words)
+    
+    return all_seeds_flat_stories, all_seeds_keywords, all_seeds_stem_words
 
-def get_similarity_matrix(flat_stories):
+def get_similarity_matrix_single_seed(flat_stories):
     vect = TfidfVectorizer(min_df=1, stop_words="english")     
     tfidf = vect.fit_transform(flat_stories)                                                                                                                                                                                                                       
     similarity_matrix = tfidf * tfidf.T 
     return similarity_matrix.toarray()
+
+def get_similarity_matrix(all_seed_flat_stories):
+    all_seeds_similarity_matrix = []
+    for flat_stories in all_seed_flat_stories:
+        similarity_matrix = get_similarity_matrix_single_seed(flat_stories)
+        all_seeds_similarity_matrix.append(similarity_matrix)
+    return all_seeds_similarity_matrix
+
 
 
 
@@ -106,7 +129,7 @@ def get_similarity(vec1, vec2):
 
 
 ## Compute similarity between generations 
-def compute_between_gen_similarities(similarity_matrix, n_gen, n_agents):
+def compute_between_gen_similarities_single_seed(similarity_matrix, n_gen, n_agents):
     between_gen_similarity_matrix = np.zeros((n_gen, n_gen))
 
     for i in range(n_gen):
@@ -119,8 +142,15 @@ def compute_between_gen_similarities(similarity_matrix, n_gen, n_agents):
 
     return between_gen_similarity_matrix
 
+def compute_between_gen_similarities(all_seeds_similarity_matrix, n_gen, n_agents):
+    all_seeds_between_gen_similarity_matrix = []
+    for similarity_matrix in all_seeds_similarity_matrix:
+        between_gen_similarity_matrix = compute_between_gen_similarities_single_seed(similarity_matrix, n_gen, n_agents)
+        all_seeds_between_gen_similarity_matrix.append(between_gen_similarity_matrix)
+    return all_seeds_between_gen_similarity_matrix
 
-def get_polarities_subjectivities(stories):
+
+def get_polarities_subjectivities_single_seed(stories):
     polarities = []
     subjectivities = []
 
@@ -136,10 +166,20 @@ def get_polarities_subjectivities(stories):
 
     return polarities, subjectivities
 
+def get_polarities_subjectivities(all_seed_stories):
+    all_seeds_polarities = []
+    all_seeds_subjectivities = []
+    for stories in all_seed_stories:
+        polarities, subjectivities = get_polarities_subjectivities_single_seed(stories)
+        all_seeds_polarities.append(polarities)
+        all_seeds_subjectivities.append(subjectivities)
+    return all_seeds_polarities, all_seeds_subjectivities
+
+
 
 # Pretty long to compute 
-def get_creativity_indexes(stories, folder):
 
+def get_creativity_indexes_single_seed(stories, folder, seed = 0):
     def story_creativity_index(story_input):
         words_story = story_input.lower().split()
         word_vectors = [word_to_vector(word) for word in words_story]
@@ -150,16 +190,21 @@ def get_creativity_indexes(stories, folder):
             for vector2 in non_zero_word_vectors:
                 similarity = get_similarity(vector1, vector2)
                 similarity_scores.append(similarity)
-        return np.mean(similarity_scores)
+        
+        ## Handle the case of an empty story
+        if similarity_scores:
+            return np.mean(similarity_scores)
+        else:
+            return 0.0
     
     try:
         # Load existing data 
-        file = open(f"{folder}/creativities.obj",'rb')
+        file = open(f"{folder}/creativities"+str(seed)+".obj",'rb')
         creativities = pickle.load(file)
         file.close()
     except:
         # Compute creativity idx and save it 
-        print(f"Computing creativity indexes of stories for {folder} dir...")
+        print(f"Computing creativity indexes of stories for {folder} dir, seed = {seed}...")
         creativities = []
         for gen in stories:
             gen_creativity = []
@@ -168,9 +213,17 @@ def get_creativity_indexes(stories, folder):
             creativities.append(gen_creativity)
 
         # Save the results in the texts folder
-        filehandler = open(f"{folder}/creativities.obj","wb")
+        filehandler = open(f"{folder}/creativities"+str(seed)+".obj","wb")
         pickle.dump(creativities, filehandler)
         filehandler.close()
         
     return  creativities
-            
+
+
+def get_creativity_indexes(all_seed_stories, folder):
+
+    creativities = []
+    for seed, stories in enumerate(all_seed_stories):
+        creativities.append(get_creativity_indexes_single_seed(stories, folder, seed))
+    return creativities
+

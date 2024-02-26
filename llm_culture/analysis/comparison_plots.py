@@ -15,7 +15,7 @@ def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folde
     max_num_ticks = 0 
 
     for folder in data:
-        num_ticks = data[folder]['between_gen_similarity_matrix'].shape[0]
+        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
         if num_ticks > max_num_ticks:
             max_num_ticks = num_ticks
             x_ticks_space = data[folder]['x_ticks_space']
@@ -27,10 +27,12 @@ def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folde
     plt.grid()
 
     for folder in data:
-        num_points = data[folder]['between_gen_similarity_matrix'].shape[0]
-        value = data[folder]['between_gen_similarity_matrix'][0, 1:]
+        num_points = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
+        value = np.mean(data[folder]['all_seeds_between_gen_similarity_matrix'], axis = 0)[0, 1:]
+        std = np.std(data[folder]['all_seeds_between_gen_similarity_matrix'], axis = 0)[0, 1:]
         label = data[folder]['label']
         plt.plot(range(1, num_points), value, label=label)
+        plt.fill_between(range(1, num_points), value - std, value + std, alpha=0.3)
 
     plt.legend(fontsize=sizes['legend'])
     
@@ -53,7 +55,7 @@ def compare_within_generation_similarity_evolution(data, plot, sizes, saving_fol
     max_num_ticks = 0 
 
     for folder in data:
-        num_ticks = data[folder]['between_gen_similarity_matrix'].shape[0]
+        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
         if num_ticks > max_num_ticks:
             max_num_ticks = num_ticks
             x_ticks_space = data[folder]['x_ticks_space']
@@ -66,12 +68,19 @@ def compare_within_generation_similarity_evolution(data, plot, sizes, saving_fol
     plt.grid()
 
     for folder in data:
-        value = np.diag(data[folder]['between_gen_similarity_matrix'])
+        value = np.diag(np.mean(data[folder]['all_seeds_between_gen_similarity_matrix'], axis = 0))
         label = data[folder]['label']
+        std = np.diag(np.std(data[folder]['all_seeds_between_gen_similarity_matrix'], axis = 0))
 
+<<<<<<< Updated upstream
         plt.plot(value, label=label, alpha=0.7)
 
     plt.legend(fontsize=sizes['legend'])
+=======
+        plt.plot(value, label=label)
+        plt.fill_between(range(0, len(value)), value - std, value + std, alpha=0.3)
+    plt.legend()
+>>>>>>> Stashed changes
     
     if saving_folder:
         saving_name = '/similarity_within_gen_comparison.png'
@@ -92,7 +101,7 @@ def compare_successive_generations_similarities(data, plot, sizes, saving_folder
     max_num_ticks = 0 
 
     for folder in data:
-        num_ticks = data[folder]['between_gen_similarity_matrix'].shape[0]
+        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
         if num_ticks > max_num_ticks:
             max_num_ticks = num_ticks
             x_ticks_space = data[folder]['x_ticks_space']
@@ -104,11 +113,14 @@ def compare_successive_generations_similarities(data, plot, sizes, saving_folder
     plt.grid()
 
     for folder in data:
-        between_gen_similarity_matrix = data[folder]['between_gen_similarity_matrix']
-        successive_sim = [between_gen_similarity_matrix[i, i+1] for i in range(between_gen_similarity_matrix.shape[0] - 1)]
+        all_seeds_between_gen_similarity_matrix = data[folder]['all_seeds_between_gen_similarity_matrix']
+        successive_sim = [[all_seeds_between_gen_similarity_matrix[seed][i, i+1] for i in range(all_seeds_between_gen_similarity_matrix[0].shape[0] - 1)] for seed in range(len(all_seeds_between_gen_similarity_matrix))]
+        value = np.mean(successive_sim, axis = 0)
         label = data[folder]['label']
+        std = np.std(successive_sim, axis = 0)
 
-        plt.plot(successive_sim, label=label, alpha=0.7)
+        plt.plot(value, label=label)
+        plt.fill_between(range(0, len(value)), value - std, value + std, alpha=0.3)
 
     plt.legend(fontsize=sizes['legend'])
     
@@ -131,7 +143,7 @@ def compare_positivity_evolution(data, plot, sizes, saving_folder=None, scale_y_
     max_num_ticks = 0 
 
     for folder in data:
-        num_ticks = data[folder]['between_gen_similarity_matrix'].shape[0]
+        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
         if num_ticks > max_num_ticks:
             max_num_ticks = num_ticks
             x_ticks_space = data[folder]['x_ticks_space']
@@ -144,12 +156,20 @@ def compare_positivity_evolution(data, plot, sizes, saving_folder=None, scale_y_
     plt.grid()
 
     for folder in data:
-        gen_positivities = []
-        for gen_polarities in data[folder]['polarities']:
-            gen_positivities.append(np.mean(gen_polarities))
+        all_seeds_positivities = data[folder]['all_seeds_positivities']
+
+        all_seeds_gen_positivities = []
+        for polarities in all_seeds_positivities:
+            gen_positivities = []
+            for p in polarities:
+                gen_positivities.append(np.mean(p))
+            all_seeds_gen_positivities.append(gen_positivities)
+
         label = data[folder]['label']
 
-        plt.plot(gen_positivities, label=label, alpha=0.7)
+
+        plt.plot(np.mean(all_seeds_gen_positivities, axis=0), label=label)
+        plt.fill_between(range(0, len(all_seeds_gen_positivities[0])), np.mean(all_seeds_gen_positivities, axis=0) - np.std(all_seeds_gen_positivities, axis=0), np.mean(all_seeds_gen_positivities, axis=0) + np.std(all_seeds_gen_positivities, axis=0), alpha=0.3)
 
     plt.legend(fontsize=sizes['legend'])
     
@@ -172,7 +192,7 @@ def compare_subjectivity_evolution(data, plot, sizes, saving_folder=None, scale_
     max_num_ticks = 0 
 
     for folder in data:
-        num_ticks = data[folder]['between_gen_similarity_matrix'].shape[0]
+        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
         if num_ticks > max_num_ticks:
             max_num_ticks = num_ticks
             x_ticks_space = data[folder]['x_ticks_space']
@@ -185,13 +205,17 @@ def compare_subjectivity_evolution(data, plot, sizes, saving_folder=None, scale_
     plt.grid()
 
     for folder in data:
-        gen_positivities = []
-        for gen_polarities in data[folder]['subjectivities']:
-            gen_positivities.append(np.mean(gen_polarities))
+        all_seeds_subjectivities = data[folder]['all_seeds_subjectivities']
+        all_see_gen_subjectivities = []
+        for subjectivities in all_seeds_subjectivities:
+            gen_subjectivities = []
+            for gen_subjectivity in subjectivities:
+                gen_subjectivities.append(np.mean(gen_subjectivity))
+            all_see_gen_subjectivities.append(gen_subjectivities)
         
         label = data[folder]['label']
-
-        plt.plot(gen_positivities, label=label, alpha=0.7)
+        plt.plot(np.mean(all_see_gen_subjectivities, axis=0), label=label)
+        plt.fill_between(range(0, len(all_see_gen_subjectivities[0])), np.mean(all_see_gen_subjectivities, axis=0) - np.std(all_see_gen_subjectivities, axis=0), np.mean(all_see_gen_subjectivities, axis=0) + np.std(all_see_gen_subjectivities, axis=0), alpha=0.3)
 
     plt.legend(fontsize=sizes['legend'])
     
@@ -214,7 +238,7 @@ def compare_creativity_evolution(data, plot, sizes, saving_folder=None, scale_y_
     max_num_ticks = 0 
 
     for folder in data:
-        num_ticks = data[folder]['between_gen_similarity_matrix'].shape[0]
+        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
         if num_ticks > max_num_ticks:
             max_num_ticks = num_ticks
             x_ticks_space = data[folder]['x_ticks_space']
@@ -227,10 +251,17 @@ def compare_creativity_evolution(data, plot, sizes, saving_folder=None, scale_y_
     plt.grid()
 
     for folder in data:
-        gen_creativities = [np.mean(gen_creativity) for gen_creativity in data[folder]['creativities']]
-        label = data[folder]['label']
+        all_seeds_creativity_indices = data[folder]['all_seeds_creativity_indices']
+        all_seeds_gen_creativities = []
+        for creativity_indices in all_seeds_creativity_indices:
+            gen_creativities = [1 - np.mean(gen_creativity) for gen_creativity in creativity_indices]
+            all_seeds_gen_creativities.append(gen_creativities)
 
-        plt.plot(gen_creativities, label=label, alpha=0.7)
+        label = data[folder]['label']
+        print(len(all_seeds_gen_creativities))
+        print(np.std(all_seeds_gen_creativities, axis=0))
+        plt.plot(np.mean(all_seeds_gen_creativities, axis=0), label=label)
+        plt.fill_between(range(0, len(all_seeds_gen_creativities[0])), np.mean(all_seeds_gen_creativities, axis=0) - np.std(all_seeds_gen_creativities, axis=0), np.mean(all_seeds_gen_creativities, axis=0) + np.std(all_seeds_gen_creativities, axis=0), alpha=0.3)
 
     plt.legend(fontsize=sizes['legend'])
     

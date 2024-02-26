@@ -13,30 +13,30 @@ def main_analysis(folders, plot, scale_y_axis, labels, sizes):
         
     for i, folder in enumerate(folders):
         # Compute all the metric that will be used for plotting
-        stories = get_stories(folder)
-        n_gen, n_agents, x_ticks_space = get_plotting_infos(stories)
-        flat_stories, keywords, stem_words = preprocess_stories(stories)
-        similarity_matrix = get_similarity_matrix(flat_stories)
-        between_gen_similarity_matrix = compute_between_gen_similarities(similarity_matrix, n_gen, n_agents)
-        polarities, subjectivities = get_polarities_subjectivities(stories)
-        creativities = get_creativity_indexes(stories, folder)
+        all_seeds_stories = get_stories(folder)
+        n_gen, n_agents, x_ticks_space = get_plotting_infos(all_seeds_stories[0])
+        all_seed_flat_stories, all_seed_keywords, all_seed_stem_words = preprocess_stories(all_seeds_stories)
+        all_seed_similarity_matrix = get_similarity_matrix(all_seed_flat_stories)
+        all_seed_between_gen_similarity_matrix = compute_between_gen_similarities(all_seed_similarity_matrix, n_gen, n_agents)
+        all_seed_polarities, all_seed_subjectivities = get_polarities_subjectivities(all_seeds_stories)
+        all_seed_creativities = get_creativity_indexes(all_seeds_stories, folder)
         label = labels[i]
         # Plot the individual similarity matrix in the same folder
         plot_similarity_matrix(similarity_matrix, label, n_gen, n_agents, plot, sizes, saving_folder)
 
         data[folder] = {
-            'stories': stories,
+            'all_seed_stories': all_seeds_stories,
             'n_gen': n_gen,
             'n_agents': n_agents,
             'x_ticks_space': x_ticks_space,
-            'flat_stories': flat_stories,
-            'keywords': keywords,
-            'stem_words': stem_words,
-            'similarity_matrix': similarity_matrix,
-            'between_gen_similarity_matrix': between_gen_similarity_matrix,
-            'polarities': polarities,
-            'subjectivities': subjectivities,
-            'creativities': creativities,
+            'all_seeds_flat_stories': all_seed_flat_stories,
+            'all_seeds_keywords': all_seed_keywords,
+            'all_seeds_stem_words': all_seed_stem_words,
+            'all_seeds_similarity_matrix': all_seed_similarity_matrix,
+            'all_seeds_between_gen_similarity_matrix': all_seed_between_gen_similarity_matrix,
+            'all_seeds_positivities': all_seed_polarities,
+            'all_seeds_subjectivities': all_seed_subjectivities,
+            'all_seeds_creativity_indices': all_seed_creativities,
             'label': label
             }
    

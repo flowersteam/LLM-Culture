@@ -35,21 +35,21 @@ class Agent:
         return [neighbour.get_story() for neighbour in self.neighbours if neighbour.get_story() is not None]
 
     def update_prompt(self):
-        print(f'wait: {self.wait}')
-        print(f'sequence:{self.sequence}' )
+        # print(f'wait: {self.wait}')
+        # print(f'sequence:{self.sequence}' )
 
         if (self.wait == 0 and self.sequence) or (self.wait <= 0 and not(self.sequence)):
             neighbours_stories = self.get_neighbours_stories()
             if len(neighbours_stories) != 0:
-                print('here1')
+                # print('here1')
                 prompt = self.personality + self.string_sep + self.prompt_update + str([str(i) + ': '+ neighbours_stories[i] for i in range(len(neighbours_stories))])
             else:
-                print('here2')
+                # print('here2')
                 prompt = self.personality + self.string_sep + self.init_prompt
             
 
         else:
-            print('here3')
+            # print('here3')
             prompt = None
         
         self.prompt = prompt
@@ -89,8 +89,8 @@ class Agent:
         if (self.wait == 0 and self.sequence) or (self.wait <= 0 and not(self.sequence)):
             self.story = get_answer(self.access_url, self.prompt, debug=self.debug)
             #print(f"AgentId: {self.agent_id}) /n Prompt: {self.prompt} /n Answer: {self.story}")
-            print(f"Prompt: {self.prompt}")
-            print(f"neigbhours stories: {self.get_neighbours_stories()}")
+            # print(f"Prompt: {self.prompt}")
+            # print(f"neigbhours stories: {self.get_neighbours_stories()}")
         else:
             self.story = None
         self.decrease_wait()
