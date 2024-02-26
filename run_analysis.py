@@ -27,19 +27,7 @@ def main_analysis(folder, font_sizes, plot=False):
 
     # Plot all the desired graphs :
 
-<<<<<<< Updated upstream
-    plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, font_sizes)
-    plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, font_sizes)
-    plot_similarity_graph(between_gen_similarity_matrix, folder, plot, font_sizes)
-    plot_init_generation_similarity_evolution(between_gen_similarity_matrix, folder, plot, x_ticks_space, font_sizes)
-    plot_within_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, font_sizes)
-    plot_successive_generations_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, font_sizes)
-    plot_positivity_evolution(polarities, folder, plot, x_ticks_space, font_sizes)
-    plot_subjectivity_evolution(subjectivities, folder, plot, x_ticks_space, font_sizes)
-    plot_word_chains(stem_words, folder, plot, x_ticks_space, font_sizes)
-    plot_creativity_evolution(creativities, folder, plot, x_ticks_space, font_sizes)
-    # 1 = low creativity and 0 = high crzativity with this function
-=======
+
     for seed in range(n_seeds):
         print(seed)
         similarity_matrix = all_seeds_similarity_matrix[seed]
@@ -73,7 +61,7 @@ def main_analysis(folder, font_sizes, plot=False):
 
     # TODO : Change the function because 1 = low creativity and 0 = high --> DONE 
     plot_creativity_evolution(all_seeds_creativities, folder, plot, x_ticks_space)
->>>>>>> Stashed changes
+
 
 
 if __name__ == "__main__":
