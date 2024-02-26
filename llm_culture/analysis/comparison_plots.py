@@ -246,7 +246,7 @@ def compare_creativity_evolution(data, plot, sizes, saving_folder=None, scale_y_
 
 
 def plot_similarity_matrix(similarity_matrix, label, n_gen, n_agents, plot, sizes, saving_folder=None):
-    plt.figure(figsize=(MATRIX_SIZE, MATRIX_SIZE))
+    plt.figure(figsize=(sizes['matrix'], sizes['matrix']))
     plt.imshow(similarity_matrix, vmin=0, vmax=1, cmap='viridis')
 
     n_texts = similarity_matrix.shape[0]
