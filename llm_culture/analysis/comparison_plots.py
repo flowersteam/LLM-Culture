@@ -72,15 +72,10 @@ def compare_within_generation_similarity_evolution(data, plot, sizes, saving_fol
         label = data[folder]['label']
         std = np.diag(np.std(data[folder]['all_seeds_between_gen_similarity_matrix'], axis = 0))
 
-<<<<<<< Updated upstream
-        plt.plot(value, label=label, alpha=0.7)
 
-    plt.legend(fontsize=sizes['legend'])
-=======
         plt.plot(value, label=label)
         plt.fill_between(range(0, len(value)), value - std, value + std, alpha=0.3)
-    plt.legend()
->>>>>>> Stashed changes
+    plt.legend(fontsize=sizes['legend'])
     
     if saving_folder:
         saving_name = '/similarity_within_gen_comparison.png'
