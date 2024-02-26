@@ -27,14 +27,13 @@ def parse_arguments():
     # select a personality from the list of personalities (no choices)
     parser.add_argument('-pl', '--personality_list', type=str, default= ["Empty", "Empty"],
                         help='Personality list.')
-    # optional argument for the number of cliques in case we use the caveman graph
-    parser.add_argument('-nc', '--n_cliques', type=int, default=3, help='Number of cliques.')
     # add an option output folder to save the results
     parser.add_argument('-o', '--output', type=str, default='Results/default_folder', help='Output folder.')
     # create optional argument for the output file name to save in the output folder
     parser.add_argument('-of', '--output_file', type=str, default='output.json', help='Output file name.')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode.')
     parser.add_argument('-url', '--access_url', type=str, default='', help='URL to send the prompt to.')
+    parser.add_argument('-s', '--n_seeds', type=int, default=5, help='Number of seeds')
 
     return parser.parse_args()
 
@@ -115,22 +114,25 @@ def main(args=None):
         output_dict["prompt_update"] = [prompt_update]
         output_dict["personality_list"] = personality_list
 
-    os.makedirs(os.path.dirname(args.output), exist_ok=True)
-    stories = run_simul(args.access_url, n_timesteps, network_structure, prompt_init,
-                        prompt_update, personality_list, n_agents,
-                        sequence=sequence, output_folder=args.output,
-                        debug=debug)
-    output_dict["stories"] = stories
+    os.makedirs(os.path.dirname(str(args.output) + '/'), exist_ok=True)
+    t = input(args.output)
+    for i in range(args.n_seeds):
+        print(f"Seed {i}")
+        stories = run_simul(args.access_url, n_timesteps, network_structure, prompt_init,
+                            prompt_update, personality_list, n_agents,
+                            sequence=sequence, output_folder=args.output,
+                            debug=debug)
+        output_dict["stories"] = stories
 
-    # Save the output to a file
-    if args.output:
-        with open(Path(args.output, 'output.json'), "w") as f:
-            json.dump(output_dict, f, indent=4)
-    else:
-        with open(Path("Results/", 'output.json'), "w") as f:
-            json.dump(output_dict, f, indent=4)
-        return output_dict
-    
+        # Save the output to a file
+        if args.output:
+            with open(Path(args.output, 'output'+str(i)+'.json'), "w") as f:
+                json.dump(output_dict, f, indent=4)
+        else:
+            with open(Path("Results/", 'output'+str(i)+'.json'), "w") as f:
+                json.dump(output_dict, f, indent=4)
+            return output_dict
+        
     # get_all_figures(stories, folder_name)
 
 

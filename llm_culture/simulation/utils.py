@@ -33,7 +33,7 @@ def run_simul(access_url, n_timesteps=5, network_structure=None, prompt_init=Non
     # print the agent id and wait time
     for agent in agent_list:
         agent.update_neighbours(network_structure, agent_list )
-        print(f'Agent: {agent.agent_id}, wait: {agent.wait}')
+        # print(f'Agent: {agent.agent_id}, wait: {agent.wait}')
 
     #MAIN LOOP
     if output_folder is None:
@@ -56,6 +56,7 @@ def update_step(agent_list, timestep, state_history_path):
         agent.update_prompt()
 
     for agent in agent_list:
+        print(f'Agent: {agent.agent_id}')
         story = agent.get_updated_story()
         if story is not None:
             new_stories.append(story)

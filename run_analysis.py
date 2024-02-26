@@ -9,18 +9,25 @@ from llm_culture.analysis.plots import *
 
 def main_analysis(folder, font_sizes, plot=False):
     # Extract data from stories
-    stories = get_stories(folder)
-    n_gen, n_agents, x_ticks_space = get_plotting_infos(stories)
+    all_seeds_stories = get_stories(folder)
 
-    flat_stories, keywords, stem_words = preprocess_stories(stories)
-    similarity_matrix = get_similarity_matrix(flat_stories)
-    between_gen_similarity_matrix = compute_between_gen_similarities(similarity_matrix, n_gen, n_agents)
-    polarities, subjectivities = get_polarities_subjectivities(stories)
-    creativities = get_creativity_indexes(stories, folder)
+    print(len(all_seeds_stories))
+    n_seeds = len(all_seeds_stories)
+    n_gen, n_agents, x_ticks_space = get_plotting_infos(all_seeds_stories[0]) #same for all seeds
+
+    all_seeds_flat_stories, all_seeds_keywords, all_seeds_stem_words = preprocess_stories(all_seeds_stories)
+    all_seeds_similarity_matrix = get_similarity_matrix(all_seeds_flat_stories)
+
+    all_seeds_between_gen_similarity_matrix = compute_between_gen_similarities(all_seeds_similarity_matrix, n_gen, n_agents)
+
+
+    all_seeds_polarities, all_seeds_subjectivities = get_polarities_subjectivities(all_seeds_stories)
+    all_seeds_creativities = get_creativity_indexes(all_seeds_stories, folder)
 
 
     # Plot all the desired graphs :
 
+<<<<<<< Updated upstream
     plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, font_sizes)
     plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, font_sizes)
     plot_similarity_graph(between_gen_similarity_matrix, folder, plot, font_sizes)
@@ -32,6 +39,41 @@ def main_analysis(folder, font_sizes, plot=False):
     plot_word_chains(stem_words, folder, plot, x_ticks_space, font_sizes)
     plot_creativity_evolution(creativities, folder, plot, x_ticks_space, font_sizes)
     # 1 = low creativity and 0 = high crzativity with this function
+=======
+    for seed in range(n_seeds):
+        print(seed)
+        similarity_matrix = all_seeds_similarity_matrix[seed]
+        between_gen_similarity_matrix = all_seeds_between_gen_similarity_matrix[seed]
+
+        
+        stem_words = all_seeds_stem_words[seed]
+
+        plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, seed = seed)
+        
+        
+        plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, seed = seed)
+
+        plot_word_chains(stem_words, folder, plot, x_ticks_space, seed = seed)
+
+
+        plot_similarity_graph(between_gen_similarity_matrix, folder, plot, seed = seed)
+
+
+    plot_init_generation_similarity_evolution(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space)
+
+    plot_within_gen_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space)
+
+    plot_successive_generations_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space)
+
+    plot_positivity_evolution(all_seeds_polarities, folder, plot, x_ticks_space)
+
+    plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_space)
+
+
+
+    # TODO : Change the function because 1 = low creativity and 0 = high --> DONE 
+    plot_creativity_evolution(all_seeds_creativities, folder, plot, x_ticks_space)
+>>>>>>> Stashed changes
 
 
 if __name__ == "__main__":
