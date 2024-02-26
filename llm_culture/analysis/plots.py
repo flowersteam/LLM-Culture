@@ -3,7 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt 
 
 
-def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, save=True):
+def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, sizes, save=True):
     plt.figure(figsize=(8, 8))
     plt.imshow(similarity_matrix, vmin=0, vmax=1, cmap='viridis')
 
@@ -14,13 +14,18 @@ def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, sav
         x_ticks_space = 10
     else:
         x_ticks_space = 5
-        
-    plt.title('Stories similarity Matrix')
+    
+    plt.xlabel('History idx', fontsize=sizes['labels'])
+    plt.ylabel('History idx', fontsize=sizes['labels'])
+    plt.title('Stories similarity Matrix', fontsize=sizes['title'])
+    
+    # Add black lines to delimit generations
     for i in range(n_gen):      
         plt.axvline(x = i * n_agents - 0.5, color = 'black')
         plt.axhline(y = i * n_agents - 0.5, color = 'black')
-    plt.xticks(range(0, similarity_matrix.shape[0], x_ticks_space))
-    plt.yticks(range(0, similarity_matrix.shape[0], x_ticks_space))
+
+    plt.xticks(range(0, similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.yticks(range(0, similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
 
     cbar = plt.colorbar(pad=0.02, shrink=0.83)
 
@@ -32,11 +37,13 @@ def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, sav
         plt.show()
 
 
-def plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, save=True):
+def plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True):
     plt.figure(figsize=(8, 8))
-    plt.title('Between generations similarity Matrix')
-    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space))
-    plt.yticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space))
+    plt.xlabel('Generation idx', fontsize=sizes['labels'])
+    plt.ylabel('Generation idx', fontsize=sizes['labels'])
+    plt.title('Between generations similarity Matrix', fontsize=sizes['title'])
+    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.yticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
 
     plt.imshow(between_gen_similarity_matrix, vmin=0, vmax=1, cmap='viridis')
     cbar = plt.colorbar(pad=0.02, shrink=0.83)
@@ -49,15 +56,15 @@ def plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x
         plt.show()
 
 
-def plot_init_generation_similarity_evolution(between_gen_similarity_matrix, folder, plot, x_ticks_space, save=True):
+def plot_init_generation_similarity_evolution(between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of similarity with the initial generation')
-    plt.xlabel('Generations')
-    plt.ylabel('Similarity with first generation')
+    plt.title('Evolution of similarity with the initial generation', fontsize=sizes['title'])
+    plt.xlabel('Generations', fontsize=sizes['labels'])
+    plt.ylabel('Similarity with first generation', fontsize=sizes['labels'])
 
     plt.ylim(0, 1)
-    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space))
-    plt.yticks(np.linspace(0, 1, 11))
+    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.grid()
 
     plt.plot(range(1, between_gen_similarity_matrix.shape[0]), between_gen_similarity_matrix[0, 1:], label='Similarity with First History')
@@ -70,14 +77,14 @@ def plot_init_generation_similarity_evolution(between_gen_similarity_matrix, fol
         plt.show()
     
 
-def plot_within_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, save=True):
+def plot_within_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes,save=True):
     plt.figure(figsize=(10, 6))
-    plt.title('Within generations texts similarities')
-    plt.xlabel('Generations')
-    plt.ylabel('Within-generation similarity')
-    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space))
+    plt.title('Within generations texts similarities', fontsize=sizes['title'])
+    plt.xlabel('Generations', fontsize=sizes['labels'])
+    plt.ylabel('Within-generation similarity', fontsize=sizes['labels'])
+    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.ylim(0 , 1.1)
-    plt.yticks(np.linspace(0, 1, 11))
     plt.grid()
     plt.plot(np.diag(between_gen_similarity_matrix))
 
@@ -89,13 +96,13 @@ def plot_within_gen_similarities(between_gen_similarity_matrix, folder, plot, x_
         plt.show()
 
 
-def plot_successive_generations_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, save=True):
+def plot_successive_generations_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True):
     plt.figure(figsize=(10, 6))
-    plt.title('Successive generations similarities')
-    plt.xlabel('Generations')
-    plt.ylabel('Similarity between successive generations')
-    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space))
-    plt.yticks(np.linspace(0, 1, 11))
+    plt.title('Successive generations similarities', fontsize=sizes['title'])
+    plt.xlabel('Generations', fontsize=sizes['labels'])
+    plt.ylabel('Similarity between successive generations', fontsize=sizes['labels'])
+    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.grid()
     plt.ylim(0, 1)
     successive_sim = [between_gen_similarity_matrix[i, i+1] for i in range(between_gen_similarity_matrix.shape[0] - 1)]
@@ -109,19 +116,19 @@ def plot_successive_generations_similarities(between_gen_similarity_matrix, fold
         plt.show()
 
 
-def plot_positivity_evolution(polarities, folder, plot, x_ticks_space, save=True):
+def plot_positivity_evolution(polarities, folder, plot, x_ticks_space, sizes, save=True):
     plt.figure(figsize=(10, 6))
     # 1 = positive, -1 = negative on the y axis
     gen_positivities = []
     for gen_polarities in polarities:
         gen_positivities.append(np.mean(gen_polarities))
 
-    plt.title("Evolution of positivity across generations")
-    plt.ylabel("Positivity")
-    plt.ylabel("Generation")
+    plt.title("Evolution of positivity across generations", fontsize=sizes['title'])
+    plt.ylabel("Positivity", fontsize=sizes['labels'])
+    plt.ylabel("Generation", fontsize=sizes['labels'])
 
-    plt.xticks(range(0, len(gen_positivities), x_ticks_space))
-    plt.yticks(np.linspace(-1, 1, 11))
+    plt.xticks(range(0, len(gen_positivities), x_ticks_space), fontsize=sizes['ticks'])
+    plt.yticks(np.linspace(-1, 1, 11), fontsize=sizes['ticks'])
     plt.grid()
     plt.ylim(-1, 1)
 
@@ -135,19 +142,19 @@ def plot_positivity_evolution(polarities, folder, plot, x_ticks_space, save=True
         plt.show()
 
 
-def plot_subjectivity_evolution(subjectivities, folder, plot, x_ticks_space, save=True):
+def plot_subjectivity_evolution(subjectivities, folder, plot, x_ticks_space, sizes, save=True):
     """Subjectivity is the output that lies within [0,1] and refers to personal opinions and judgments"""
     plt.figure(figsize=(10, 6))
     gen_subjectivities = []
     for gen_subjectivity in subjectivities:
         gen_subjectivities.append(np.mean(gen_subjectivity))
 
-    plt.title("Evolution of subjectivity across generations")
-    plt.ylabel("Positivity")
-    plt.ylabel("Generation")
+    plt.title("Evolution of subjectivity across generations", fontsize=sizes['title'])
+    plt.ylabel("Positivity", fontsize=sizes['labels'])
+    plt.ylabel("Generation", fontsize=sizes['labels'])
 
-    plt.xticks(range(0, len(gen_subjectivities), x_ticks_space))
-    plt.yticks(np.linspace(0, 1, 11))
+    plt.xticks(range(0, len(gen_subjectivities), x_ticks_space), fontsize=sizes['ticks'])
+    plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.grid()
     plt.ylim(0, 1)
 
@@ -161,18 +168,18 @@ def plot_subjectivity_evolution(subjectivities, folder, plot, x_ticks_space, sav
         plt.show()
 
     
-def plot_creativity_evolution(creativity_indices, folder, plot, x_ticks_space, save=True):
+def plot_creativity_evolution(creativity_indices, folder, plot, x_ticks_space, sizes, save=True):
     """!!! Warning here 1 = low creativity and 0 = high creativity !!!"""
     
     plt.figure(figsize=(10, 6))
     gen_creativities = [np.mean(gen_creativity) for gen_creativity in creativity_indices]
     plt.figure(figsize=(10, 6))
     
-    plt.title("Creativity Evolution")
-    plt.xlabel("Generation")
-    plt.ylabel("Creativity Index")
-    plt.xticks(range(0, len(creativity_indices), x_ticks_space))
-    plt.yticks(np.linspace(0, 1, 11))
+    plt.title("Creativity index evolution", fontsize=sizes['title'])
+    plt.xlabel("Generation", fontsize=sizes['labels'])
+    plt.ylabel("Creativity Index", fontsize=sizes['labels'])
+    plt.xticks(range(0, len(creativity_indices), x_ticks_space), fontsize=sizes['ticks'])
+    plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.ylim(0, 1)
     plt.grid()
     plt.plot(gen_creativities)
@@ -186,7 +193,7 @@ def plot_creativity_evolution(creativity_indices, folder, plot, x_ticks_space, s
 
 
 
-def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, save=True):
+def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, sizes, save=True):
     plt.figure(figsize=(8, 8))
     n_generations = between_gen_similarity_matrix.shape[0]
 
@@ -218,7 +225,7 @@ def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, save=True
     incr_plotted_weights = [3 if idx in connected_edges_idx else val for idx, val in enumerate(weights)] 
     nx.draw_networkx_edges(G, pos, edgelist=edges, width=incr_plotted_weights, edge_color='gray')
 
-    plt.title('Evolution of similarities between generations')
+    plt.title('Evolution of similarities between generations', fontsize=sizes['labels'])
     plt.axis('off')
 
     if save:
@@ -231,12 +238,10 @@ def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, save=True
     return G
 
 
-def plot_word_chains(word_lists, folder, plot, x_ticks_space, save=True):
+# TODO : See how to do for word chains ticks_sizes
+def plot_word_chains(word_lists, folder, plot, ticks_space, sizes, save=True):
 
-    # flatten_list_of_lists = [np.array(l).flatten() for l in word_lists]
     flatten_list_of_lists = [item for sublist in word_lists for item in sublist]
-
-
     known_words = {}
 
     for i, word_list in enumerate(flatten_list_of_lists):
@@ -248,12 +253,11 @@ def plot_word_chains(word_lists, folder, plot, x_ticks_space, save=True):
                 known_words[word] = [i]
 
     # Scale the fig size with the number of words (not optimal but works atm)
-    # TODO : Maybe scale the y_axis too ? 
     x_fig_size = len(known_words) // 10
     plt.figure(figsize=(x_fig_size, 6))
-    # TODO : Maybe add a legend to explain how the plot works
-    plt.ylabel("Generations")
-    plt.xlabel("Words")
+    plt.title("Evolution of words presence in texts across generations", fontsize=sizes['title'])
+    plt.ylabel("Presence across generations", fontsize=sizes['labels'])
+    plt.xlabel("Words", fontsize=sizes['labels'])
     ax = plt.gca()
 
     for i, key in enumerate(known_words.keys()):
@@ -272,19 +276,18 @@ def plot_word_chains(word_lists, folder, plot, x_ticks_space, save=True):
     ax2 = ax.twiny()
     ax2.set_xlim(ax.get_xlim())
 
-    # Set the lower and upper ticks labels 
+    # Add half of the words on top and half on the bottom of x axis
     upper_xtick_labels = [''] * len(xtick_labels)
     upper_xtick_labels[::2] = xtick_labels[::2]
     lower_xtick_labels = [''] * len(xtick_labels)
     lower_xtick_labels[1::2] = xtick_labels[1::2]
 
-    # Plot them
     ax.set_xticks(range(0, len(xtick_labels), 2))
     ax.set_xticklabels(upper_xtick_labels[0::2], rotation=90, ha='center')
     ax2.set_xticks(range(1, len(xtick_labels), 2))
     ax2.set_xticklabels(lower_xtick_labels[1::2], rotation=90, ha='center')
 
-    plt.yticks(range(0, len(word_lists), x_ticks_space))
+    plt.yticks(range(0, len(word_lists), ticks_space))
     
     # See if we wanna keep the grids
     ax.grid()
