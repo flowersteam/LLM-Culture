@@ -60,18 +60,20 @@ if __name__ == "__main__":
     parser.add_argument("--ticks_font_size", type=int, default=16)
     parser.add_argument("--labels_font_size", type=int, default=18)
     parser.add_argument("--legend_font_size", type=int, default=16)
-    parser.add_argument("--title_font_size", type=int, default=24)
+    parser.add_argument("--title_font_size", type=int, default=23)
+    parser.add_argument("--matrix_size", type=int, default=8)
     args = parser.parse_args()
 
     analyzed_dirs = args.dirs.split('+')
     dirs_list = [f"Results/{dir_name}" for dir_name in analyzed_dirs]
 
     labels = args.labels.split('+')
-    font_sizes = {'ticks': args.ticks_font_size,
+    sizes = {'ticks': args.ticks_font_size,
                   'labels': args.labels_font_size,
                   'legend': args.legend_font_size,
-                  'title': args.title_font_size}
+                  'title': args.title_font_size,
+                  'matrix': args.matrix_size}
 
     print(f"\nLaunching analysis on the {args.dirs} results")
     print(f"plot = {args.plot}")
-    main_analysis(dirs_list, args.plot, args.scale_y_axis, labels, font_sizes)
+    main_analysis(dirs_list, args.plot, args.scale_y_axis, labels, sizes)
