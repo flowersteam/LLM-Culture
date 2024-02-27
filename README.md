@@ -40,7 +40,7 @@ python3 run_interface.py
 This will open the GUI. You can then select the simulation parameters. 
 
 
-![Alt text](/Images/Fig1b.png?raw=true)
+![Alt text](/Images/supplementary_screenshot.pdf?raw=true)
 
 <details>
   
