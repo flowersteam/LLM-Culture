@@ -44,8 +44,8 @@ def plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x
     plt.xlabel('Generation idx', fontsize=sizes['labels'])
     plt.ylabel('Generation idx', fontsize=sizes['labels'])
     plt.title('Between generations similarity Matrix', fontsize=sizes['title'])
-    plt.xticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
-    plt.yticks(range(0, between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.xticks(range(0, between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.yticks(range(0, between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
 
     plt.imshow(between_gen_similarity_matrix, vmin=0, vmax=1, cmap='viridis')
     cbar = plt.colorbar(pad=0.02, shrink=0.83)
@@ -65,7 +65,7 @@ def plot_init_generation_similarity_evolution(all_seeds_between_gen_similarity_m
     plt.ylabel('Similarity with first generation', fontsize=sizes['labels'])
 
     plt.ylim(0, 1)
-    plt.xticks(range(0, all_seeds_between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.xticks(range(0, all_seeds_between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
 
     plt.grid()
@@ -92,7 +92,7 @@ def plot_within_gen_similarities(all_seeds_between_gen_similarity_matrix, folder
     plt.title('Within generations texts similarities', fontsize=sizes['title'])
     plt.xlabel('Generations', fontsize=sizes['labels'])
     plt.ylabel('Within-generation similarity', fontsize=sizes['labels'])
-    plt.xticks(range(0, all_seeds_between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.xticks(range(0, all_seeds_between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.ylim(0 , 1.1)
 
@@ -126,11 +126,11 @@ def plot_successive_generations_similarities(all_seeds_between_gen_similarity_ma
     plt.title('Successive generations similarities', fontsize=sizes['title'])
     plt.xlabel('Generations', fontsize=sizes['labels'])
     plt.ylabel('Similarity between successive generations', fontsize=sizes['labels'])
-    plt.xticks(range(0, all_seeds_between_gen_similarity_matrix.shape[0], x_ticks_space), fontsize=sizes['ticks'])
+    plt.xticks(range(0, all_seeds_between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
 
     plt.grid()
-
+    n_seeds = len(all_seeds_between_gen_similarity_matrix)
     all_seeds_successive_sim = [[all_seeds_between_gen_similarity_matrix[seed][i, i+1] for i in range(all_seeds_between_gen_similarity_matrix[0].shape[0] - 1)] for seed in range(n_seeds)]
     
     print(len(all_seeds_successive_sim))
@@ -318,7 +318,7 @@ def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, sizes, sa
 
 
 # TODO : See how to do for word chains ticks_sizes
-def plot_word_chains(word_lists, folder, plot, ticks_space, sizes, save=True):
+def plot_word_chains(word_lists, folder, plot, ticks_space, sizes, save=True, seed = 0):
 
 
     flatten_list_of_lists = [item for sublist in word_lists for item in sublist]
