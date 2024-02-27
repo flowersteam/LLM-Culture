@@ -33,7 +33,7 @@ def parse_arguments():
     parser.add_argument('-of', '--output_file', type=str, default='output.json', help='Output file name.')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode.')
     parser.add_argument('-url', '--access_url', type=str, default='', help='URL to send the prompt to.')
-    parser.add_argument('-s', '--n_seeds', type=int, default=5, help='Number of seeds')
+    parser.add_argument('-s', '--n_seeds', type=int, default=2, help='Number of seeds')
 
     return parser.parse_args()
 

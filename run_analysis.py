@@ -36,31 +36,31 @@ def main_analysis(folder, font_sizes, plot=False):
         
         stem_words = all_seeds_stem_words[seed]
 
-        plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, seed = seed)
+        plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, seed = seed, sizes= font_sizes)
         
         
-        plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, seed = seed)
+        plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, seed = seed, sizes= font_sizes)
 
-        plot_word_chains(stem_words, folder, plot, x_ticks_space, seed = seed)
-
-
-        plot_similarity_graph(between_gen_similarity_matrix, folder, plot, seed = seed)
+        plot_word_chains(stem_words, folder, plot, x_ticks_space, seed = seed, sizes= font_sizes)
 
 
-    plot_init_generation_similarity_evolution(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space)
+        plot_similarity_graph(between_gen_similarity_matrix, folder, plot, seed = seed, sizes= font_sizes)
 
-    plot_within_gen_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space)
 
-    plot_successive_generations_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space)
+    plot_init_generation_similarity_evolution(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes= font_sizes)
 
-    plot_positivity_evolution(all_seeds_polarities, folder, plot, x_ticks_space)
+    plot_within_gen_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes= font_sizes)
 
-    plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_space)
+    plot_successive_generations_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes= font_sizes)
+
+    plot_positivity_evolution(all_seeds_polarities, folder, plot, x_ticks_space, sizes= font_sizes)
+
+    plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_space, sizes= font_sizes)
 
 
 
     # TODO : Change the function because 1 = low creativity and 0 = high --> DONE 
-    plot_creativity_evolution(all_seeds_creativities, folder, plot, x_ticks_space)
+    plot_creativity_evolution(all_seeds_creativities, folder, plot, x_ticks_space, sizes= font_sizes)
 
 
 

@@ -120,7 +120,7 @@ class SimulationFrame(tk.Frame):
         args.prompt_init = prompt_init
         args.prompt_update = prompt_update
         args.network_structure = network_structure_type
-        args.n_seeds = 5
+        args.n_seeds = 3
         if self.vertical_frame1.same_personnalities.get():
             print('here2')
 

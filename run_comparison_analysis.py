@@ -22,7 +22,8 @@ def main_analysis(folders, plot, scale_y_axis, labels, sizes):
         all_seed_creativities = get_creativity_indexes(all_seeds_stories, folder)
         label = labels[i]
         # Plot the individual similarity matrix in the same folder
-        plot_similarity_matrix(similarity_matrix, label, n_gen, n_agents, plot, sizes, saving_folder)
+        for seed in range(len(all_seeds_stories)):
+            plot_similarity_matrix(all_seed_similarity_matrix[seed], label, n_gen, n_agents, plot, sizes, saving_folder, seed = seed)
 
         data[folder] = {
             'all_seed_stories': all_seeds_stories,

@@ -114,8 +114,8 @@ def compare_successive_generations_similarities(data, plot, sizes, saving_folder
         label = data[folder]['label']
         std = np.std(successive_sim, axis = 0)
 
-        plt.plot(value, label=label)
-        plt.fill_between(range(0, len(value)), value - std, value + std, alpha=0.3)
+        plt.plot(range(1, len(value) + 1), value, label=label)
+        plt.fill_between(range(1, len(value) + 1), value - std, value + std, alpha=0.3)
 
     plt.legend(fontsize=sizes['legend'])
     
@@ -271,7 +271,7 @@ def compare_creativity_evolution(data, plot, sizes, saving_folder=None, scale_y_
 
 
 
-def plot_similarity_matrix(similarity_matrix, label, n_gen, n_agents, plot, sizes, saving_folder=None):
+def plot_similarity_matrix(similarity_matrix, label, n_gen, n_agents, plot, sizes, saving_folder=None, seed = 0):
     plt.figure(figsize=(sizes['matrix'], sizes['matrix']))
     plt.imshow(similarity_matrix, vmin=0, vmax=1, cmap='viridis')
 
@@ -298,7 +298,7 @@ def plot_similarity_matrix(similarity_matrix, label, n_gen, n_agents, plot, size
     cbar = plt.colorbar(pad=0.02, shrink=0.84)
 
     if saving_folder:
-        saving_name = f'/stories_similarity_matrix_{label}.png'
+        saving_name = f'/stories_similarity_matrix_{label}_{seed}.png'
         os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
         plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
         print(f"Saved {saving_name}")
