@@ -49,6 +49,8 @@ This will open the GUI. You can then select the simulation parameters.
   - Number of agents: use this to specify how many agents you wish to simulate
     
   - Number of timesteps: use this to specify for how many timesteps the simulation should run
+
+  - Number of seeds: use this to specify how many times the whole simulation should be repeated. 
     
   - Initialization prompt: use this to set the prompt given to agents at the first timestep. You can choose among already registered prompt using the drop-down menu, or add a new prompt to this list by clicking on "Add Prompt...". This will open a window where you can enter the name and content of your new prompt.
     
