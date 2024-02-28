@@ -112,6 +112,7 @@ class SimulationFrame(tk.Frame):
         output_folder_path = self.vertical_frame1.output_folder_path.get().strip()  # Get the output folder path
         access_url = self.vertical_frame1.access_url.get().strip()
         n_cliques = self.vertical_frame1.n_cliques.get()
+        n_seeds = self.vertical_frame1.n_seeds_var.get()
 
         # Create an instance of argparse.Namespace and set its attributes
         args = argparse.Namespace()
@@ -120,7 +121,7 @@ class SimulationFrame(tk.Frame):
         args.prompt_init = prompt_init
         args.prompt_update = prompt_update
         args.network_structure = network_structure_type
-        args.n_seeds = 3
+        args.n_seeds = n_seeds
         if self.vertical_frame1.same_personnalities.get():
             print('here2')
 
@@ -176,6 +177,7 @@ class ParametersFrame(tk.Frame):
 
         self.n_agents_var = tk.IntVar(value=6)
         self.n_timesteps_var = tk.IntVar(value=5)
+        self.n_seeds_var = tk.IntVar(value=1)
         # self.prompt_init = tk.Text(self, height=3, width=20)
         self.prompt_init = ttk.Combobox(self, state= 'readonly', width=10)
 
@@ -183,7 +185,7 @@ class ParametersFrame(tk.Frame):
 
         self.network_structure = tk.StringVar()
         self.radio_frame = tk.Frame(self, background=self.cget('bg'))
-        self.radio_frame.grid(row=4, column=0, padx=10, pady=10, columnspan = 5, sticky = 'W')
+        self.radio_frame.grid(row=5, column=0, padx=10, pady=10, columnspan = 5, sticky = 'W')
         label = tk.Label(self.radio_frame, text='Network Structure: ')
         label.grid(column=0, row=0, sticky='e', padx=10, pady=5)
 
@@ -224,34 +226,37 @@ class ParametersFrame(tk.Frame):
             _ , _ , self.personalities = self.create_personnality_list(int(self.n_agents_var.get()), json_file_personnalities)
 
         agent_entry.bind('<FocusOut>', update_perso_list )
+
         self.create_integer_input('Number of timesteps:', 1, self.n_timesteps_var)
+
+        self.create_integer_input('Number of seeds:', 2, self.n_seeds_var)
         # self.create_text_input('prompt_init:', 2, self.prompt_init,
         #                        "Tell me a story")  # Default text is "Tell me a story"
         
         
         
         
-        self.create_selector('Initialization prompt', 2, None, self.prompt_init)
+        self.create_selector('Initialization prompt', 3, None, self.prompt_init)
         create_combobox_from_json(json_file_prompt_init, self.prompt_init)
         # Button to add new item
         add_button_prompt_init = tk.Button(self, text="Add Item...", command=lambda: add_item_dialog(self, json_file_prompt_init, self.prompt_init), )
     #add_button.pack(pady=5)
-        add_button_prompt_init.grid(column=2, row=2, sticky='ew', padx=10, pady=5)
+        add_button_prompt_init.grid(column=2, row=3, sticky='ew', padx=10, pady=5)
         remove_button_prompt_init = tk.Button(self, text="Remove this Item", command=lambda: remove_item(json_file_prompt_init, self.prompt_init))
-        remove_button_prompt_init.grid(column=3, row=2, sticky='ew', padx=10, pady=5)
+        remove_button_prompt_init.grid(column=3, row=3, sticky='ew', padx=10, pady=5)
         reveal_button_prompt_init = tk.Button(self, text="Reveal content", command=lambda: reveal_content(json_file_prompt_init, self.prompt_init))
-        reveal_button_prompt_init.grid(column=4, row=2, sticky='ew', padx=10, pady=5)
+        reveal_button_prompt_init.grid(column=4, row=3, sticky='ew', padx=10, pady=5)
 
-        self.create_selector('Transformation prompt', 3, None, self.prompt_update)
+        self.create_selector('Transformation prompt', 4, None, self.prompt_update)
         create_combobox_from_json(json_file_prompt_update, self.prompt_update)
         # Button to add new item
         add_button_prompt_update = tk.Button(self, text="Add Item...", command=lambda: add_item_dialog(self, json_file_prompt_update, self.prompt_update), )
     #add_button.pack(pady=5)
-        add_button_prompt_update.grid(column=2, row=3, sticky='ew', padx=10, pady=5)
+        add_button_prompt_update.grid(column=2, row=4, sticky='ew', padx=10, pady=5)
         remove_button_prompt_update = tk.Button(self, text="Remove this Item", command=lambda: remove_item(json_file_prompt_update, self.prompt_update))
-        remove_button_prompt_update.grid(column=3, row=3, sticky='ew', padx=10, pady=5)
+        remove_button_prompt_update.grid(column=3, row=4, sticky='ew', padx=10, pady=5)
         reveal_button_prompt_update = tk.Button(self, text="Reveal content", command=lambda: reveal_content(json_file_prompt_update, self.prompt_update))
-        reveal_button_prompt_update.grid(column=4, row=3, sticky='ew', padx=10, pady=5)
+        reveal_button_prompt_update.grid(column=4, row=4, sticky='ew', padx=10, pady=5)
 
 
         
@@ -284,21 +289,21 @@ class ParametersFrame(tk.Frame):
 
 
         checkbox = ttk.Checkbutton(self, text="Same for all agents", variable=self.same_personnalities, command=toggle_visibility)
-        checkbox.grid(row = 5, column= 0)
+        checkbox.grid(row = 6, column= 0)
 
        
 
-        self.create_selector('personality:', 5, None, self.personality,
+        self.create_selector('personality:', 6, None, self.personality,
                              '', column=1)  
         create_combobox_from_json(json_file_personnalities, self.personality)
         # Button to add new item
         add_button_personnalities = tk.Button(self, text="Add Personnality...", command=lambda: add_item_dialog(self, json_file_personnalities, self.personality), )
     #add_button.pack(pady=5)
-        add_button_personnalities.grid(column=3, row=5, sticky='ew', padx=10, pady=5)
+        add_button_personnalities.grid(column=3, row=6, sticky='ew', padx=10, pady=5)
         remove_button_personnalities = tk.Button(self, text="Remove this Item", command=lambda: remove_item(json_file_personnalities, self.personality))
-        remove_button_personnalities.grid(column=4, row=5, sticky='ew', padx=10, pady=5)
+        remove_button_personnalities.grid(column=4, row=6, sticky='ew', padx=10, pady=5)
         reveal_button_personnalities = tk.Button(self, text="Reveal content", command=lambda: reveal_content(json_file_personnalities, self.personality))
-        reveal_button_personnalities.grid(column=5, row=5, sticky='ew', padx=10, pady=5)
+        reveal_button_personnalities.grid(column=5, row=6, sticky='ew', padx=10, pady=5)
 
         canvas, scrollbar, self.personalities = self.create_personnality_list(int(self.n_agents_var.get()), json_file_personnalities)
         
@@ -340,7 +345,7 @@ class ParametersFrame(tk.Frame):
 
     def create_personnality_list(self, n_agents, json_file):
         perso_frame = ttk.Frame(self)
-        perso_frame.grid(row = 6, column = 0, columnspan=4, sticky= 'w')
+        perso_frame.grid(row = 7, column = 0, columnspan=4, sticky= 'w')
         def on_configure(event):
             canvas.configure(scrollregion=canvas.bbox('all'))
 

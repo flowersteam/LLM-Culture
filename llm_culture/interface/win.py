@@ -4,7 +4,7 @@ from llm_culture.interface.notebook import CustomNotebookFrame
 class AppWin(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.title("Hack1Robot2024")
+        self.title("LLM-Culture")
         self.geometry("800x800")
 
         canvas = CustomNotebookFrame(self)
