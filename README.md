@@ -141,7 +141,6 @@ It will store the analysis figures in a directory called ```Results/Comparisons/
 
 ## Figures : 
 
-TODO : Add a list of analysis figures with their corresponding plots here ? 
 
 
 
