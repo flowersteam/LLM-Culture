@@ -7,7 +7,7 @@ from llm_culture.analysis.utils import compute_between_gen_similarities, get_pol
 from llm_culture.analysis.plots import *
 
 
-def main_analysis(folder, font_sizes, plot=False):
+def main_analysis(folder, font_sizes = {'ticks': 12, 'labels': 14, 'title': 16}, plot=False):
     # Extract data from stories
     all_seeds_stories = get_stories(folder)
 
