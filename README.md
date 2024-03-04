@@ -12,12 +12,10 @@ It allows organizing LLM agents into networks wherein each agent interacts with 
 
 1- Clone the repository
 
-As this is an anonymous repository, you can use this tool to clone it: https://github.com/fedebotu/clone-anonymous-github
 
 
 ```bash
-git clone https://github.com/fedebotu/clone-anonymous-github.git && cd clone-anonymous-github
-python3 src/download.py --url https://anonymous.4open.science/r/LLM-Culture-75BE
+git clone https://github.com/jeremyperez2/LLM-Culture.git
 cd LLM-Culture/
 ```
 
