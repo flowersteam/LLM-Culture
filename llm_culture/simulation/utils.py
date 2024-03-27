@@ -1,16 +1,19 @@
 # This file contains the main functions to run the simulation. 
 #It is called by the run_simulation.py file.
 from llm_culture.simulation.agent import Agent
+from tqdm import trange
 
 
-def init_agents(n_agents, network_structure, prompt_init, prompt_update, personality_list, access_url,
+def init_agents(n_agents, network_structure, prompt_init, prompt_update, personality_list, access_url, format_prompt='', start_flag=None, end_flag=None,
                 sequence=False, debug=False):
     agent_list = []
     wait = 0
 
     for a in range(n_agents):
         perso = personality_list[a]
-        agent = Agent(a, network_structure, prompt_init, prompt_update, perso, access_url= access_url, wait=wait,
+        agent = Agent(a, network_structure, prompt_init, prompt_update, perso, 
+                      access_url= access_url, format_prompt = format_prompt, 
+                      start_flag= start_flag, end_flag=end_flag , wait=wait,
                       debug=debug, sequence = sequence)
         agent_list.append(agent)
         if sequence:
@@ -19,13 +22,15 @@ def init_agents(n_agents, network_structure, prompt_init, prompt_update, persona
     return agent_list
 
 
-def run_simul(access_url, n_timesteps=5, network_structure=None, prompt_init=None, prompt_update=None, personality_list=None,
-              n_agents=5, sequence=False, output_folder=None, debug=False):
+def run_simul(access_url, n_timesteps=5, network_structure=None, prompt_init=None, prompt_update=None, personality_list=None, 
+              n_agents=5, format_prompt='', start_flag=None, end_flag=None, sequence=False, output_folder=None, debug=False):
     #STRORAGE
     stories_history = []
 
     #INTIALIZE AGENTS
-    agent_list = init_agents(n_agents, network_structure, prompt_init, prompt_update, personality_list, access_url,
+    agent_list = init_agents(n_agents, network_structure, prompt_init, 
+                             prompt_update, personality_list, access_url, format_prompt = format_prompt, 
+                            start_flag= start_flag, end_flag=end_flag ,
                              sequence=sequence, debug=debug)
     
 
@@ -40,7 +45,7 @@ def run_simul(access_url, n_timesteps=5, network_structure=None, prompt_init=Non
         state_history_path = 'Results/state_history.json'
     else:
         state_history_path = f'{output_folder}/state_history.json'
-    for t in range(n_timesteps):
+    for t in trange(n_timesteps):
         new_stories = update_step(agent_list, t, state_history_path)
         print(f'Timestep: {t}')
         print(f'Number of new_stories: {len(new_stories)}')

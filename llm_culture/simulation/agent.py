@@ -1,10 +1,10 @@
 # This file contains the Agent class which is used to create the agents in the simulation.
 
 from llm_culture.simulation.server_answer import get_answer
-
+import re
 
 class Agent:
-    def __init__(self, agent_id, network_structure, init_prompt, prompt_update, personality, access_url,
+    def __init__(self, agent_id, network_structure, init_prompt, prompt_update, personality, access_url, format_prompt = '', start_flag = None, end_flag = None,
                  wait=0, string_sep='\n', debug=False, sequence = False):
         self.agent_id = agent_id
         self.is_new = True
@@ -21,6 +21,10 @@ class Agent:
         self.go = True
         self.access_url = access_url
         self.sequence = sequence
+        self.prompt_format = format_prompt
+        self.start_flag = start_flag
+        self.end_flag = end_flag
+        self.pattern = rf"{start_flag}(.*?){end_flag}"
 
     def update_neighbours(self, graph, agentList):
         # get the neighbours of the agent from the graph (networkx graph)
@@ -31,8 +35,15 @@ class Agent:
             self.neighbours = [agentList[i] for i in list(graph.neighbors(self.agent_id))]
 
     def get_neighbours_stories(self):
+        if self.start_flag == None or self.end_flag == None:
         #print(neighbour.get_story() for neighbour in self.neighbours if neighbour.get_story() is not None)
-        return [neighbour.get_story() for neighbour in self.neighbours if neighbour.get_story() is not None]
+            return [neighbour.get_story() for neighbour in self.neighbours if neighbour.get_story() is not None]
+        else:
+            print([neighbour.get_story() for neighbour in self.neighbours if neighbour.get_story() is not None])
+
+            matches = [re.search(self.pattern, neighbour.get_story()).group(1).strip() for neighbour in self.neighbours if neighbour.get_story() is not None]
+            return matches
+
 
     def update_prompt(self):
         # print(f'wait: {self.wait}')
@@ -42,10 +53,10 @@ class Agent:
             neighbours_stories = self.get_neighbours_stories()
             if len(neighbours_stories) != 0:
                 # print('here1')
-                prompt = self.personality + self.string_sep + self.prompt_update + str([str(i) + ': '+ neighbours_stories[i] for i in range(len(neighbours_stories))])
+                prompt = self.personality + self.string_sep + self.prompt_update + str([str(i) + ': '+ neighbours_stories[i] for i in range(len(neighbours_stories))]) + self.string_sep + self.prompt_format
             else:
                 # print('here2')
-                prompt = self.personality + self.string_sep + self.init_prompt
+                prompt = self.personality + self.string_sep + self.init_prompt + self.prompt_format
             
 
         else:
@@ -53,6 +64,7 @@ class Agent:
             prompt = None
         
         self.prompt = prompt
+        print(f'Prompt: {self.prompt}')
         # if self.is_new:
         #     if self.wait == 0:
         #         self.go = True
@@ -85,9 +97,17 @@ class Agent:
         # self.prompt = prompt
 
     def update_story(self):
+        format_ok = False
         # if self.wait == 0 and self.go:
         if (self.wait == 0 and self.sequence) or (self.wait <= 0 and not(self.sequence)):
-            self.story = get_answer(self.access_url, self.prompt, debug=self.debug)
+            while not format_ok:
+                self.story = get_answer(self.access_url, self.prompt, debug=self.debug)
+                try:
+                    test = re.search(self.pattern, self.story).group(1).strip()
+                    format_ok = True
+                except:
+                    print('Format not ok')
+                    pass
             #print(f"AgentId: {self.agent_id}) /n Prompt: {self.prompt} /n Answer: {self.story}")
             # print(f"Prompt: {self.prompt}")
             # print(f"neigbhours stories: {self.get_neighbours_stories()}")

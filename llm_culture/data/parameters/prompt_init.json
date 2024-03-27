@@ -26,5 +26,9 @@
     {
         "name": "long story",
         "prompt": "Create a long story."
+    },
+    {
+        "name": "permutation_same_for_all",
+        "prompt": "You will receive a story. You can change up to 10 words of this story. Your goal is to produce a story that is as close as possible to your favorite genre.\n\tHere is the story: \"In the quaint town of Willowbrook, a peculiar old bookstore stood at the corner of Elm Street. It was rumored to hold books of ancient magic. One rainy afternoon, Sarah stumbled upon it. Drawn by an unseen force, she entered. The books whispered secrets, promising power. Sarah hesitated, but curiosity won. She chose a tome bound in cracked leather. As she flipped through its pages, a surge of energy enveloped her. Outside, the rain ceased, and the sun bathed Willowbrook in golden light. Sarah smiled, realizing she held the key to changing her world forever.\""
     }
 ]

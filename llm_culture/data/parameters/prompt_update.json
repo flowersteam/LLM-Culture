@@ -50,5 +50,13 @@
     {
         "name": "pick repeat",
         "prompt": "You will receive stories. Select only one of these story, and repeat it. Just output the story,  don't write anything else. "
+    },
+    {
+        "name": "permutations",
+        "prompt": "You will receive a list of stories. Your goal is to pick one of these stories, and to change up to 10 words of this story. Your goal is to produce a story that is as close as possible to your favorite genre.\n\tHere is the list of stories: "
+    },
+    {
+        "name": "permutations_chain",
+        "prompt": "You will receive one story.You can change up to 10 words of this story. Your goal is to produce a story that is as close as possible to your favorite genre.\nHere is the  story: "
     }
 ]

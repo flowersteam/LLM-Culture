@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 
 def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, sizes, save=True, seed = 0):
     plt.figure(figsize=(8, 8))
-    plt.imshow(similarity_matrix, vmin=0, vmax=1, cmap='viridis')
+    # plt.imshow(similarity_matrix, vmin=0, vmax=1, cmap='viridis')
+    plt.imshow(similarity_matrix, cmap='viridis')
 
     n_texts = similarity_matrix.shape[0]
     if n_texts < 20:
@@ -47,7 +48,8 @@ def plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x
     plt.xticks(range(0, between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(range(0, between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
 
-    plt.imshow(between_gen_similarity_matrix, vmin=0, vmax=1, cmap='viridis')
+    # plt.imshow(between_gen_similarity_matrix, vmin=0, vmax=1, cmap='viridis')
+    plt.imshow(between_gen_similarity_matrix, cmap='viridis')
     cbar = plt.colorbar(pad=0.02, shrink=0.83)
    
     if save:
@@ -271,26 +273,67 @@ def plot_creativity_evolution(all_seeds_creativity_indices, folder, plot, x_tick
 
 
 
+        def plot_similarity_space(similarity_matrix):
+            # Get the number of points
+            n_points = similarity_matrix.shape[0]
+            
+            # Generate random initial positions for the points
+            np.random.seed(0)
+            positions = np.random.rand(n_points, 2)
+            
+            # Create a graph to represent the similarity space
+            G = nx.Graph()
+            G.add_nodes_from(range(n_points))
+            
+            # Add edges to the graph based on the similarity matrix
+            for i in range(n_points):
+                for j in range(i+1, n_points):
+                    distance = similarity_matrix[i, j]
+                    G.add_edge(i, j, weight=distance)
+            
+            # Compute the positions of the points based on the similarity matrix
+            pos = nx.spring_layout(G, pos=positions)
+            
+            # Plot the points in the similarity space
+            plt.figure(figsize=(8, 8))
+            nx.draw_networkx_nodes(G, pos, node_size=300, node_color='b')
+            nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5)
+            plt.axis('off')
+            plt.show()
+
+
+
 
 def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, sizes, save=True, seed = 0):
+  
+
+
+    
     plt.figure(figsize=(8, 8))
     n_generations = between_gen_similarity_matrix.shape[0]
+
+    max_similarity = np.max(between_gen_similarity_matrix)
+    min_similarity = np.min(between_gen_similarity_matrix)
 
     G = nx.Graph()
     G.add_nodes_from(range(n_generations))
     connected_edges_idx = []
 
+    np.random.seed(0)
+    #positions = np.random.rand(n_generations, 2)
+
     for i in range(n_generations):
         for j in range(n_generations):
             if i != j:
-                similarity = between_gen_similarity_matrix[i, j]
+                similarity = (between_gen_similarity_matrix[i, j] - min_similarity) / (max_similarity - min_similarity)
+                # similarity = between_gen_similarity_matrix[i, j]
                 G.add_edge(i, j, weight=similarity)
                 if i == j - 1:
                      # We keep the indexes of the succesive generations edges to plot them at the end 
                      connected_edges_idx.append((len(G.edges)) - 1)
 
-    np.random.seed(0)
-    pos = nx.spring_layout(G)
+    #np.random.seed(0)
+    pos = nx.spring_layout(G, iterations = 10000)
 
     nx.draw_networkx_nodes(G, pos, node_size=300, node_color=range(n_generations), cmap='cool')
     nx.draw_networkx_labels(G, pos)
@@ -301,8 +344,10 @@ def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, sizes, sa
     # - Only plot them
     # hide_plotted_weights = [val if idx in connected_edges_idx else 0 for idx, val in enumerate(weights)] 
     # - Increase their width compared to others
-    incr_plotted_weights = [3 if idx in connected_edges_idx else val for idx, val in enumerate(weights)] 
-    nx.draw_networkx_edges(G, pos, edgelist=edges, width=incr_plotted_weights, edge_color='gray')
+    incr_plotted_weights = [3 if idx in connected_edges_idx else 0 for idx, val in enumerate(weights)] 
+    nx.draw_networkx_edges(G, pos, edgelist=edges, width=incr_plotted_weights, edge_color='gray', alpha=0.5, 
+                           arrowstyle='->',
+                           arrowsize=30)
 
     plt.title('Evolution of similarities between generations', fontsize=sizes['labels'])
     plt.axis('off')

@@ -15,6 +15,8 @@ from nltk.probability import FreqDist
 from sklearn.feature_extraction.text import TfidfVectorizer
 from textblob import TextBlob
 import os
+from sentence_transformers import SentenceTransformer, util
+
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context
@@ -30,7 +32,8 @@ nltk.download('stopwords')
 nlp = spacy.load('en_core_web_sm')
 
 
-def get_stories(folder):
+def get_stories(folder, start_flag = None, end_flag = None):
+    pattern = rf"{start_flag}(.*?){end_flag}"
     json_files = [file for file in os.listdir(folder) if file.endswith('.json')]
     all_stories = []
     # json_file  = folder + '/output.json'
@@ -38,7 +41,21 @@ def get_stories(folder):
         with open(folder + '/' + json_file, 'r') as file:
                 data = json.load(file)
                 stories = data['stories']
-                all_stories.append(stories)
+                print("0::",len(stories))
+                print("1::",len(stories[0]))
+                print("2::",len(stories[0][0]))
+                
+                if start_flag is not None and end_flag is not None:
+                    stories_gen = []
+                    for gen in stories:
+                        stories_gen.append([re.search(pattern, story).group(1).strip() for story in gen])
+                    all_stories.append(stories_gen)
+                    print("0::",len(stories_gen))
+                    print("1::",len(stories_gen[0]))
+                    print("2::",len(stories_gen[0][0]))
+                    #return ''
+                else:
+                    all_stories.append(stories)
     
     return all_stories
     
@@ -67,15 +84,34 @@ def preprocess_stories(all_seeds_stories):
     return all_seeds_flat_stories, all_seeds_keywords, all_seeds_stem_words
 
 def get_similarity_matrix_single_seed(flat_stories):
-    vect = TfidfVectorizer(min_df=1, stop_words="english")     
+    vect = TfidfVectorizer(min_df=1, stop_words="english", norm="l2")
     tfidf = vect.fit_transform(flat_stories)                                                                                                                                                                                                                       
     similarity_matrix = tfidf * tfidf.T 
     return similarity_matrix.toarray()
 
+def get_SBERT_similarity(story1, story2):
+    model = SentenceTransformer("distiluse-base-multilingual-cased-v1")
+    embeddings1 = model.encode(story1, convert_to_tensor=True)
+    embeddings2 = model.encode(story2, convert_to_tensor=True)
+    cosine_scores = util.cos_sim(embeddings1, embeddings2)
+    return cosine_scores.cpu().numpy()
+
+def get_similarity_matrix_single_seed_SBERT(flat_stories):
+    model = SentenceTransformer("distiluse-base-multilingual-cased-v1")
+    #print(flat_stories)
+    embeddings = model.encode(flat_stories, convert_to_tensor=True)
+    # print(embeddings[0])
+    # print(embeddings[-1])
+    cosine_scores = util.cos_sim(embeddings, embeddings)
+    return cosine_scores.cpu().numpy()
+    similarity_matrix = embeddings @ embeddings.T / (np.linalg.norm(embeddings, axis=1) * np.linalg.norm(embeddings, axis=1)[:, None])
+    print(similarity_matrix)
+    return similarity_matrix
+
 def get_similarity_matrix(all_seed_flat_stories):
     all_seeds_similarity_matrix = []
     for flat_stories in all_seed_flat_stories:
-        similarity_matrix = get_similarity_matrix_single_seed(flat_stories)
+        similarity_matrix = get_similarity_matrix_single_seed_SBERT(flat_stories)
         all_seeds_similarity_matrix.append(similarity_matrix)
     return all_seeds_similarity_matrix
 
@@ -86,12 +122,13 @@ def extract_keywords(text, num_keywords=30):
     tokens = word_tokenize(text)
     
     stop_words = set(stopwords.words('english'))
-    filtered_tokens = [word for word in tokens if word.lower() not in stop_words and word.isalnum()]
+    filtered_tokens = [word for word in tokens if word.lower() not in stop_words and word.isalpha()]
     
     fdist = FreqDist(filtered_tokens)
     
     keywords = [word for word, _ in fdist.most_common(num_keywords)]
     
+    return filtered_tokens
     return keywords
 
 
@@ -180,6 +217,15 @@ def get_polarities_subjectivities(all_seed_stories):
 # Pretty long to compute 
 
 def get_creativity_indexes_single_seed(stories, folder, seed = 0):
+    def story_creativity_index_SBERT(story_input):
+        model = SentenceTransformer("distiluse-base-multilingual-cased-v1")
+        #print(flat_stories)
+        embeddings = model.encode(story_input.lower().split(), convert_to_tensor=True)
+        # print(embeddings[0])
+        # print(embeddings[-1])
+        cosine_scores = util.cos_sim(embeddings, embeddings)
+        return np.mean(cosine_scores.cpu().numpy())
+    
     def story_creativity_index(story_input):
         words_story = story_input.lower().split()
         word_vectors = [word_to_vector(word) for word in words_story]
@@ -209,7 +255,7 @@ def get_creativity_indexes_single_seed(stories, folder, seed = 0):
         for gen in stories:
             gen_creativity = []
             for story in gen:
-                gen_creativity.append(story_creativity_index(story))
+                gen_creativity.append(story_creativity_index_SBERT(story))
             creativities.append(gen_creativity)
 
         # Save the results in the texts folder

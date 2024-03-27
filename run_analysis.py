@@ -7,9 +7,9 @@ from llm_culture.analysis.utils import compute_between_gen_similarities, get_pol
 from llm_culture.analysis.plots import *
 
 
-def main_analysis(folder, font_sizes = {'ticks': 12, 'labels': 14, 'title': 16}, plot=False):
+def main_analysis(folder, font_sizes = {'ticks': 12, 'labels': 14, 'title': 16}, plot=False, start_flag=None, end_flag=None):
     # Extract data from stories
-    all_seeds_stories = get_stories(folder)
+    all_seeds_stories = get_stories(folder, start_flag, end_flag)
 
     print(len(all_seeds_stories))
     n_seeds = len(all_seeds_stories)
@@ -35,6 +35,7 @@ def main_analysis(folder, font_sizes = {'ticks': 12, 'labels': 14, 'title': 16},
 
         
         stem_words = all_seeds_stem_words[seed]
+        key_words = all_seeds_keywords[seed]
 
         plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, seed = seed, sizes= font_sizes)
         
@@ -43,6 +44,8 @@ def main_analysis(folder, font_sizes = {'ticks': 12, 'labels': 14, 'title': 16},
 
         plot_word_chains(stem_words, folder, plot, x_ticks_space, seed = seed, sizes= font_sizes)
 
+        # #Use key_words instead of stem_words?
+        # plot_word_chains(key_words, folder, plot, x_ticks_space, seed = seed, sizes= font_sizes)
 
         plot_similarity_graph(between_gen_similarity_matrix, folder, plot, seed = seed, sizes= font_sizes)
 
@@ -71,6 +74,8 @@ if __name__ == "__main__":
     parser.add_argument("--ticks_font_size", type=int, default=12)
     parser.add_argument("--labels_font_size", type=int, default=14)
     parser.add_argument("--title_font_size", type=int, default=16)
+    parser.add_argument("--sf", "--start_flag", type=str, default=None, help="Start flag")
+    parser.add_argument("--ef", "--end_flag", type=str, default=None, help="End flag")
     args = parser.parse_args()
 
     analyzed_dir = f"Results/{args.dir}"
@@ -80,4 +85,4 @@ if __name__ == "__main__":
     
     print(f"\nLaunching analysis on the {analyzed_dir} results")
     print(f"plot = {args.plot}")
-    main_analysis(analyzed_dir, font_sizes, args.plot)
+    main_analysis(analyzed_dir, font_sizes, args.plot, args.sf, args.ef)

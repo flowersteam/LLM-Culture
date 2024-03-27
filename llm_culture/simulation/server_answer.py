@@ -1,7 +1,9 @@
 # This file is used to get the answer from the server. 
 #It is called by the agent.py file.
 import requests
+import urllib3
 
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def get_answer(access_url, prompt, debug=False):
     url = access_url + "/v1/chat/completions"

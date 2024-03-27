@@ -2,13 +2,15 @@ import argparse
 
 from llm_culture.analysis.utils import get_stories, get_plotting_infos, preprocess_stories, get_similarity_matrix
 from llm_culture.analysis.utils import compute_between_gen_similarities, get_polarities_subjectivities, get_creativity_indexes
-from llm_culture.analysis.plots import plot_similarity_matrix
+from llm_culture.analysis.plots import *
 from llm_culture.analysis.comparison_plots import *
 
 
 
 def main_analysis(folders, plot, scale_y_axis, labels, sizes):
     saving_folder = '-'.join(os.path.basename(folder) for folder in folders)
+    if len(saving_folder) > 250:
+        saving_folder = saving_folder[:200] + '_NAME_TOO_LONG'
     data = {}
         
     for i, folder in enumerate(folders):
@@ -24,6 +26,7 @@ def main_analysis(folders, plot, scale_y_axis, labels, sizes):
         # Plot the individual similarity matrix in the same folder
         for seed in range(len(all_seeds_stories)):
             plot_similarity_matrix(all_seed_similarity_matrix[seed], label, n_gen, n_agents, plot, sizes, saving_folder, seed = seed)
+            #plot_similarity_graph(all_seed_between_gen_similarity_matrix[seed], "Comparisons/"+saving_folder, plot, sizes)
 
         data[folder] = {
             'all_seed_stories': all_seeds_stories,
@@ -49,6 +52,8 @@ def main_analysis(folders, plot, scale_y_axis, labels, sizes):
     compare_positivity_evolution(data, plot, sizes, saving_folder, scale_y_axis)
     compare_subjectivity_evolution(data, plot, sizes, saving_folder, scale_y_axis)
     compare_creativity_evolution(data, plot, sizes, saving_folder, scale_y_axis)
+
+    plot_all_similarity_graphs(data, plot, sizes, saving_folder)
 
 
 if __name__ == "__main__":

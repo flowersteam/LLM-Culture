@@ -6,6 +6,7 @@ from pathlib import Path
 import networkx as nx
 import matplotlib.pyplot as plt
 
+from tqdm import trange
 from llm_culture.simulation.utils import run_simul
 
 
@@ -34,6 +35,10 @@ def parse_arguments():
     parser.add_argument('--debug', action='store_true', help='Enable debug mode.')
     parser.add_argument('-url', '--access_url', type=str, default='', help='URL to send the prompt to.')
     parser.add_argument('-s', '--n_seeds', type=int, default=2, help='Number of seeds')
+    parser.add_argument('-f', '--format_prompt', type=str, default='', help='Format of the prompt')
+    parser.add_argument('-sf', '--start_flag', type=str, default=None, help='Start flag')
+    parser.add_argument('-ef', '--end_flag', type=str, default=None, help='End flag')
+
 
     return parser.parse_args()
 
@@ -48,6 +53,7 @@ def main(args=None):
     json_prompt_update = 'llm_culture/data/parameters/prompt_update.json'
     json_structure = 'llm_culture/data/parameters/network_structure.json'
     json_personnalities = 'llm_culture/data/parameters/personnalities.json'
+    json_format = 'llm_culture/data/parameters/format_prompt.json'
 
 
     if args is None:
@@ -95,6 +101,12 @@ def main(args=None):
             if d['name'] == args.prompt_update:
                 prompt_update = d['prompt']
 
+    with open(json_format, 'r') as file:
+        data = json.load(file)
+        for d in data:
+            if d['name'] == args.format_prompt:
+                format_prompt = d['prompt']
+
 
 
         # personality_dict = getattr(prompts, args.personality_dict)
@@ -113,13 +125,15 @@ def main(args=None):
         output_dict["prompt_init"] = [prompt_init]
         output_dict["prompt_update"] = [prompt_update]
         output_dict["personality_list"] = personality_list
+        output_dict["format_prompt"] = [format_prompt]
 
     os.makedirs(os.path.dirname(str(args.output) + '/'), exist_ok=True)
-    t = input(args.output)
-    for i in range(args.n_seeds):
+    # t = input(args.output)
+    for i in trange(args.n_seeds):
         print(f"Seed {i}")
         stories = run_simul(args.access_url, n_timesteps, network_structure, prompt_init,
-                            prompt_update, personality_list, n_agents,
+                            prompt_update, personality_list, n_agents, format_prompt=format_prompt,
+                            start_flag=args.start_flag, end_flag=args.end_flag,
                             sequence=sequence, output_folder=args.output,
                             debug=debug)
         output_dict["stories"] = stories
