@@ -32,7 +32,7 @@ pip install -r requirements.txt
 Launch the graphical user interface:
 
 ```bash
-python3 run_interface.py
+python3 web_interface.py
 ```
 
 This will open the GUI. You can then select the simulation parameters. 
@@ -95,7 +95,7 @@ This will open the GUI. You can then select the simulation parameters.
 Run a simulation with your desired parameters (see parameters details above): 
 
 ```bash
-python3 run_simulation.py --output_file simulation_test
+python3 scripts/run_simulation.py --output_file simulation_test
 ```
 
 <details>
@@ -125,13 +125,13 @@ python3 run_simulation.py --output_file simulation_test
 The results of the experiment will be stored in a directory called ```Results/simulation_test/```. You can then analyze the texts produced with this command : 
 
 ```bash
-python3 run_analysis.py --dir simulation_test
+python3 scripts/run_analysis.py --dir simulation_test
 ```
 
 To compare the results of several experiments, you can can run this command (with the experiment names separated by '+' symbols) : 
 
 ```bash
-python3 run_comparison_analysis --dirs experiment_1+experiment_2+experiment_3
+python3 scripts/run_comparison_analysis --dirs experiment_1+experiment_2+experiment_3
 ```
 
 It will store the analysis figures in a directory called ```Results/Comparisons/experiment_1-experiment_2-experiment_3/```
