@@ -10,7 +10,7 @@
     <nav>
         <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('analyze') }}">Analyze Results</a>
-        {% block nav %}{% endblock %}
+        <a href="{{ url_for('results') }}">Results</a>
     </nav>
 
     {% block body %}{% endblock %}

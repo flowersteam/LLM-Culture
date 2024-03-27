@@ -1,6 +1,5 @@
 body {
     text-align: center;
-    padding: 50px;
     background-color: #f2f2f2;
     font-family: sans-serif;
     margin: 0;
@@ -87,3 +86,11 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #45a049;
 }
+
+/* Plotting analysis results */
+
+.plot-img {
+    max-width: 25%;
+    height: auto;
+  }
+  
