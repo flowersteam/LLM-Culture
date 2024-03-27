@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Analyze Results</title>
+{% endblock %}
+
+{% block body %}
+<form method="POST">
+    <label for="dir">Experiment directory</label>
+    <input type="text" id="dir" name="dir" value="Chain_20"><br>
+
+    <label for="ticks_font_size">Ticks Font Size:</label><br>
+    <input type="number" id="ticks_font_size" name="ticks_font_size" value="12"><br>
+
+    <label for="labels_font_size">Labels Font Size:</label><br>
+    <input type="number" id="labels_font_size" name="labels_font_size" value="14"><br>
+
+    <label for="title_font_size">Title Font Size:</label><br>
+    <input type="number" id="title_font_size" name="title_font_size" value="16"><br>
+    
+    <input type="submit" value="Launch Analysis">
+</form>
+{% endblock %}
+

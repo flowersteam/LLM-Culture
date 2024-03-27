@@ -7,6 +7,12 @@
     {% block head %}{% endblock %}
 </head> 
 <body>
+    <nav>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('analyze') }}">Analyze Results</a>
+        {% block nav %}{% endblock %}
+    </nav>
+
     {% block body %}{% endblock %}
 </body>
 </html>
