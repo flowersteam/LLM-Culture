@@ -2,11 +2,25 @@
 
 {% block head %}
 <title>Simulation</title>
+<script>
+    function toggleCliques() {
+        var network_structure = document.getElementById("network_structure");
+        var n_cliques_container = document.getElementById("n_cliques_container");
+        if (network_structure.value == "caveman") {
+            n_cliques_container.style.display = "block";
+        } else {
+            n_cliques_container.style.display = "none";
+        }
+    }
+</script>
 {% endblock %}
 
 {% block body %}
-<h1>Run a simulation</h1>
+<h1>Run a transmission simulation</h1>
+
 <form method="POST">
+    <h2>Experiment parameters</h2>
+
     <div class="form-column">
         <label for="output">Experiment name:</label>
         <input type="text" id="name" name="name" value=""><br>
@@ -14,22 +28,32 @@
         <label for="n_agents">Number of agents:</label>
         <input type="number" id="n_agents" name="n_agents" min="1" value="2"><br>
 
-        <label for="n_timesteps">Number of timesteps:</label>
+        
+    </div>
+
+    <div class="form-column">
+        <label for="n_timesteps">Number of generations:</label>
         <input type="number" id="n_timesteps" name="n_timesteps" min="1" value="10"><br>
 
         <label for="network_structure">Network structure:</label>
-        <select id="network_structure" name="network_structure">
+        <select id="network_structure" name="network_structure" onchange="toggleCliques()">
             <option value="sequence">Sequence</option>
             <option value="fully_connected">Fully connected</option>
             <option value="circle">Circle</option>
             <option value="caveman">Caveman</option>
         </select><br>
 
-        <label for="n_cliques">Number of cliques (for Caveman graph):</label>
+    </div>
+
+    <div id="n_cliques_container" style="display: none;">
+        <label for="n_cliques">Number of cliques in caveman network:</label>
         <input type="number" id="n_cliques" name="n_cliques" min="1" value="2"><br>
     </div>
 
-    <div class="form-column">
+
+    <div class="form-agents">
+        <h2>Agents parameters</h2>
+
         <label for="prompt_init">Initial prompt:</label>
         <input type="text" id="prompt_init" name="prompt_init" value="kid"><br>
 
@@ -41,12 +65,13 @@
 
         <label for="n_seeds">Number of seeds:</label>
         <input type="number" id="n_seeds" name="n_seeds" min="1" value="3"><br>
-    </div>
+      </div>
 
-    <div class="form-button">
+      <div class="form-button">
         <input type="submit" value="Run simulation">
       </div>
 
 </form>
 
 {% endblock %}
+

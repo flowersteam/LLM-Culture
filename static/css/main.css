@@ -11,9 +11,13 @@ body {
 nav {
     background-color: #333;
     overflow: hidden;
+    display: flex;
+    justify-content: space-between;
 }
 
+
 nav a {
+    flex-grow: 1; 
     float: left;
     display: block;
     color: #f2f2f2;
@@ -48,7 +52,7 @@ p {
 /* Forms of run_analysis */
 
 form {
-    width: 800px; 
+    width: 80%;
     margin: 0 auto;
     padding: 20px;
     background-color: #f2f2f2;
@@ -61,6 +65,7 @@ form {
     width: 50%;
     padding: 0 10px;
     box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
 /* Clearfix hack to make the form container contain the floated divs */
@@ -77,10 +82,25 @@ form:after {
     padding-bottom: 20px;
 }
 
+.form-agents {
+    clear: both;
+    text-align: center;
+    padding-top: 50px;
+}
+
 label {
     display: block;
     margin-top: 20px;
     font-weight: bold;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
 }
 
 input[type="text"],
@@ -94,7 +114,7 @@ input[type="number"] {
 }
 
 input[type="submit"] {
-    width: 100%;
+    width: 25%;
     padding: 10px;
     margin-top: 20px;
     background-color: #49bb93;
