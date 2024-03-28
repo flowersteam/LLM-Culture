@@ -12,10 +12,78 @@
             n_cliques_container.style.display = "none";
         }
     }
+
+    function generateAgentsInput() {
+        const nAgents = parseInt(document.getElementById("n_agents").value)
+        const formAgents = document.getElementById("form-agents")
+
+        formAgents.innerHTML = "<h2>Agents parameters</h2>";
+
+        // Generate input fields for each agent
+        for (let i = 0; i < nAgents; i++) {
+            // Create a div to hold the input fields for this agent
+            const agentDiv = document.createElement("div");
+            agentDiv.className = "agent";
+            
+            const agentLabel = document.createElement("label");
+            agentLabel.textContent = `Agent ${i + 1}:`;
+            agentLabel.style.width = '120px'; 
+
+            // Create the input fields for this agent
+            const promptInitLabel = document.createElement("label");
+            promptInitLabel.htmlFor = `prompt_init_${i}`;
+            promptInitLabel.textContent = `Initial prompt:`;
+            const promptInitInput = document.createElement("input");
+            promptInitInput.type = "text";
+            promptInitInput.id = `prompt_init_${i}`;
+            promptInitInput.name = `prompt_init_${i}`;
+            promptInitInput.value = "kid";
+            const promptUpdateLabel = document.createElement("label");
+            promptUpdateLabel.htmlFor = `prompt_update_${i}`;
+            promptUpdateLabel.textContent = `update prompt:`;
+            const promptUpdateInput = document.createElement("input");
+            promptUpdateInput.type = "text";
+            promptUpdateInput.id = `prompt_update_${i}`;
+            promptUpdateInput.name = `prompt_update_${i}`;
+            promptUpdateInput.value = "kid";
+            const personalityLabel = document.createElement("label");
+            personalityLabel.htmlFor = `personality_list_${i}`;
+            personalityLabel.textContent = `personality:`;
+            const personalityInput = document.createElement("input");
+            personalityInput.type = "text";
+            personalityInput.id = `personality_list_${i}`;
+            personalityInput.name = `personality_list_${i}`;
+            personalityInput.value = "Empty,Empty";
+
+            // Add the agent label to the beginning of the agent div
+            agentDiv.appendChild(agentLabel);
+
+            // Add the input fields to the agent div
+            agentDiv.appendChild(promptInitLabel);
+            agentDiv.appendChild(promptInitInput);
+            agentDiv.appendChild(document.createElement("br"));
+            agentDiv.appendChild(promptUpdateLabel);
+            agentDiv.appendChild(promptUpdateInput);
+            agentDiv.appendChild(document.createElement("br"));
+            agentDiv.appendChild(personalityLabel);
+            agentDiv.appendChild(personalityInput);
+            agentDiv.appendChild(document.createElement("br"));
+        
+            // Add the agent div to the form-agents div
+            formAgents.appendChild(agentDiv);
+            }
+        }
+
+    window.onload = function() {
+        generateAgentsInput();
+};
 </script>
+
+
 {% endblock %}
 
 {% block body %}
+
 <h1>Run a transmission simulation</h1>
 
 <form method="POST">
@@ -26,7 +94,7 @@
         <input type="text" id="name" name="name" value=""><br>
 
         <label for="n_agents">Number of agents:</label>
-        <input type="number" id="n_agents" name="n_agents" min="1" value="2"><br>
+        <input type="number" id="n_agents" name="n_agents" min="1" value="2" oninput="generateAgentsInput()"><br>
 
         
     </div>
@@ -51,25 +119,13 @@
     </div>
 
 
-    <div class="form-agents">
+    <div class="form-agents" id="form-agents">
         <h2>Agents parameters</h2>
-
-        <label for="prompt_init">Initial prompt:</label>
-        <input type="text" id="prompt_init" name="prompt_init" value="kid"><br>
-
-        <label for="prompt_update">Update prompt:</label>
-        <input type="text" id="prompt_update" name="prompt_update" value="kid"><br>
-
-        <label for="personality_list">Personality list (comma-separated):</label>
-        <input type="text" id="personality_list" name="personality_list" value="Empty,Empty"><br>
-
-        <label for="n_seeds">Number of seeds:</label>
-        <input type="number" id="n_seeds" name="n_seeds" min="1" value="3"><br>
-      </div>
+    </div> 
 
       <div class="form-button">
         <input type="submit" value="Run simulation">
-      </div>
+      </div> 
 
 </form>
 

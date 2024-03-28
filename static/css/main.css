@@ -94,6 +94,26 @@ label {
     font-weight: bold;
 }
 
+/* Agents displayed when selcting n_agents */
+
+.agent {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    white-space: nowrap;
+  }
+  
+  .agent label {
+    font-weight: normal;
+    font-size: 1em;
+    margin-right: 10px;
+  }
+  
+  .agent input {
+    margin-right: 20px;
+  }
+  
+
 select {
     width: 100%;
     padding: 10px;
