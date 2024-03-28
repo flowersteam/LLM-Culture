@@ -13,10 +13,14 @@ from dummy_main_analysis import main_analysis
 app = Flask(__name__)
 RESULTS_DIR = 'Results'
 
+
+# Home Page
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
+# Run simulation
 # TODO : Add a directory with the different type of prompts and parse it 
 @app.route('/simulation', methods=['GET', 'POST'])
 def simulation():
@@ -38,10 +42,13 @@ def simulation():
     
     return render_template('simulation.html')
 
+
+# Run analysis
 @app.route('/analyze', methods=['GET', 'POST'])
 def analyze():
+    result_dirs = _get_results_dir()
     if request.method == 'POST':
-        directory = request.form.get('dir')
+        directory = request.form.get('result_dir')
         ticks_font_size = int(request.form.get('ticks_font_size'))
         labels_font_size = int(request.form.get('labels_font_size'))
         title_font_size = int(request.form.get('title_font_size'))
@@ -58,35 +65,42 @@ def analyze():
         # Redirect to the new route that serves the generated plots
         return redirect(url_for('plots', dir_name=directory))
 
-    return render_template('analysis.html')
+    return render_template('analysis.html', result_dirs=result_dirs)
 
 
+# Select analyzed dir
 @app.route('/results')
 def results():
-    result_dirs = [d for d in os.listdir(RESULTS_DIR) if os.path.isdir(os.path.join(RESULTS_DIR, d))]
+    result_dirs = result_dirs = _get_results_dir()
     return render_template('results.html', result_dirs=result_dirs)
-
-
-@app.route('/show_plots', methods=['POST'])
-def show_plots():
-    result_dir = request.form.get('result_dir')
-    return redirect(url_for('plots', dir_name=result_dir))
-
 
 @app.route('/results/<path:filename>')
 def send_result_file_from_directory(filename):
     return send_from_directory(RESULTS_DIR, filename)
 
+
+# Observe analyzed dir plots
+@app.route('/show_plots', methods=['POST'])
+def show_plots():
+    result_dir = request.form.get('result_dir')
+    return redirect(url_for('plots', dir_name=result_dir))
+
+@app.route('/plots/<dir_name>')
+def plots(dir_name):
+    plot_paths = _get_plot_paths(dir_name)
+    # I would like to also pass the dir name as an argument to display it 
+    return render_template('plots.html', dir_name=dir_name, **plot_paths)
+    
+# Helper functions
 def _get_plot_paths(dir_name):
     return {
         'plot1_path': f'{dir_name}/between_gen_similarity_matrix.png',
         'plot2_path': f'{dir_name}/generation_similarities_graph.png'
     }
 
-@app.route('/plots/<dir_name>')
-def plots(dir_name):
-    plot_paths = _get_plot_paths(dir_name)
-    return render_template('plots.html', **plot_paths)
+def _get_results_dir():
+    return [d for d in os.listdir(RESULTS_DIR) if os.path.isdir(os.path.join(RESULTS_DIR, d))]
+
 
 if __name__ == "__main__":
     app.run(debug=True)

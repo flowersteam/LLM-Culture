@@ -2,23 +2,63 @@
 
 {% block head %}
 <title>Analyze Results</title>
+
+<script>
+window.onload = function() {
+    document.getElementById('analysis-form').addEventListener('submit', function(event) {
+        // Show the loading message
+        document.getElementById('loading-message').style.display = 'block';
+
+        // Submit the form
+        setTimeout(function() {
+            event.target.submit();
+        }, 100);
+    });
+};
+</script>
+
+<style>
+    #loading-message {
+        font-size: 1.2em;
+        font-weight: normal;
+        color: #333;
+        text-align: center;
+        margin-top: 20px;
+    }
+    </style>
 {% endblock %}
 
 {% block body %}
-<form method="POST">
+
+<h1>Run an analysis on an experiment</h1>
+
+<form id="analysis-form" method="POST">
     <label for="dir">Experiment directory</label>
-    <input type="text" id="dir" name="dir" value="Chain_20"><br>
+    <select name="result_dir">
+        {% for dir in result_dirs %}
+        <option value="{{ dir }}">{{ dir }}</option>
+        {% endfor %}
+    </select>
 
-    <label for="ticks_font_size">Ticks Font Size:</label><br>
-    <input type="number" id="ticks_font_size" name="ticks_font_size" value="12"><br>
+    <h4>Figure font sizes:</h4>
 
-    <label for="labels_font_size">Labels Font Size:</label><br>
-    <input type="number" id="labels_font_size" name="labels_font_size" value="14"><br>
+    <div class="size-fields">
+        <div>
+            <label for="ticks_font_size">Ticks:</label><br>
+            <input type="number" id="ticks_font_size" name="ticks_font_size" value="12">
+        </div>
+        <div>
+            <label for="labels_font_size">Labels:</label><br>
+            <input type="number" id="labels_font_size" name="labels_font_size" value="14">
+        </div>
+        <div>
+            <label for="title_font_size">Title:</label><br>
+            <input type="number" id="title_font_size" name="title_font_size" value="16">
+        </div>
+    </div>
 
-    <label for="title_font_size">Title Font Size:</label><br>
-    <input type="number" id="title_font_size" name="title_font_size" value="16"><br>
-    
     <input type="submit" value="Launch Analysis">
+    <div id="loading-message" style="display: none;">Analyzing experiment, please wait ...</div>
 </form>
-{% endblock %}
 
+{% endblock %}

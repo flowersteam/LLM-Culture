@@ -94,6 +94,22 @@ label {
     font-weight: bold;
 }
 
+/* size fields to generate plots */
+
+.size-fields {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.size-fields div {
+    width: 30%;
+}
+
+.size-fields label {
+    font-size: 0.8em;
+}
+
 /* Agents displayed when selcting n_agents */
 
 .agent {

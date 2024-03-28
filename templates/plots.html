@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<h1>Plots</h1>
+<h1>{{ dir_name }} analysis figures</h1>
 
 <img class="plot-img" src="{{ url_for('send_result_file_from_directory', filename=plot1_path) }}" alt="Plot 1">
 <img class="plot-img" src="{{ url_for('send_result_file_from_directory', filename=plot2_path) }}" alt="Plot 2">
