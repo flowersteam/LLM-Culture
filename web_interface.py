@@ -1,4 +1,4 @@
-import os 
+import os
 
 from flask import Flask
 from flask import request
@@ -16,6 +16,27 @@ RESULTS_DIR = 'Results'
 @app.route('/')
 def index():
     return render_template('index.html')
+
+# TODO : Add a directory with the different type of prompts and parse it 
+@app.route('/simulation', methods=['GET', 'POST'])
+def simulation():
+    if request.method == 'POST':
+        experiment_name = request.form.get('name')
+        n_agents = int(request.form.get('n_agents'))
+        n_timesteps = int(request.form.get('n_timesteps'))
+        network_structure = request.form.get('network_structure')
+        n_cliques = int(request.form.get('n_cliques'))
+        prompt_init = request.form.get('prompt_init')
+        prompt_update = request.form.get('prompt_update')
+        # TODO : Change the logic to have a list of agents (maybe with a system of idx if there are many)
+        personality_list = [p.strip() for p in request.form.get('personality_list').split(',')]
+        output_dir = f"Results/{experiment_name}"
+        output_file = 'output.json'
+        n_seeds = int(request.form.get('n_seeds'))
+
+        return 'Launching the analysis '
+    
+    return render_template('simulation.html')
 
 @app.route('/analyze', methods=['GET', 'POST'])
 def analyze():
@@ -64,8 +85,6 @@ def _get_plot_paths(dir_name):
 
 @app.route('/plots/<dir_name>')
 def plots(dir_name):
-    # plot1_path = f'{dir_name}/between_gen_similarity_matrix.png'
-    # plot2_path = f'{dir_name}/generation_similarities_graph.png'
     plot_paths = _get_plot_paths(dir_name)
     return render_template('plots.html', **plot_paths)
 
