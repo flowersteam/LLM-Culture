@@ -9,7 +9,6 @@ from flask import send_from_directory
 
 from dummy_main_analysis import main_analysis
 
-
 app = Flask(__name__)
 RESULTS_DIR = 'Results'
 
@@ -30,13 +29,15 @@ def simulation():
         n_timesteps = int(request.form.get('n_timesteps'))
         network_structure = request.form.get('network_structure')
         n_cliques = int(request.form.get('n_cliques'))
+        n_seeds = int(request.form.get('n_seeds'))
+        
+        # TODO : Change the logic to have a list of agents (maybe with a system of idx if there are many)
         prompt_init = request.form.get('prompt_init')
         prompt_update = request.form.get('prompt_update')
-        # TODO : Change the logic to have a list of agents (maybe with a system of idx if there are many)
         personality_list = [p.strip() for p in request.form.get('personality_list').split(',')]
+
         output_dir = f"Results/{experiment_name}"
         output_file = 'output.json'
-        n_seeds = int(request.form.get('n_seeds'))
 
         return 'Launching the analysis '
     
@@ -88,9 +89,9 @@ def show_plots():
 @app.route('/plots/<dir_name>')
 def plots(dir_name):
     plot_paths = _get_plot_paths(dir_name)
-    # I would like to also pass the dir name as an argument to display it 
     return render_template('plots.html', dir_name=dir_name, **plot_paths)
-    
+
+  
 # Helper functions
 def _get_plot_paths(dir_name):
     return {
