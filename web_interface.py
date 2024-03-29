@@ -27,23 +27,35 @@ def index():
 @app.route('/simulation', methods=['GET', 'POST'])
 def simulation():
     prompt_options = _get_prompt_options()
-    print(f"{prompt_options = }")
     if request.method == 'POST':
         experiment_name = request.form.get('name')
         n_agents = int(request.form.get('n_agents'))
         n_timesteps = int(request.form.get('n_timesteps'))
         network_structure = request.form.get('network_structure')
         n_cliques = int(request.form.get('n_cliques'))
-        n_seeds = int(request.form.get('n_seeds'))
+        # TODO : Add back the n_seeds parameter in the web app 
+        # n_seeds = int(request.form.get('n_seeds'))
         
-        # TODO : Change the logic to have a list of agents (maybe with a system of idx if there are many)
-        prompt_init = request.form.get('prompt_init')
-        prompt_update = request.form.get('prompt_update')
-        personality_list = [p.strip() for p in request.form.get('personality_list').split(',')]
-        
+        # Get the agent parameters
+        agents = []
+        for i in range(n_agents):   
+            agent = {
+                'prompt_init': request.form.get(f'prompt_init_{i}'),
+                'prompt_update': request.form.get(f'prompt_update_{i}'),
+                'personality': request.form.getlist(f'personality_list_{i}')
+            }
+            agents.append(agent)
 
         output_dir = f"Results/{experiment_name}"
         output_file = 'output.json'
+
+        print(f"Experiment name: {experiment_name}")
+        print(f"Number of agents: {n_agents}")
+        print(f"Number of timesteps: {n_timesteps}")
+        print(f"Network structure: {network_structure}")
+        print(f"Number of cliques: {n_cliques}")
+        # print(f"Number of seeds: {n_seeds}")
+        print(f"Agents: {agents}")
 
         return 'Launching the analysis '
     
