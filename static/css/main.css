@@ -111,23 +111,25 @@ label {
 
 /* Agents displayed when selcting n_agents */
 
-.agent {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    white-space: nowrap;
-  }
-  
-  .agent label {
-    font-weight: normal;
-    font-size: 1em;
+.agent-select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
     margin-right: 10px;
-  }
-  
-  .agent input {
-    margin-right: 20px;
-  }
-  
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+#form-agents table {
+    width: 100%;
+}
+
+#form-agents table th,
+#form-agents table td {
+    width: 33%;
+}
+
 
 select {
     width: 100%;
