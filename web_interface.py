@@ -1,4 +1,5 @@
 import os
+import json
 
 from flask import Flask
 from flask import request
@@ -8,9 +9,11 @@ from flask import url_for
 from flask import send_from_directory
 
 from dummy_main_analysis import main_analysis
+from dummy_comparison_analysis import comparison_analysis
 
 app = Flask(__name__)
 RESULTS_DIR = 'Results'
+COMPARISON_DIR = os.path.join(RESULTS_DIR, 'Comparisons')
 
 
 # Home Page
@@ -23,27 +26,43 @@ def index():
 # TODO : Add a directory with the different type of prompts and parse it 
 @app.route('/simulation', methods=['GET', 'POST'])
 def simulation():
+    prompt_options = _get_prompt_options()
     if request.method == 'POST':
         experiment_name = request.form.get('name')
         n_agents = int(request.form.get('n_agents'))
         n_timesteps = int(request.form.get('n_timesteps'))
         network_structure = request.form.get('network_structure')
         n_cliques = int(request.form.get('n_cliques'))
-        n_seeds = int(request.form.get('n_seeds'))
+        # TODO : Add back the n_seeds parameter in the web app 
+        # n_seeds = int(request.form.get('n_seeds'))
         
-        # TODO : Change the logic to have a list of agents (maybe with a system of idx if there are many)
-        prompt_init = request.form.get('prompt_init')
-        prompt_update = request.form.get('prompt_update')
-        personality_list = [p.strip() for p in request.form.get('personality_list').split(',')]
+        # Get the agent parameters
+        agents = []
+        for i in range(n_agents):   
+            agent = {
+                'prompt_init': request.form.get(f'prompt_init_{i}'),
+                'prompt_update': request.form.get(f'prompt_update_{i}'),
+                'personality': request.form.getlist(f'personality_list_{i}')
+            }
+            agents.append(agent)
 
         output_dir = f"Results/{experiment_name}"
         output_file = 'output.json'
 
+        print(f"Experiment name: {experiment_name}")
+        print(f"Number of agents: {n_agents}")
+        print(f"Number of timesteps: {n_timesteps}")
+        print(f"Network structure: {network_structure}")
+        print(f"Number of cliques: {n_cliques}")
+        # print(f"Number of seeds: {n_seeds}")
+        print(f"Agents: {agents}")
+
         return 'Launching the analysis '
     
-    return render_template('simulation.html')
+    return render_template('simulation.html', prompt_options=prompt_options)
 
 
+# TODO : Also add an option for comparison analysis
 # Run analysis
 @app.route('/analyze', methods=['GET', 'POST'])
 def analyze():
@@ -59,9 +78,9 @@ def analyze():
                       'labels': labels_font_size,
                       'title': title_font_size}
 
-        
         print(f"\nLaunching analysis on the {analyzed_dir} results")
-        main_analysis(analyzed_dir, font_sizes, plot=False)
+        if directory.startswith('Comparisons'):
+            main_analysis(analyzed_dir, font_sizes, plot=False)
 
         # Redirect to the new route that serves the generated plots
         return redirect(url_for('plots', dir_name=directory))
@@ -100,7 +119,26 @@ def _get_plot_paths(dir_name):
     }
 
 def _get_results_dir():
-    return [d for d in os.listdir(RESULTS_DIR) if os.path.isdir(os.path.join(RESULTS_DIR, d))]
+    results_dirs = [d for d in os.listdir(RESULTS_DIR) if os.path.isdir(os.path.join(RESULTS_DIR, d))]
+    comparison_dirs = [d for d in os.listdir(COMPARISON_DIR) if os.path.isdir(os.path.join(COMPARISON_DIR, d))]
+    return results_dirs + comparison_dirs
+
+def _get_prompt_options():
+    option_files = {
+        'initial_prompts': 'data/parameters/prompt_init.json',
+        'update_prompts': 'data/parameters/prompt_update.json',
+        'personalities': 'data/parameters/personnalities.json'
+    }
+
+    options = {}
+
+    for option_name, file_path in option_files.items():
+        with open(file_path, 'r') as f:
+            option_data = json.load(f)
+
+        options[option_name] = [o['name'] for o in option_data]
+
+    return options
 
 
 if __name__ == "__main__":
