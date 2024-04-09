@@ -9,7 +9,6 @@ from flask import url_for
 from flask import send_from_directory
 
 from dummy_main_analysis import main_analysis
-from dummy_comparison_analysis import comparison_analysis
 
 app = Flask(__name__)
 RESULTS_DIR = 'Results'
@@ -31,33 +30,41 @@ def simulation():
         experiment_name = request.form.get('name')
         n_agents = int(request.form.get('n_agents'))
         n_timesteps = int(request.form.get('n_timesteps'))
+        n_seeds = int(request.form.get('n_seeds'))
         network_structure = request.form.get('network_structure')
         n_cliques = int(request.form.get('n_cliques'))
-        # TODO : Add back the n_seeds parameter in the web app 
-        # n_seeds = int(request.form.get('n_seeds'))
-        
-        # Get the agent parameters
-        agents = []
-        for i in range(n_agents):   
-            agent = {
-                'prompt_init': request.form.get(f'prompt_init_{i}'),
-                'prompt_update': request.form.get(f'prompt_update_{i}'),
-                'personality': request.form.getlist(f'personality_list_{i}')
-            }
-            agents.append(agent)
+
+        # Get the agents parameters
+        personalities = []
+        init_prompts = []
+        update_prompts = []
+        for i in range(n_agents):
+            personalities.append(request.form.getlist(f'personality_{i}'))
+            init_prompts.append(request.form.get(f'prompt_init_{i}'))
+            update_prompts.append(request.form.getlist(f'prompt_update_{i}'))
 
         output_dir = f"Results/{experiment_name}"
         output_file = 'output.json'
 
-        print(f"Experiment name: {experiment_name}")
-        print(f"Number of agents: {n_agents}")
-        print(f"Number of timesteps: {n_timesteps}")
-        print(f"Network structure: {network_structure}")
-        print(f"Number of cliques: {n_cliques}")
-        # print(f"Number of seeds: {n_seeds}")
-        print(f"Agents: {agents}")
+        params = {
+        "Experiment name": experiment_name,
+        "Number of agents": n_agents,
+        "Number of timesteps": n_timesteps,
+        "Number of seeds": n_seeds,
+        "Network structure": network_structure,
+        "Number of cliques": n_cliques,
+        "Personalities": personalities,
+        "Init prompts": init_prompts,
+        "Update prompts": update_prompts,
+        "Output directory": output_dir,
+        "Output file": output_file
+        }
 
-        return 'Launching the analysis '
+        param_strings = [f"{key}: {value}" for key, value in params.items()]
+        param_list = "\n".join(param_strings)
+
+        run_analysis_message = f"Launching the analysis with the following parameters:\n\n{param_list}\n"
+        return run_analysis_message
     
     return render_template('simulation.html', prompt_options=prompt_options)
 
@@ -127,7 +134,7 @@ def _get_prompt_options():
     option_files = {
         'initial_prompts': 'data/parameters/prompt_init.json',
         'update_prompts': 'data/parameters/prompt_update.json',
-        'personalities': 'data/parameters/personnalities.json'
+        'personalities': 'data/parameters/personalities.json'
     }
 
     options = {}

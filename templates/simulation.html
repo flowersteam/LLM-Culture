@@ -52,8 +52,8 @@
             promptUpdateSelect.name = `prompt_update_${i}`;
             promptUpdateSelect.className = "agent-select"; // Add a class name to the select element
             const personalitySelect = document.createElement("select");
-            personalitySelect.id = `personality_list_${i}`;
-            personalitySelect.name = `personality_list_${i}`;
+            personalitySelect.id = `personality_${i}`;
+            personalitySelect.name = `personality_${i}`;
             personalitySelect.className = "agent-select"; // Add a class name to the select element
 
             // Populate the options for each select element using the prompt options
@@ -121,7 +121,8 @@
         <label for="n_agents">Number of agents:</label>
         <input type="number" id="n_agents" name="n_agents" min="1" value="2" oninput="generateAgentsInput()"><br>
 
-        
+        <label for="n_seeds">Number of seeds:</label>
+        <input type="number" id="n_seeds" name="n_seeds" min="1" value="1"><br>
     </div>
 
     <div class="form-column">
@@ -136,13 +137,11 @@
             <option value="caveman">Caveman</option>
         </select><br>
 
+        <div id="n_cliques_container" style="display: none;">
+            <label for="n_cliques">Number of cliques in caveman network:</label>
+            <input type="number" id="n_cliques" name="n_cliques" min="1" value="2"><br>
+        </div>
     </div>
-
-    <div id="n_cliques_container" style="display: none;">
-        <label for="n_cliques">Number of cliques in caveman network:</label>
-        <input type="number" id="n_cliques" name="n_cliques" min="1" value="2"><br>
-    </div>
-
 
     <div class="form-agents" id="form-agents">
         <h2>Agents parameters</h2>
