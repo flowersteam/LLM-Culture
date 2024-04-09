@@ -223,7 +223,7 @@ class ParametersFrame(tk.Frame):
        
 
         def update_perso_list(event):
-            _ , _ , self.personalities = self.create_personnality_list(int(self.n_agents_var.get()), json_file_personnalities)
+            _ , _ , self.personalities = self.create_personality_list(int(self.n_agents_var.get()), json_file_personnalities)
 
         agent_entry.bind('<FocusOut>', update_perso_list )
 
@@ -297,7 +297,7 @@ class ParametersFrame(tk.Frame):
                              '', column=1)  
         create_combobox_from_json(json_file_personnalities, self.personality)
         # Button to add new item
-        add_button_personnalities = tk.Button(self, text="Add Personnality...", command=lambda: add_item_dialog(self, json_file_personnalities, self.personality), )
+        add_button_personnalities = tk.Button(self, text="Add personality...", command=lambda: add_item_dialog(self, json_file_personnalities, self.personality), )
     #add_button.pack(pady=5)
         add_button_personnalities.grid(column=3, row=6, sticky='ew', padx=10, pady=5)
         remove_button_personnalities = tk.Button(self, text="Remove this Item", command=lambda: remove_item(json_file_personnalities, self.personality))
@@ -305,7 +305,7 @@ class ParametersFrame(tk.Frame):
         reveal_button_personnalities = tk.Button(self, text="Reveal content", command=lambda: reveal_content(json_file_personnalities, self.personality))
         reveal_button_personnalities.grid(column=5, row=6, sticky='ew', padx=10, pady=5)
 
-        canvas, scrollbar, self.personalities = self.create_personnality_list(int(self.n_agents_var.get()), json_file_personnalities)
+        canvas, scrollbar, self.personalities = self.create_personality_list(int(self.n_agents_var.get()), json_file_personnalities)
         
         
 
@@ -343,7 +343,7 @@ class ParametersFrame(tk.Frame):
         return [perso.get() for perso in self.personalities]
     
 
-    def create_personnality_list(self, n_agents, json_file):
+    def create_personality_list(self, n_agents, json_file):
         perso_frame = ttk.Frame(self)
         perso_frame.grid(row = 7, column = 0, columnspan=4, sticky= 'w')
         def on_configure(event):

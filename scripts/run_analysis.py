@@ -15,13 +15,9 @@ def main_analysis(folder, font_sizes = {'ticks': 12, 'labels': 14, 'title': 16},
 
     all_seeds_flat_stories, all_seeds_keywords, all_seeds_stem_words = preprocess_stories(all_seeds_stories)
     all_seeds_similarity_matrix = get_similarity_matrix(all_seeds_flat_stories)
-
     all_seeds_between_gen_similarity_matrix = compute_between_gen_similarities(all_seeds_similarity_matrix, n_gen, n_agents)
-
-
     all_seeds_polarities, all_seeds_subjectivities = get_polarities_subjectivities(all_seeds_stories)
     all_seeds_creativities = get_creativity_indexes(all_seeds_stories, folder)
-
 
     # Plot all the desired graphs :
     for seed in range(n_seeds):
