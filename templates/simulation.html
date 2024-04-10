@@ -3,123 +3,125 @@
 {% block head %}
 <title>Simulation</title>
 <script>
-    function toggleCliques() {
-        var network_structure = document.getElementById("network_structure");
-        var n_cliques_container = document.getElementById("n_cliques_container");
-        if (network_structure.value == "caveman") {
-            n_cliques_container.style.display = "block";
-        } else {
-            n_cliques_container.style.display = "none";
-        }
+function toggleCliques() {
+    var network_structure = document.getElementById("network_structure");
+    var n_cliques_container = document.getElementById("n_cliques_container");
+    if (network_structure.value == "caveman") {
+        n_cliques_container.style.display = "block";
+    } else {
+        n_cliques_container.style.display = "none";
     }
+}
 
-    function generateAgentsInput() {
-        const nAgents = parseInt(document.getElementById("n_agents").value)
-        const formAgents = document.getElementById("form-agents")
+function generateAgentsInput() {
+    const nAgents = parseInt(document.getElementById("n_agents").value)
+    const formAgents = document.getElementById("form-agents")
 
-        formAgents.innerHTML = "<h2>Agents parameters</h2>";
+    formAgents.innerHTML = "<h2>Agents parameters</h2>";
 
-        // Get the prompt options from the Flask template context
-        const promptOptions = JSON.parse('{{ prompt_options|tojson }}');
+    // Get the prompt options from the Flask template context
+    const promptOptions = JSON.parse('{{ prompt_options|tojson }}');
 
-        const agentsTable = document.createElement("table");
+    const agentsTable = document.createElement("table");
 
-        const headerRow = document.createElement("tr");
-        const initPromptHeader = document.createElement("th");
-        initPromptHeader.textContent = "Initial prompt";
-        const updatePromptHeader = document.createElement("th");
-        updatePromptHeader.textContent = "Update prompt";
-        const personalityHeader = document.createElement("th");
-        personalityHeader.textContent = "Personality";
-        headerRow.appendChild(initPromptHeader);
-        headerRow.appendChild(updatePromptHeader);
-        headerRow.appendChild(personalityHeader);
-        agentsTable.appendChild(headerRow);
+    const headerRow = document.createElement("tr");
+    const initPromptHeader = document.createElement("th");
+    initPromptHeader.textContent = "Initial prompt";
+    const updatePromptHeader = document.createElement("th");
+    updatePromptHeader.textContent = "Update prompt";
+    const personalityHeader = document.createElement("th");
+    personalityHeader.textContent = "Personality";
+    headerRow.appendChild(initPromptHeader);
+    headerRow.appendChild(updatePromptHeader);
+    headerRow.appendChild(personalityHeader);
+    agentsTable.appendChild(headerRow);
 
-        // Generate table rows for each agent
-        for (let i = 0; i < nAgents; i++) {
-            const agentRow = document.createElement("tr");
-            // Create the select elements for this agent
-            const promptInitSelect = document.createElement("select");
-            promptInitSelect.id = `prompt_init_${i}`;
-            promptInitSelect.name = `prompt_init_${i}`;
-            promptInitSelect.className = "agent-select"; 
-            // Remove the following lines if you want to pass different init prompts
-            promptInitSelect.addEventListener("change", function (event) {
-                const newValue = event.target.value;
-                const initPromptSelects = document.querySelectorAll(".agent-select[id^='prompt_init_']");
+    // Generate table rows for each agent
+    for (let i = 0; i < nAgents; i++) {
+        const agentRow = document.createElement("tr");
+        // Create the select elements for this agent
+        const promptInitSelect = document.createElement("select");
+        promptInitSelect.id = `prompt_init_${i}`;
+        promptInitSelect.name = `prompt_init_${i}`;
+        promptInitSelect.className = "agent-select"; 
+        // Remove the following lines if you want to pass different init prompts
+        promptInitSelect.addEventListener("change", function (event) {
+            const newValue = event.target.value;
+            const initPromptSelects = document.querySelectorAll(".agent-select[id^='prompt_init_']");
 
-                for (const select of initPromptSelects) {
-                    if (select !== event.target) {
-                        select.value = newValue;
-                    }
+            for (const select of initPromptSelects) {
+                if (select !== event.target) {
+                    select.value = newValue;
                 }
-            });
-            const promptUpdateSelect = document.createElement("select");
-            promptUpdateSelect.id = `prompt_update_${i}`;
-            promptUpdateSelect.name = `prompt_update_${i}`;
-            promptUpdateSelect.className = "agent-select"; 
-            // Remove the following lines if you want to pass different update prompts
-            promptUpdateSelect.addEventListener("change", function(event) {
-                const newValue = event.target.value;
-                const updatePromptsSelects = document.querySelectorAll(".agent-select[id^='prompt_update_']");
+            }
+        });
+        const promptUpdateSelect = document.createElement("select");
+        promptUpdateSelect.id = `prompt_update_${i}`;
+        promptUpdateSelect.name = `prompt_update_${i}`;
+        promptUpdateSelect.className = "agent-select"; 
+        // Remove the following lines if you want to pass different update prompts
+        promptUpdateSelect.addEventListener("change", function(event) {
+            const newValue = event.target.value;
+            const updatePromptsSelects = document.querySelectorAll(".agent-select[id^='prompt_update_']");
 
-                for (const select of updatePromptsSelects) {
-                    if (select !== event.target) {
-                        select.value = newValue;
-                    }
+            for (const select of updatePromptsSelects) {
+                if (select !== event.target) {
+                    select.value = newValue;
                 }
-            });
-            const personalitySelect = document.createElement("select");
-            personalitySelect.id = `personality_${i}`;
-            personalitySelect.name = `personality_${i}`;
-            personalitySelect.className = "agent-select";
-
-            for (const option of promptOptions.initial_prompts) {
-                const promptInitOption = document.createElement("option");
-                promptInitOption.value = option;
-                promptInitOption.textContent = option;
-                promptInitSelect.appendChild(promptInitOption);
             }
+        });
+        const personalitySelect = document.createElement("select");
+        personalitySelect.id = `personality_${i}`;
+        personalitySelect.name = `personality_${i}`;
+        personalitySelect.className = "agent-select";
 
-            for (const option of promptOptions.update_prompts) {
-                const promptUpdateOption = document.createElement("option");
-                promptUpdateOption.value = option;
-                promptUpdateOption.textContent = option;
-                promptUpdateSelect.appendChild(promptUpdateOption);
-            }
-
-            for (const option of promptOptions.personalities) {
-                const personalityOption = document.createElement("option");
-                personalityOption.value = option;
-                personalityOption.textContent = option;
-                personalitySelect.appendChild(personalityOption);
-            }
-
-            // Add the select elements to the agent row
-            const initPromptCell = document.createElement("td");
-            initPromptCell.appendChild(promptInitSelect);
-            const updatePromptCell = document.createElement("td");
-            updatePromptCell.appendChild(promptUpdateSelect);
-            const personalityCell = document.createElement("td");
-            personalityCell.appendChild(personalitySelect);
-            agentRow.appendChild(initPromptCell);
-            agentRow.appendChild(updatePromptCell);
-            agentRow.appendChild(personalityCell);
-
-            // Add the agent row to the table
-            agentsTable.appendChild(agentRow);
+        for (const option of promptOptions.initial_prompts) {
+            const promptInitOption = document.createElement("option");
+            promptInitOption.value = option;
+            promptInitOption.textContent = option;
+            promptInitSelect.appendChild(promptInitOption);
         }
 
-        // Add the table to the form-agents div
-        formAgents.appendChild(agentsTable);
+        for (const option of promptOptions.update_prompts) {
+            const promptUpdateOption = document.createElement("option");
+            promptUpdateOption.value = option;
+            promptUpdateOption.textContent = option;
+            promptUpdateSelect.appendChild(promptUpdateOption);
+        }
+
+        for (const option of promptOptions.personalities) {
+            const personalityOption = document.createElement("option");
+            personalityOption.value = option;
+            personalityOption.textContent = option;
+            personalitySelect.appendChild(personalityOption);
+        }
+
+        // Add the select elements to the agent row
+        const initPromptCell = document.createElement("td");
+        initPromptCell.appendChild(promptInitSelect);
+        const updatePromptCell = document.createElement("td");
+        updatePromptCell.appendChild(promptUpdateSelect);
+        const personalityCell = document.createElement("td");
+        personalityCell.appendChild(personalitySelect);
+        agentRow.appendChild(initPromptCell);
+        agentRow.appendChild(updatePromptCell);
+        agentRow.appendChild(personalityCell);
+
+        // Add the agent row to the table
+        agentsTable.appendChild(agentRow);
     }
 
+    // Add the table to the form-agents div
+    formAgents.appendChild(agentsTable);
+}
 
 
-    window.onload = function() {
-        generateAgentsInput();
+
+window.onload = function() {
+    generateAgentsInput();
 };
+
+    
 </script>
 
 
@@ -166,7 +168,7 @@
     </div> 
 
 
-    <h3 style=" margin-top: 30px;">Add a new prompt</h3>
+    <h2 style=" margin-top: 30px;">Add a new prompt</h2>
     <div style="display: flex; flex-direction: row; justify-content: space-between;">
         <div style="display: flex; flex-direction: row; width: 25%;">
             <div style="display: flex; flex-direction: column;">
@@ -199,7 +201,7 @@
     <div class="form-button">
         <input type="submit" name="run_simulation" value="Run simulation">
     </div> 
-
+    <div id="loading-message" style="display: none;">Simulation running, please wait ...</div>
 </form>
 
 {% endblock %}
