@@ -9,6 +9,7 @@ from flask import url_for
 from flask import send_from_directory
 
 from dummy_main_analysis import main_analysis
+from dummy_run_simulation import run_simulation
 
 app = Flask(__name__)
 RESULTS_DIR = 'Results'
@@ -47,12 +48,16 @@ def simulation():
             init_prompts = []
             update_prompts = []
             for i in range(n_agents):
-                personalities.append(request.form.getlist(f'personality_{i}'))
+                personalities.append(request.form.get(f'personality_{i}'))
                 init_prompts.append(request.form.get(f'prompt_init_{i}'))
-                update_prompts.append(request.form.getlist(f'prompt_update_{i}'))
+                update_prompts.append(request.form.get(f'prompt_update_{i}'))
+
+            # At the moment the simulation only takes 1 init and update prompt for all the agents (might change later)
+            init_prompt = init_prompts[0]
+            update_prompt = update_prompts[0]
 
             output_dir = f"Results/{experiment_name}"
-            output_file = 'output.json'
+            # output_file = 'output.json'
             server_url = request.form.get('server_url')
 
             params = {
@@ -63,10 +68,9 @@ def simulation():
             "Network structure": network_structure,
             "Number of cliques": n_cliques,
             "Personalities": personalities,
-            "Init prompts": init_prompts,
-            "Update prompts": update_prompts,
+            "Init prompts": init_prompt,
+            "Update prompts": update_prompt,
             "Output directory": output_dir,
-            "Output file": output_file,
             "Server url": server_url
             }
 
@@ -74,7 +78,22 @@ def simulation():
             param_list = "\n".join(param_strings)
 
             run_analysis_message = f"Launching the analysis with the following parameters:\n\n{param_list}\n"
-            return run_analysis_message
+            print(run_analysis_message)
+
+            run_simulation(
+                n_agents=n_agents,
+                n_timesteps=n_timesteps,
+                n_seeds=n_seeds,
+                network_structure_name=network_structure,
+                n_cliques=n_cliques,
+                personalities=personalities,
+                init_prompt=init_prompt,
+                update_prompt=update_prompt,
+                output_dir=output_dir,
+                server_url=server_url
+            )
+
+            return "Simulation done"
   
     prompt_options = _get_prompt_options()
 
@@ -98,8 +117,8 @@ def analyze():
                       'title': title_font_size}
 
         print(f"\nLaunching analysis on the {analyzed_dir} results")
-        if directory.startswith('Comparisons'):
-            main_analysis(analyzed_dir, font_sizes, plot=False)
+        # if directory.startswith('Comparisons'):
+        main_analysis(analyzed_dir, font_sizes, plot=False)
 
         # Redirect to the new route that serves the generated plots
         return redirect(url_for('plots', dir_name=directory))
@@ -133,8 +152,8 @@ def plots(dir_name):
 # Helper functions
 def _get_plot_paths(dir_name):
     return {
-        'plot1_path': f'{dir_name}/between_gen_similarity_matrix.png',
-        'plot2_path': f'{dir_name}/generation_similarities_graph.png'
+        'plot1_path': f'{dir_name}/between_gen_similarity_matrix0.png',
+        'plot2_path': f'{dir_name}/generation_similarities_graph0.png'
     }
 
 def _get_results_dir():

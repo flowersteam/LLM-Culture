@@ -39,12 +39,12 @@
         // Generate table rows for each agent
         for (let i = 0; i < nAgents; i++) {
             const agentRow = document.createElement("tr");
-
             // Create the select elements for this agent
             const promptInitSelect = document.createElement("select");
             promptInitSelect.id = `prompt_init_${i}`;
             promptInitSelect.name = `prompt_init_${i}`;
             promptInitSelect.className = "agent-select"; 
+            // Remove the following lines if you want to pass different init prompts
             promptInitSelect.addEventListener("change", function (event) {
                 const newValue = event.target.value;
                 const initPromptSelects = document.querySelectorAll(".agent-select[id^='prompt_init_']");
@@ -59,6 +59,7 @@
             promptUpdateSelect.id = `prompt_update_${i}`;
             promptUpdateSelect.name = `prompt_update_${i}`;
             promptUpdateSelect.className = "agent-select"; 
+            // Remove the following lines if you want to pass different update prompts
             promptUpdateSelect.addEventListener("change", function(event) {
                 const newValue = event.target.value;
                 const updatePromptsSelects = document.querySelectorAll(".agent-select[id^='prompt_update_']");
