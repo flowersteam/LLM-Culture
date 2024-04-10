@@ -25,7 +25,7 @@ def index():
 @app.route('/simulation', methods=['GET', 'POST'])
 def simulation():
     if request.method == 'POST':
-        # You can either add a new prompt
+        # You can either add a new prompt 
         if request.form.get('add_prompt'):
             prompt_type = request.form.get('prompt_type')
             name = request.form.get('prompt_name')
@@ -53,6 +53,7 @@ def simulation():
 
             output_dir = f"Results/{experiment_name}"
             output_file = 'output.json'
+            server_url = request.form.get('server_url')
 
             params = {
             "Experiment name": experiment_name,
@@ -65,7 +66,8 @@ def simulation():
             "Init prompts": init_prompts,
             "Update prompts": update_prompts,
             "Output directory": output_dir,
-            "Output file": output_file
+            "Output file": output_file,
+            "Server url": server_url
             }
 
             param_strings = [f"{key}: {value}" for key, value in params.items()]
