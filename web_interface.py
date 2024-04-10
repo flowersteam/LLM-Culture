@@ -22,50 +22,60 @@ def index():
 
 
 # Run simulation
-# TODO : Add a directory with the different type of prompts and parse it 
 @app.route('/simulation', methods=['GET', 'POST'])
 def simulation():
-    prompt_options = _get_prompt_options()
     if request.method == 'POST':
-        experiment_name = request.form.get('name')
-        n_agents = int(request.form.get('n_agents'))
-        n_timesteps = int(request.form.get('n_timesteps'))
-        n_seeds = int(request.form.get('n_seeds'))
-        network_structure = request.form.get('network_structure')
-        n_cliques = int(request.form.get('n_cliques'))
+        # You can either add a new prompt
+        if request.form.get('add_prompt'):
+            prompt_type = request.form.get('prompt_type')
+            name = request.form.get('prompt_name')
+            prompt = request.form.get('prompt')
+            _write_prompt_option(prompt_type, name, prompt)
+        
+        # Or run a simulation
+        if request.form.get('run_simulation'):
+            # Get the general simulation parameters
+            experiment_name = request.form.get('name')
+            n_agents = int(request.form.get('n_agents'))
+            n_timesteps = int(request.form.get('n_timesteps'))
+            n_seeds = int(request.form.get('n_seeds'))
+            network_structure = request.form.get('network_structure')
+            n_cliques = int(request.form.get('n_cliques'))
 
-        # Get the agents parameters
-        personalities = []
-        init_prompts = []
-        update_prompts = []
-        for i in range(n_agents):
-            personalities.append(request.form.getlist(f'personality_{i}'))
-            init_prompts.append(request.form.get(f'prompt_init_{i}'))
-            update_prompts.append(request.form.getlist(f'prompt_update_{i}'))
+            # Get the agents parameters
+            personalities = []
+            init_prompts = []
+            update_prompts = []
+            for i in range(n_agents):
+                personalities.append(request.form.getlist(f'personality_{i}'))
+                init_prompts.append(request.form.get(f'prompt_init_{i}'))
+                update_prompts.append(request.form.getlist(f'prompt_update_{i}'))
 
-        output_dir = f"Results/{experiment_name}"
-        output_file = 'output.json'
+            output_dir = f"Results/{experiment_name}"
+            output_file = 'output.json'
 
-        params = {
-        "Experiment name": experiment_name,
-        "Number of agents": n_agents,
-        "Number of timesteps": n_timesteps,
-        "Number of seeds": n_seeds,
-        "Network structure": network_structure,
-        "Number of cliques": n_cliques,
-        "Personalities": personalities,
-        "Init prompts": init_prompts,
-        "Update prompts": update_prompts,
-        "Output directory": output_dir,
-        "Output file": output_file
-        }
+            params = {
+            "Experiment name": experiment_name,
+            "Number of agents": n_agents,
+            "Number of timesteps": n_timesteps,
+            "Number of seeds": n_seeds,
+            "Network structure": network_structure,
+            "Number of cliques": n_cliques,
+            "Personalities": personalities,
+            "Init prompts": init_prompts,
+            "Update prompts": update_prompts,
+            "Output directory": output_dir,
+            "Output file": output_file
+            }
 
-        param_strings = [f"{key}: {value}" for key, value in params.items()]
-        param_list = "\n".join(param_strings)
+            param_strings = [f"{key}: {value}" for key, value in params.items()]
+            param_list = "\n".join(param_strings)
 
-        run_analysis_message = f"Launching the analysis with the following parameters:\n\n{param_list}\n"
-        return run_analysis_message
-    
+            run_analysis_message = f"Launching the analysis with the following parameters:\n\n{param_list}\n"
+            return run_analysis_message
+  
+    prompt_options = _get_prompt_options()
+
     return render_template('simulation.html', prompt_options=prompt_options)
 
 
@@ -117,7 +127,7 @@ def plots(dir_name):
     plot_paths = _get_plot_paths(dir_name)
     return render_template('plots.html', dir_name=dir_name, **plot_paths)
 
-  
+
 # Helper functions
 def _get_plot_paths(dir_name):
     return {
@@ -138,14 +148,24 @@ def _get_prompt_options():
     }
 
     options = {}
-
     for option_name, file_path in option_files.items():
         with open(file_path, 'r') as f:
             option_data = json.load(f)
-
         options[option_name] = [o['name'] for o in option_data]
 
     return options
+
+def _write_prompt_option(prompt_type, name, prompt):
+    file_path = f"data/parameters/{prompt_type}.json"
+    with open(file_path, 'r') as f:
+        prompts = json.load(f)
+
+    new_prompt = {"name": name, "prompt": prompt}
+    print(f"{new_prompt = }")
+    prompts.append(new_prompt)
+
+    with open(file_path, 'w') as f:
+        json.dump(prompts, f, indent=4)
 
 
 if __name__ == "__main__":

@@ -22,10 +22,8 @@
         // Get the prompt options from the Flask template context
         const promptOptions = JSON.parse('{{ prompt_options|tojson }}');
 
-        // Create a table to hold the input fields for all agents
         const agentsTable = document.createElement("table");
 
-        // Create the table header row
         const headerRow = document.createElement("tr");
         const initPromptHeader = document.createElement("th");
         initPromptHeader.textContent = "Initial prompt";
@@ -46,17 +44,16 @@
             const promptInitSelect = document.createElement("select");
             promptInitSelect.id = `prompt_init_${i}`;
             promptInitSelect.name = `prompt_init_${i}`;
-            promptInitSelect.className = "agent-select"; // Add a class name to the select element
+            promptInitSelect.className = "agent-select"; 
             const promptUpdateSelect = document.createElement("select");
             promptUpdateSelect.id = `prompt_update_${i}`;
             promptUpdateSelect.name = `prompt_update_${i}`;
-            promptUpdateSelect.className = "agent-select"; // Add a class name to the select element
+            promptUpdateSelect.className = "agent-select"; 
             const personalitySelect = document.createElement("select");
             personalitySelect.id = `personality_${i}`;
             personalitySelect.name = `personality_${i}`;
-            personalitySelect.className = "agent-select"; // Add a class name to the select element
+            personalitySelect.className = "agent-select";
 
-            // Populate the options for each select element using the prompt options
             for (const option of promptOptions.initial_prompts) {
                 const promptInitOption = document.createElement("option");
                 promptInitOption.value = option;
@@ -147,9 +144,35 @@
         <h2>Agents parameters</h2>
     </div> 
 
-      <div class="form-button">
-        <input type="submit" value="Run simulation">
-      </div> 
+
+    <h3 style=" margin-top: 30px;">Add a new prompt</h3>
+    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+        <div style="display: flex; flex-direction: row; width: 25%;">
+            <div style="display: flex; flex-direction: column;">
+                <label for="prompt_type" style="margin-top: 10px;" >Type:</label>
+                <select id="prompt_type" name="prompt_type">
+                    <option value="prompt_init">Init prompt</option>
+                    <option value="prompt_update">Update prompt</option>
+                    <option value="personalities">Personality</option>
+                </select>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+                <label for="prompt_name" style="margin-top: 10px;">Prompt name:</label>
+                <input type="text" id="prompt_name" name="prompt_name">
+            </div>  
+        </div>
+        <div style="display: flex; flex-direction: column; width: 50%;">
+            <label for="prompt" style="margin-top: 10px;">Description:</label>
+            <textarea id="prompt" name="prompt"></textarea>
+        </div>
+        <div class="form-button" style="display: flex; flex-direction: column; width: 20%;">
+            <input type="submit" name="add_prompt" value="Add Prompt" style="margin-top: 10px; width: 80%; margin-left: 10px;">
+        </div> 
+    </div>      
+      
+    <div class="form-button">
+        <input type="submit" name="run_simulation" value="Run simulation">
+    </div> 
 
 </form>
 
