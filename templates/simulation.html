@@ -45,10 +45,30 @@
             promptInitSelect.id = `prompt_init_${i}`;
             promptInitSelect.name = `prompt_init_${i}`;
             promptInitSelect.className = "agent-select"; 
+            promptInitSelect.addEventListener("change", function (event) {
+                const newValue = event.target.value;
+                const initPromptSelects = document.querySelectorAll(".agent-select[id^='prompt_init_']");
+
+                for (const select of initPromptSelects) {
+                    if (select !== event.target) {
+                        select.value = newValue;
+                    }
+                }
+            });
             const promptUpdateSelect = document.createElement("select");
             promptUpdateSelect.id = `prompt_update_${i}`;
             promptUpdateSelect.name = `prompt_update_${i}`;
             promptUpdateSelect.className = "agent-select"; 
+            promptUpdateSelect.addEventListener("change", function(event) {
+                const newValue = event.target.value;
+                const updatePromptsSelects = document.querySelectorAll(".agent-select[id^='prompt_update_']");
+
+                for (const select of updatePromptsSelects) {
+                    if (select !== event.target) {
+                        select.value = newValue;
+                    }
+                }
+            });
             const personalitySelect = document.createElement("select");
             personalitySelect.id = `personality_${i}`;
             personalitySelect.name = `personality_${i}`;
