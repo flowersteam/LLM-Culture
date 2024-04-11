@@ -13,7 +13,6 @@ It allows organizing LLM agents into networks wherein each agent interacts with 
 1- Clone the repository
 
 
-
 ```bash
 git clone https://github.com/jeremyperez2/LLM-Culture.git
 cd LLM-Culture/
@@ -27,15 +26,15 @@ source myvenv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Usage (GUI)
+## Usage of the web interface
 
-Launch the graphical user interface:
+Launch the web user interface with the following command:
 
 ```bash
 python3 web_interface.py
 ```
 
-This will open the GUI. You can then run a simulation, analyze it and visualize the results from previous simulations ! You can find below the details of the different simulation parameters, as well as how to use an LLM in our framework.
+This will create a link the website (e.g *http://127.0.0.1:5000* in your terminal), just click on it to open the interface on a web browser. You can then run a simulation, analyze it and visualize the results from previous simulations ! You can find below the details of the different simulation parameters, as well as how to use an LLM in our framework.
 
 
 ![GUI](/static/web_interface.png)
@@ -70,14 +69,15 @@ This will open the GUI. You can then run a simulation, analyze it and visualize 
   - Manually install oogabooga Text generation web UI by following the steps described here: https://github.com/oobabooga/text-generation-webui (section "Setup details and information about installing manually")
   
   - Launch a server: 
+
   ```bash
-  python server.py  --gradio-auth username:password --listen --public-api --share
+  python server.py  --gradio-auth <your_username>:<your_password> --listen --public-api --share
   ```
   3. This will output an OpenAI-compatible API URL: https://xxxx-xxxx-xxxx-xxxx.trycloudflare, and a "gradio.live" URL: "Running on public URL: https://xxxxxxxx.gradio.live"
 
   4. Paste the OpenAI-compatible URL in the field "Server access URL" of the LLM-Culture GUI.
 
-  5. Open the gradio.live URL in your browser. 
+  5. Open the gradio.live URL in your browser (use the given username and password to connect). 
 
   6. Go to the model tab and download a model from [huggingface](https://huggingface.co). We used https://huggingface.co/TheBloke/Mistral-7B-OpenOrca-GGUF, with File name "mistral-7b-openorca.Q4_K_M.gguf". Select an appropriate Model loader (we used llama.cpp). 
 
@@ -87,9 +87,7 @@ This will open the GUI. You can then run a simulation, analyze it and visualize 
 </details>
     
 
-
 ## Usage (command line)
-
 
 Run a simulation with your desired parameters (see parameters details above): 
 
@@ -121,7 +119,7 @@ python3 scripts/run_simulation.py --output_file simulation_test
 
 </details>
 
-The results of the experiment will be stored in a directory called ```Results/simulation_test/```. You can then analyze the texts produced with this command : 
+The results of the experiment will be stored in a directory called ```Results/simulation_test/``` in this case. You can then analyze the texts produced with this command : 
 
 ```bash
 python3 scripts/run_analysis.py --dir simulation_test
