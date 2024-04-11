@@ -1,6 +1,7 @@
+# TODO : Refactor the file to decompose huge functions into smaller ones
+
 import os
 import json
-import argparse
 from pathlib import Path
 
 import networkx as nx
@@ -21,8 +22,6 @@ def _create_network_structure(network_structure_name, n_agents, n_cliques):
         network_structure = nx.complete_graph(n_agents)
     return network_structure
 
-
-# get_all_figures(stories, folder_name)
 
 def run_simulation(
         n_agents,
@@ -93,12 +92,10 @@ def run_simulation(
         
         output_dict["stories"] = stories
 
-        # Save the output to a file with the seed number
         if output_dir:
             with open(Path(output_dir, f'output{seed}.json'), "w") as f:
                 json.dump(output_dict, f, indent=4)
         else:
-            with open(Path("Results/", f'output{seed}.json'), "w") as f:
-                json.dump(output_dict, f, indent=4)
+            raise ValueError("Please provide an output directory for your experiment")
     
 

@@ -8,8 +8,8 @@ from flask import redirect
 from flask import url_for
 from flask import send_from_directory
 
-from dummy_main_analysis import main_analysis
-from dummy_run_simulation import run_simulation
+from scripts.run_analysis import main_analysis
+from scripts.run_simulation_interface import run_simulation
 
 app = Flask(__name__)
 RESULTS_DIR = 'Results'
