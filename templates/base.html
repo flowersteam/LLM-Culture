@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+    {% block head %}{% endblock %}
+</head> 
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('simulation') }}">Simulation</a>
+        <a href="{{ url_for('analyze') }}">Analyze Results</a>
+        <a href="{{ url_for('results') }}">Results</a>
+    </nav>
+
+    {% block body %}{% endblock %}
+</body>
+</html>

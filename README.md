@@ -5,13 +5,12 @@ This repository provides a comprehensive framework for studying the cultural evo
 It allows organizing LLM agents into networks wherein each agent interacts with neighboring agents by exchanging stories. Each agent can be assigned specific personalities and transmission instructions, serving as prompts for generating new stories from their neighbors’ narratives. Once the network structure and agent characteristics are defined, you can simulate the cultural evolution of texts across generations of agents. We also provide built-in metrics and vizualizations to analyze the results.
 
 
-![introduction_figure](/Images/introduction_figure.png)
+![introduction_figure](/static/introduction_figure.png)
 
 
 ## Installation 
 
 1- Clone the repository
-
 
 
 ```bash
@@ -27,22 +26,24 @@ source myvenv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Usage (GUI)
+## Usage of the web interface
 
-Launch the graphical user interface:
+Launch the web user interface with the following command:
 
 ```bash
-python3 run_interface.py
+python3 web_interface.py
 ```
 
-This will open the GUI. You can then select the simulation parameters. 
+This will create a link the website (e.g *http://127.0.0.1:5000* in your terminal), just click on it to open the interface on a web browser. You can then run a simulation, analyze it and visualize the results from previous simulations ! You can find below the details of the different simulation parameters, as well as how to use an LLM in our framework.
 
 
-![GUI](/Images/supplementary_screenshot.png)
+![GUI](/static/web_interface.png)
 
 <details>
   
-  <summary> Display parameters details</summary>
+  <summary>Display parameters details</summary>
+  
+  - Simulation name: Give a name to your simulation. This will be the name of the folder when the simulation results are stored.
   
   - Number of agents: use this to specify how many agents you wish to simulate
     
@@ -50,15 +51,13 @@ This will open the GUI. You can then select the simulation parameters.
 
   - Number of seeds: use this to specify how many times the whole simulation should be repeated. 
     
-  - Initialization prompt: use this to set the prompt given to agents at the first timestep. You can choose among already registered prompt using the drop-down menu, or add a new prompt to this list by clicking on "Add Prompt...". This will open a window where you can enter the name and content of your new prompt.
-    
-  - Transmission prompt: use this to set the prompt that will be concatenated with the stories of each agent's neighbors after the first timestep. As for the Initialization prompt, you may select an existing prompt or create a new one.
-    
   - Network structure: use this to specify the stucture of the social network. You can view the selected structure by clicking on "Display Graph"
+
+  - Initialization prompts: use this to set the prompt given each agent at the first timestep. You can choose among already registered prompt using the drop-down menu, or add a new prompt to this list by clicking on "Add Prompt...". This will open a window where you can enter the name and content of your new prompt.
     
-  - Personality: use this to assign a personality to the agents. The personality will be concatenated with the rest of the prompt. If you want all agents to have the same personality, tick the "Same for all agents" box. You can then select a personality from the drop-down menu or create a new one. If you want agents to have different personalities, untick the "Same for all agents" box and select a personality for each agent.
+  - Transmission prompts: use this to set the prompt that will be concatenated with the stories of each agent's neighbors after the first timestep. As for the Initialization prompt, you may select an existing prompt or create a new one.
     
-  - Simulation name: Give a name to your simulation. This will be the name of the folder when the simulation results are stored.
+  - Personalities: use this to assign a personality to each agent. The personality will be concatenated with the rest of the prompt. If you want all agents to have the same personality, tick the "Same for all agents" box. You can then select a personality from the drop-down menu or create a new one. If you want agents to have different personalities, untick the "Same for all agents" box and select a personality for each agent.  
     
   - Server access URL: URL to which the requests will be sent to get answers from the LLM. In our case, we generated such an URL using oogabooga (https://github.com/oobabooga/text-generation-webui) and we provide a step-by-step guide below.
 </details>
@@ -70,14 +69,15 @@ This will open the GUI. You can then select the simulation parameters.
   - Manually install oogabooga Text generation web UI by following the steps described here: https://github.com/oobabooga/text-generation-webui (section "Setup details and information about installing manually")
   
   - Launch a server: 
+
   ```bash
-  python server.py  --gradio-auth username:password --listen --public-api --share
+  python server.py  --gradio-auth <your_username>:<your_password> --listen --public-api --share
   ```
   3. This will output an OpenAI-compatible API URL: https://xxxx-xxxx-xxxx-xxxx.trycloudflare, and a "gradio.live" URL: "Running on public URL: https://xxxxxxxx.gradio.live"
 
   4. Paste the OpenAI-compatible URL in the field "Server access URL" of the LLM-Culture GUI.
 
-  5. Open the gradio.live URL in your browser. 
+  5. Open the gradio.live URL in your browser (use the given username and password to connect). 
 
   6. Go to the model tab and download a model from [huggingface](https://huggingface.co). We used https://huggingface.co/TheBloke/Mistral-7B-OpenOrca-GGUF, with File name "mistral-7b-openorca.Q4_K_M.gguf". Select an appropriate Model loader (we used llama.cpp). 
 
@@ -87,15 +87,12 @@ This will open the GUI. You can then select the simulation parameters.
 </details>
     
 
-
 ## Usage (command line)
-
-
 
 Run a simulation with your desired parameters (see parameters details above): 
 
 ```bash
-python3 run_simulation.py --output_file simulation_test
+python3 scripts/run_simulation.py --output_file simulation_test
 ```
 
 <details>
@@ -122,16 +119,16 @@ python3 run_simulation.py --output_file simulation_test
 
 </details>
 
-The results of the experiment will be stored in a directory called ```Results/simulation_test/```. You can then analyze the texts produced with this command : 
+The results of the experiment will be stored in a directory called ```Results/simulation_test/``` in this case. You can then analyze the texts produced with this command : 
 
 ```bash
-python3 run_analysis.py --dir simulation_test
+python3 scripts/run_analysis.py --dir simulation_test
 ```
 
 To compare the results of several experiments, you can can run this command (with the experiment names separated by '+' symbols) : 
 
 ```bash
-python3 run_comparison_analysis --dirs experiment_1+experiment_2+experiment_3
+python3 scripts/run_comparison_analysis --dirs experiment_1+experiment_2+experiment_3
 ```
 
 It will store the analysis figures in a directory called ```Results/Comparisons/experiment_1-experiment_2-experiment_3/```
@@ -142,11 +139,11 @@ It will store the analysis figures in a directory called ```Results/Comparisons/
 
 For each experiment analysis, we present several plots (generated by ```run_analysis.py```) : 
 
-![analysis_plots](/Images/experiment_analysis_figures.png)
+![analysis_plots](/static/experiment_analysis_figures.png)
 
 They include a **similarity matrix** (**a**) that enables comparing the similarity between all the stories generated during an experiment. We also provide a **similarity graph** (**b**), where the nodes represent stories and are also arranged based on their similarities. We also provide a **word chains plot** (**c**) to visualize the evolution of key words in texts through generations. We also provide quantitative insights from the generations of stories by tracking the evolution of **similarity between new generations of stories and the the initial one**, as well as the evolution of **similarity within generations** and **with successive ones**. We also analyze the evolution of measures such as **positivity**, **subjectivity** and **creativity** across generations.
 
 
 We show in the following plot how we can compare the evolution of these metrics for several experiments (generated by ```run_comparison_analysis.py```): 
 
-![comparison_analysis_plots](/Images/experiment_analysis_comparison_figures.png)
+![comparison_analysis_plots](/static/experiment_analysis_comparison_figures.png)

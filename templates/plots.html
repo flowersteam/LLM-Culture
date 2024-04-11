@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Plots</title>
+{% endblock %}
+
+{% block body %}
+<h1>Analysis figures for {{ dir_name }} experiment  </h1>
+
+{% for plot_name in plot_names %}
+<p>{{ plot_name }} figure :</p>
+{% set src_url = url_for('send_result_file_from_directory', filename=plot_paths[plot_name]) %}
+<img class="plot-img" src="{{ src_url }}" alt="{{ plot_name }}">
+{% endfor %}
+
+{% endblock %}

@@ -4,7 +4,6 @@ import argparse
 from pathlib import Path
 
 import networkx as nx
-import matplotlib.pyplot as plt
 
 from llm_culture.simulation.utils import run_simul
 

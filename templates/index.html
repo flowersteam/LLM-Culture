@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Homepage</title>
+{% endblock %}
+
+{% block body %}
+<h1>LLM-Culture </h1>
+<h2>An open source software for cultural evolution in populations of Large Language Models</h2>
+
+<img class="intro-fig" src="{{ url_for('static', filename='lmm_culture_figure.png') }}" alt="Introduction Figure">
+
+
+<div style="max-width: 800px; margin: 0 auto;">
+    <p>
+      This interface provides a comprehensive framework for studying the cultural evolution of linguistic content in populations of Large Language Models (LLMs).
+    </p>
+    <p>
+      It allows organizing LLM agents into networks wherein each agent interacts with neighboring agents by exchanging stories. Each agent can be assigned specific personalities and transmission instructions, serving as prompts for generating new stories from their neighbors’ narratives.
+    </p>
+    <p>
+      Once the network structure and agent characteristics are defined, you can simulate the cultural evolution of texts across generations of agents. We also provide built-in metrics and visualizations to analyze the results.
+    </p>
+  </div>
+  
+
+{% endblock %}
+
