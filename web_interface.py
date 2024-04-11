@@ -145,16 +145,39 @@ def show_plots():
 
 @app.route('/plots/<dir_name>')
 def plots(dir_name):
-    plot_paths = _get_plot_paths(dir_name)
-    return render_template('plots.html', dir_name=dir_name, **plot_paths)
+    plot_names = [
+        'stories_similarity_matrix0',
+        'between_gen_similarity_matrix0',
+        'generation_similarities_graph0',
+        'similarity_first_gen',
+        'successive_similarity',
+        'within_gen_similarity',
+        'positivity_evolution',
+        'creativity_evolution',
+        'subjectivity_evolution',
+        'wordchains0'
+    ]
 
+    plot_paths = _get_plot_paths(dir_name, plot_names)
+
+    print(plot_paths)
+    return render_template('plots.html', dir_name=dir_name, plot_names=plot_names, plot_paths=plot_paths)
 
 # Helper functions
-def _get_plot_paths(dir_name):
-    return {
-        'plot1_path': f'{dir_name}/between_gen_similarity_matrix0.png',
-        'plot2_path': f'{dir_name}/generation_similarities_graph0.png'
-    }
+def _get_plot_paths(dir_name, plot_names):
+    plot_paths = {}
+    for plot_name in plot_names:
+        file_name = f'{plot_name}.png'
+        if os.path.exists(os.path.join(RESULTS_DIR, dir_name, file_name)):
+            print(dir_name)
+            print(file_name)
+            plot_paths[plot_name] = f"{dir_name}/{file_name}"
+            print(plot_paths[plot_name])
+        else:
+            print(f"File '{file_name}' not found in directory '{dir_name}'")
+    return plot_paths
+
+
 
 def _get_results_dir():
     results_dirs = [d for d in os.listdir(RESULTS_DIR) if os.path.isdir(os.path.join(RESULTS_DIR, d))]
