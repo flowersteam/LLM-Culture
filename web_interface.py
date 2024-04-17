@@ -12,8 +12,9 @@ from scripts.run_analysis import main_analysis
 from scripts.run_simulation_interface import run_simulation
 
 app = Flask(__name__)
-RESULTS_DIR = 'Results'
-COMPARISON_DIR = os.path.join(RESULTS_DIR, 'Comparisons')
+RESULTS_DIR = 'Results/experiments'
+COMPARISON_DIR = 'Results/experiments_comparisons'
+# COMPARISON_DIR = os.path.join(RESULTS_DIR, 'Comparisons')
 
 
 # Home Page
@@ -57,9 +58,9 @@ def simulation():
             update_prompt = update_prompts[0]
 
             output_dir = f"Results/{experiment_name}"
-            # output_file = 'output.json'
             server_url = request.form.get('server_url')
 
+            # TODO : Can be deleted now 
             params = {
             "Experiment name": experiment_name,
             "Number of agents": n_agents,
@@ -100,7 +101,6 @@ def simulation():
     return render_template('simulation.html', prompt_options=prompt_options)
 
 
-# TODO : Also add an option for comparison analysis
 # Run analysis
 @app.route('/analyze', methods=['GET', 'POST'])
 def analyze():
@@ -126,11 +126,42 @@ def analyze():
     return render_template('analysis.html', result_dirs=result_dirs)
 
 
+# Run analysis
+@app.route('/comparison_analysis', methods=['GET', 'POST'])
+def comparison_analysis():
+    result_dirs = _get_results_dir()
+    if request.method == 'POST':
+        selected_dirs = request.form.getlist('result_dir[]')
+        ticks_font_size = int(request.form.get('ticks_font_size'))
+        labels_font_size = int(request.form.get('labels_font_size'))
+        title_font_size = int(request.form.get('title_font_size'))
+
+        print(selected_dirs)
+        msg = f"{selected_dirs = }"
+        return selected_dirs
+
+        analyzed_dir = f"{RESULTS_DIR}/{directory}"
+        font_sizes = {'ticks': ticks_font_size,
+                      'labels': labels_font_size,
+                      'title': title_font_size}
+
+        print(f"\nLaunching analysis on the {analyzed_dir} results")
+        # if directory.startswith('Comparisons'):
+        main_analysis(analyzed_dir, font_sizes, plot=False)
+
+        # Redirect to the new route that serves the generated plots
+        return redirect(url_for('plots', dir_name=directory))
+
+    return render_template('comparison_analysis.html', result_dirs=result_dirs)
+
+
 # Select analyzed dir
 @app.route('/results')
 def results():
-    result_dirs = result_dirs = _get_results_dir()
-    return render_template('results.html', result_dirs=result_dirs)
+    result_dirs =  _get_results_dir()
+    results_comparison_dirs =  _get_results_comparisons_dirs()
+    all_results_dirs = result_dirs + results_comparison_dirs
+    return render_template('results.html', result_dirs=all_results_dirs)
 
 @app.route('/results/<path:filename>')
 def send_result_file_from_directory(filename):
@@ -163,6 +194,7 @@ def plots(dir_name):
     print(plot_paths)
     return render_template('plots.html', dir_name=dir_name, plot_names=plot_names, plot_paths=plot_paths)
 
+
 # Helper functions
 def _get_plot_paths(dir_name, plot_names):
     plot_paths = {}
@@ -181,8 +213,11 @@ def _get_plot_paths(dir_name, plot_names):
 
 def _get_results_dir():
     results_dirs = [d for d in os.listdir(RESULTS_DIR) if os.path.isdir(os.path.join(RESULTS_DIR, d))]
+    return results_dirs 
+
+def _get_results_comparisons_dirs():
     comparison_dirs = [d for d in os.listdir(COMPARISON_DIR) if os.path.isdir(os.path.join(COMPARISON_DIR, d))]
-    return results_dirs + comparison_dirs
+    return comparison_dirs
 
 def _get_prompt_options():
     option_files = {

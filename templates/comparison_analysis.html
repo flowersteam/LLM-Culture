@@ -16,44 +16,17 @@ window.onload = function() {
     });
 };
 </script>
-
-<style>
-    #loading-message {
-        font-size: 1.2em;
-        font-weight: normal;
-        color: #333;
-        text-align: center;
-        margin-top: 20px;
-    }
-
-    .switch_comparison {
-        background-color: transparent;
-        color: #333;
-        padding: 5px 10px;
-        text-decoration: none;
-        cursor: pointer;
-        font-size: 1em;
-        transition: background-color 0.3s ease;
-        margin-bottom: 20px; /* Add some margin at the bottom */
-        display: inline-block; /* Add this line */
-    }
-
-    .switch_comparison:hover {
-        /* background-color: #f0f0f0; */
-        color: #369b76;
-    }
-</style>
 {% endblock %}
 
 {% block body %}
 
-<h1>Run an analysis on a simulation</h1>
+<h1>Run a comparison analysis of multiple simulations</h1>
 
-<a href="comparison_analysis" class="switch_comparison">Compare multiple simulations</a>
+<a href="analyze" class="switch_comparison">Analyze only one simulation</a>
 
 <form id="analysis-form" method="POST">
     <label for="dir">Experiment directory</label>
-    <select name="result_dir">
+    <select name="result_dir[]" multiple>
         {% for dir in result_dirs %}
         <option value="{{ dir }}">{{ dir }}</option>
         {% endfor %}
