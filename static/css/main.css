@@ -53,9 +53,6 @@ nav .dropdown-content a {
     text-align: left;
 }
 
-/* nav .dropdown-content a:hover {
-    background-color: #ddd;
-} */
 
 nav .dropdown .dropbtn {
     font-size: inherit;
@@ -75,6 +72,11 @@ nav .dropdown .dropbtn {
 
 h1 {
     font-size: 2.5em;
+    color: #333;
+}
+
+h1.smaller-heading {
+    font-size: 1.75em;
     color: #333;
 }
 
@@ -196,7 +198,7 @@ input[type="submit"] {
     width: 25%;
     padding: 10px;
     margin-top: 20px;
-    background-color: #49bb93;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 3px;
@@ -204,7 +206,7 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-    background-color: #369b76;
+    background-color: #004792;
 }
 
 /* Plotting analysis results */
@@ -236,13 +238,12 @@ input[type="submit"]:hover {
     cursor: pointer;
     font-size: 1em;
     transition: background-color 0.3s ease;
-    margin-bottom: 20px; /* Add some margin at the bottom */
-    display: inline-block; /* Add this line */
+    margin-bottom: 20px; 
+    display: inline-block;
 }
 
 .switch_comparison:hover {
-    /* background-color: #f0f0f0; */
-    color: #369b76;
+    color: #007bff;
 }
 
 #experiment-form {
@@ -265,4 +266,12 @@ input[type="submit"]:hover {
   
   .experiment-field label {
     margin-right: 10px;
+  }
+
+  .styled-link {
+    color: #0066cc; 
+    text-decoration: none;
+  }
+  .styled-link:hover {
+    text-decoration: underline;
   }

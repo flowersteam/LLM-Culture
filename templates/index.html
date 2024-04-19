@@ -2,24 +2,27 @@
 
 {% block head %}
 <title>Homepage</title>
+<style>
+  
+</style>
 {% endblock %}
 
 {% block body %}
-<h1>LLM-Culture </h1>
+<h1>LLM-Culture</h1>
 <h2>An open source software for cultural evolution in populations of Large Language Models</h2>
 
 <img class="intro-fig" src="{{ url_for('static', filename='lmm_culture_figure.png') }}" alt="Introduction Figure">
 
 
-<div style="max-width: 800px; margin: 0 auto;">
+<div style="max-width: 80%; margin: 0 auto; ; text-align: left;">
     <p>
-      This interface provides a comprehensive framework for studying the cultural evolution of linguistic content in populations of Large Language Models (LLMs).
+      This interface provides a comprehensive framework for studying the cultural evolution of linguistic content in populations of Large Language Models (LLMs). It allows organizing LLM agents into networks wherein each agent interacts with neighboring agents by exchanging stories. Each agent can be assigned specific personalities and transmission instructions, serving as prompts for generating new stories from their neighbors’ narratives.
     </p>
     <p>
-      It allows organizing LLM agents into networks wherein each agent interacts with neighboring agents by exchanging stories. Each agent can be assigned specific personalities and transmission instructions, serving as prompts for generating new stories from their neighbors’ narratives.
+      To run such experiments, go to the <a class="styled-link" href="simulation">simulation page</a>, initalize a network structure, agent characteristics, and simulate the cultural evolution of texts across generations of agents. 
     </p>
     <p>
-      Once the network structure and agent characteristics are defined, you can simulate the cultural evolution of texts across generations of agents. We also provide built-in metrics and visualizations to analyze the results.
+      When the simulation is finished, we provide built-in metrics and visualizations to analyze them. You can either analyze <a class="styled-link" href="analysis">one experiment</a> or compare the results <a class="styled-link" href="comparison_analysis">of different experiments</a>.
     </p>
   </div>
   
