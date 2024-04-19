@@ -9,12 +9,12 @@ from flask import url_for
 from flask import send_from_directory
 
 from scripts.run_analysis import main_analysis
+from scripts.run_comparison_analysis import run_comparison_analysis
 from scripts.run_simulation_interface import run_simulation
 
 app = Flask(__name__)
 RESULTS_DIR = 'Results/experiments'
 COMPARISON_DIR = 'Results/experiments_comparisons'
-# COMPARISON_DIR = os.path.join(RESULTS_DIR, 'Comparisons')
 
 
 # Home Page
@@ -60,26 +60,7 @@ def simulation():
             output_dir = f"Results/{experiment_name}"
             server_url = request.form.get('server_url')
 
-            # TODO : Can be deleted now 
-            params = {
-            "Experiment name": experiment_name,
-            "Number of agents": n_agents,
-            "Number of timesteps": n_timesteps,
-            "Number of seeds": n_seeds,
-            "Network structure": network_structure,
-            "Number of cliques": n_cliques,
-            "Personalities": personalities,
-            "Init prompts": init_prompt,
-            "Update prompts": update_prompt,
-            "Output directory": output_dir,
-            "Server url": server_url
-            }
-
-            param_strings = [f"{key}: {value}" for key, value in params.items()]
-            param_list = "\n".join(param_strings)
-
-            run_analysis_message = f"Launching the analysis with the following parameters:\n\n{param_list}\n"
-            print(run_analysis_message)
+            print(f"Launching the analysis")
 
             run_simulation(
                 n_agents=n_agents,
@@ -117,7 +98,6 @@ def analyze():
                       'title': title_font_size}
 
         print(f"\nLaunching analysis on the {analyzed_dir} results")
-        # if directory.startswith('Comparisons'):
         main_analysis(analyzed_dir, font_sizes, plot=False)
 
         # Redirect to the new route that serves the generated plots
@@ -136,21 +116,21 @@ def comparison_analysis():
         labels_font_size = int(request.form.get('labels_font_size'))
         title_font_size = int(request.form.get('title_font_size'))
 
-        print(selected_dirs)
-        msg = f"{selected_dirs = }"
-        return selected_dirs
+        dirs_list = [f"{RESULTS_DIR}/{dir_name}" for dir_name in selected_dirs]
+        saving_folder = '-'.join(os.path.basename(folder) for folder in dirs_list)
 
-        analyzed_dir = f"{RESULTS_DIR}/{directory}"
+        # Hard encoded the matrix and legend sizes but can add an option on the interface
         font_sizes = {'ticks': ticks_font_size,
                       'labels': labels_font_size,
-                      'title': title_font_size}
-
-        print(f"\nLaunching analysis on the {analyzed_dir} results")
-        # if directory.startswith('Comparisons'):
-        main_analysis(analyzed_dir, font_sizes, plot=False)
+                      'title': title_font_size,
+                      'legend': 16,
+                      'matrix': 8}
+        
+        print(f"\nLaunching comaprison analysis on the {dirs_list} results")
+        run_comparison_analysis(dirs_list, plot=False, scale_y_axis=True, labels=selected_dirs,  sizes=font_sizes)
 
         # Redirect to the new route that serves the generated plots
-        return redirect(url_for('plots', dir_name=directory))
+        return redirect(url_for('plots', dir_name=saving_folder))
 
     return render_template('comparison_analysis.html', result_dirs=result_dirs)
 
@@ -165,7 +145,11 @@ def results():
 
 @app.route('/results/<path:filename>')
 def send_result_file_from_directory(filename):
-    return send_from_directory(RESULTS_DIR, filename)
+    if os.path.exists(os.path.join(COMPARISON_DIR, filename)):
+        results_dir = COMPARISON_DIR
+    else:
+        results_dir = RESULTS_DIR
+    return send_from_directory(results_dir, filename)
 
 
 # Observe analyzed dir plots
@@ -176,40 +160,56 @@ def show_plots():
 
 @app.route('/plots/<dir_name>')
 def plots(dir_name):
-    plot_names = [
-        'stories_similarity_matrix0',
-        'between_gen_similarity_matrix0',
-        'generation_similarities_graph0',
-        'similarity_first_gen',
-        'successive_similarity',
-        'within_gen_similarity',
-        'positivity_evolution',
-        'creativity_evolution',
-        'subjectivity_evolution',
-        'wordchains0'
-    ]
+    # Weird logic here but check if the directory is a comparion or not (should be done before)
+    if os.path.exists(os.path.join(COMPARISON_DIR, dir_name)):
+        comparison =  True
+    else:
+        comparison = False
 
-    plot_paths = _get_plot_paths(dir_name, plot_names)
+    if comparison:
+        exp_names = dir_name.split('-')
+        matrix_plot_names = [f"stories_similarity_matrix_{exp}_0" for exp in exp_names]
 
-    print(plot_paths)
+        comparison_plot_names = [
+            'creativity_gen_comparison',
+            'positivity_gen_comparison',
+            'similarity_first_gen_comparison',
+            'similarity_successive_gen_comparison',
+            'similarity_within_gen_comparison',
+            'subjectivity_gen_comparison',
+            ]
+        
+        plot_names = matrix_plot_names + comparison_plot_names
+
+    else:
+        plot_names = [
+            'stories_similarity_matrix0',
+            'between_gen_similarity_matrix0',
+            'generation_similarities_graph0',
+            'similarity_first_gen',
+            'successive_similarity',
+            'within_gen_similarity',
+            'positivity_evolution',
+            'creativity_evolution',
+            'subjectivity_evolution',
+            'wordchains0'
+            ]
+
+    plot_paths = _get_plot_paths(dir_name, plot_names, comparison)
+
     return render_template('plots.html', dir_name=dir_name, plot_names=plot_names, plot_paths=plot_paths)
 
-
 # Helper functions
-def _get_plot_paths(dir_name, plot_names):
+def _get_plot_paths(dir_name, plot_names, comparison):
+    results_dir = COMPARISON_DIR if comparison else RESULTS_DIR
     plot_paths = {}
     for plot_name in plot_names:
         file_name = f'{plot_name}.png'
-        if os.path.exists(os.path.join(RESULTS_DIR, dir_name, file_name)):
-            print(dir_name)
-            print(file_name)
+        if os.path.exists(os.path.join(results_dir, dir_name, file_name)):
             plot_paths[plot_name] = f"{dir_name}/{file_name}"
-            print(plot_paths[plot_name])
         else:
             print(f"File '{file_name}' not found in directory '{dir_name}'")
     return plot_paths
-
-
 
 def _get_results_dir():
     results_dirs = [d for d in os.listdir(RESULTS_DIR) if os.path.isdir(os.path.join(RESULTS_DIR, d))]
