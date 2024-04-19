@@ -160,55 +160,32 @@ def show_plots():
 
 @app.route('/plots/<dir_name>')
 def plots(dir_name):
-    # Weird logic here but check if the directory is a comparion or not (should be done before)
     if os.path.exists(os.path.join(COMPARISON_DIR, dir_name)):
-        comparison =  True
+        comparison = True
+        results_dir = COMPARISON_DIR
     else:
         comparison = False
+        results_dir = RESULTS_DIR
 
-    if comparison:
-        exp_names = dir_name.split('-')
-        matrix_plot_names = [f"stories_similarity_matrix_{exp}_0" for exp in exp_names]
-
-        comparison_plot_names = [
-            'creativity_gen_comparison',
-            'positivity_gen_comparison',
-            'similarity_first_gen_comparison',
-            'similarity_successive_gen_comparison',
-            'similarity_within_gen_comparison',
-            'subjectivity_gen_comparison',
-            ]
-        
-        plot_names = matrix_plot_names + comparison_plot_names
-
-    else:
-        plot_names = [
-            'stories_similarity_matrix0',
-            'between_gen_similarity_matrix0',
-            'generation_similarities_graph0',
-            'similarity_first_gen',
-            'successive_similarity',
-            'within_gen_similarity',
-            'positivity_evolution',
-            'creativity_evolution',
-            'subjectivity_evolution',
-            'wordchains0'
-            ]
-
-    plot_paths = _get_plot_paths(dir_name, plot_names, comparison)
+    dir_path = os.path.join(results_dir, dir_name)
+    plot_names = [f.replace('.png', '') for f in os.listdir(dir_path) if f.endswith('.png')]
+    # Plot the matrix elements before the other figures
+    plot_names.sort(key=_matrix_sort_key)
+    plot_paths = _get_plot_paths_dict(dir_name, plot_names, comparison)
 
     return render_template('plots.html', dir_name=dir_name, plot_names=plot_names, plot_paths=plot_paths)
 
+
 # Helper functions
-def _get_plot_paths(dir_name, plot_names, comparison):
-    results_dir = COMPARISON_DIR if comparison else RESULTS_DIR
-    plot_paths = {}
-    for plot_name in plot_names:
-        file_name = f'{plot_name}.png'
-        if os.path.exists(os.path.join(results_dir, dir_name, file_name)):
-            plot_paths[plot_name] = f"{dir_name}/{file_name}"
-        else:
-            print(f"File '{file_name}' not found in directory '{dir_name}'")
+
+def _matrix_sort_key(name):
+    if "matrix" in name:
+        return (0, name)
+    else:
+        return (1, name)
+
+def _get_plot_paths_dict(dir_name, plot_names, comparison):
+    plot_paths = {plot_name: f"{dir_name}/{plot_name}.png" for plot_name in plot_names}
     return plot_paths
 
 def _get_results_dir():
