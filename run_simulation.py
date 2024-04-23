@@ -17,8 +17,9 @@ def parse_arguments():
     # add an optional argument that will select a preset of parameters from parameters_sets in data
     # argument to select the network structure
     parser.add_argument('-ns', '--network_structure', type=str, default='sequence',
-                        choices=['sequence','fully_connected' 'circle', 'caveman'], help='Network structure.')
+                        choices=['sequence','fully_connected' 'circle', 'caveman', 'random'], help='Network structure.')
     parser.add_argument('-nc', '--n_cliques', type=int, default=2, help='Number of cliques for the Caveman graph')
+    parser.add_argument('-nc', '--n_edges', type=int, default=2, help='Number of edges for the Random graph')
     # argument to select the prompt_init from the list of prompts
     parser.add_argument('-pi', '--prompt_init', type=str, default='kid',
                         help='Initial prompt.')
@@ -82,7 +83,10 @@ def main(args=None):
         network_structure = nx.connected_caveman_graph(int(args.n_cliques), n_agents // int(args.n_cliques))
 
     elif args.network_structure == 'fully_connected':
-                network_structure = nx.complete_graph(n_agents)
+                network_structure = nx.complete_graph(n_agents, int(args.n_edges))
+    
+    elif args.network_structure == 'random':
+         network_structure = nx.dense_gnm_random_graph(n_agents, args.n_edges )
 
     # save adjacency matrix to output_dict
     output_dict["adjacency_matrix"] = nx.to_numpy_array(network_structure).tolist()

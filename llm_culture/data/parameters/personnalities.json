@@ -38,5 +38,21 @@
     {
         "name": "Sci-Fi",
         "prompt": "Your favorite book genre is Science-Fiction."
+    },
+    {
+        "name": "SciFi+Romance",
+        "prompt": "Your favorite book genre is Science Fiction Romance."
+    },
+    {
+        "name": "NotSciFi",
+        "prompt": "Your favorite book genre is anything that is not Science Fiction."
+    },
+    {
+        "name": "SciFiNotRomance",
+        "prompt": "Your favorite book genre is Science Fiction and you hate Romance."
+    },
+    {
+        "name": "RomanceNotSciFi",
+        "prompt": "Your favorite book genre is Romance and you hate Science Fiction."
     }
 ]

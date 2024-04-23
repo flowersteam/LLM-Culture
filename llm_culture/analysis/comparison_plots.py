@@ -1,12 +1,18 @@
 import json
 import os 
+from matplotlib import animation
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
 from tqdm import trange
 
 from llm_culture.analysis.plots import plot_similarity_graph
-from llm_culture.analysis.utils import get_SBERT_similarity, get_similarity_matrix, preprocess_stories 
+from llm_culture.analysis.utils import convert_to_json_serializable, get_SBERT_similarity, get_embeddings, get_similarity_matrix, preprocess_stories 
 import networkx as nx
+from scipy.spatial import ConvexHull
+import umap
+
 
 PAD = 20
 LABEL_PAD = 10
@@ -45,7 +51,7 @@ def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folde
     if saving_folder:
         saving_name = '/similarity_first_gen_comparison.png'
         os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
-        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}", transparent=True)
         print(f"Saved {saving_name}")
     
     if plot:
@@ -73,12 +79,18 @@ def compare_within_generation_similarity_evolution(data, plot, sizes, saving_fol
     plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
     plt.grid()
 
+    last_gens_values = []
+    last_gens_stds = []
+
     for folder in data:
         value = np.diag(np.mean(data[folder]['all_seeds_between_gen_similarity_matrix'], axis = 0))
-        print("------within------", data[folder]['all_seeds_between_gen_similarity_matrix'] )
-        print("------within mean------", value )
+
+        last_gens_values.append(value[-1])
+       
         label = data[folder]['label']
         std = np.diag(np.std(data[folder]['all_seeds_between_gen_similarity_matrix'], axis = 0))
+
+        last_gens_stds.append(std[-1])
 
 
         plt.plot(value, label=label)
@@ -88,11 +100,42 @@ def compare_within_generation_similarity_evolution(data, plot, sizes, saving_fol
     if saving_folder:
         saving_name = '/similarity_within_gen_comparison.png'
         os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
-        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}", transparent=True)
         print(f"Saved {saving_name}")
     
     if plot:
         plt.show()
+
+    plt.figure(figsize=(20, 15))
+    plt.subplots_adjust(top=0.9)
+    plt.title('Cultural diversity', fontsize=sizes['title'], pad=PAD)
+    plt.xlabel('', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+    plt.ylabel('Cultural diversity', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+    plt.xticks(np.arange(len(last_gens_values)), [data[folder]['label'] for folder in data], fontsize=sizes['ticks'], rotation=45)
+    plt.grid()
+
+    last_gens_stds = np.array(last_gens_stds)
+
+    last_gens_values = np.ones(len(last_gens_values)) - np.array(last_gens_values)
+
+    plt.plot(last_gens_values)
+    plt.fill_between(range(0, len(last_gens_values)), last_gens_values - last_gens_stds, last_gens_values + last_gens_stds, alpha=0.3)
+    #plt.xticks = [data[folder]['label'] for folder in data]
+    #plt.ylabel = 'Diversity'
+    if saving_folder:
+        saving_name = '/similarity_within_gen_comparison_LAST.png'
+        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}", transparent=True)
+        print(f"Saved {saving_name}")
+    
+    if plot:
+        plt.show()
+    
+    plt.clf()
+
+    
+
+
 
 
 def compare_successive_generations_similarities(data, plot, sizes, saving_folder=None, scale_y_axis=False):
@@ -130,7 +173,7 @@ def compare_successive_generations_similarities(data, plot, sizes, saving_folder
     if saving_folder:
         saving_name = '/similarity_successive_gen_comparison.png'
         os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
-        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}", transparent=True)
         print(f"Saved {saving_name}")
     
     if plot:
@@ -315,85 +358,11 @@ def plot_similarity_matrix(similarity_matrix, label, n_gen, n_agents, plot, size
         plt.show()
 
 
-def plot_all_similarity_graphs(data, plot, fontsizes, saving_folder=None, save = True, initial_story = 'In the quaint town of Willowbrook, a peculiar old bookstore stood at the corner of Elm Street. It was rumored to hold books of ancient magic. One rainy afternoon, Sarah stumbled upon it. Drawn by an unseen force, she entered. The books whispered secrets, promising power. Sarah hesitated, but curiosity won. She chose a tome bound in cracked leather. As she flipped through its pages, a surge of energy enveloped her. Outside, the rain ceased, and the sun bathed Willowbrook in golden light. Sarah smiled, realizing she held the key to changing her world forever.'):
-    plt.clf()
-
-#     all_folder_stories = []
-
-#     for folder in data:
-#         all_folder_stories.append(data[folder]['all_seed_stories'])
-
-#     plt.figure(figsize=(8, 8))
-#     n_folders = len(data)
-#     n_seeds_per_folder = [len(data[folder]['all_seed_stories']) for folder in data]
-#     total_seeds = sum(n_seeds_per_folder)
-#     n_generations = len(all_folder_stories[0][0])
-
-
-
-
-
-#     # max_similarity = np.max(between_gen_similarity_matrix)
-#     # min_similarity = np.min(between_gen_similarity_matrix)
-
-#     G = nx.Graph()
-#     G.add_nodes_from(range(n_generations))
-#     connected_edges_idx = []
-
-#     np.random.seed(0)
-#     print("Drawing similarity graph...")
-#     #positions = np.random.rand(n_generations, 2)
-#     for f1 in range(n_folders):
-#         print("f1", f1)
-#         for s1 in range(n_seeds_per_folder[f1]):
-#             print("s1", s1)
-#             for f2 in range(n_folders):
-#                 print("f2", f2)
-#                 for s2 in range(n_seeds_per_folder[f2]):
-#                     print("s2", s2)
-#                     for i in range(n_generations):
-#                         print("i", i)
-#                         for j in range(n_generations):
-#                             print("j", j)
-#                             if not(i == j and f1 == f2 and s1 == s2):
-#                                 # similarity = (between_gen_similarity_matrix[i, j] - min_similarity) / (max_similarity - min_similarity)
-#                                 # similarity = between_gen_similarity_matrix[i, j]
-#                                 similarity = get_SBERT_similarity(all_folder_stories[f1][s1][i], all_folder_stories[f2][s2][j])
-#                                 G.add_edge(i, j, weight=similarity)
-#                                 if f1 == f2 and s1 == s2 and i == j - 1:
-#                                     # We keep the indexes of the succesive generations edges to plot them at the end 
-#                                     connected_edges_idx.append((len(G.edges)) - 1)
-
-#     #np.random.seed(0)
-#     pos = nx.spring_layout(G, iterations = 10000)
-
-#     nx.draw_networkx_nodes(G, pos, node_size=300, node_color=range(n_generations), cmap='cool')
-#     nx.draw_networkx_labels(G, pos)
-
-#     edges = G.edges()
-#     weights = [G[u][v]['weight'] for u, v in edges]
-#     # Use the previously computed indexes of successive generations to either:
-#     # - Only plot them
-#     # hide_plotted_weights = [val if idx in connected_edges_idx else 0 for idx, val in enumerate(weights)] 
-#     # - Increase their width compared to others
-#     incr_plotted_weights = [3 if idx in connected_edges_idx else 0 for idx, val in enumerate(weights)] 
-#     nx.draw_networkx_edges(G, pos, edgelist=edges, width=incr_plotted_weights, edge_color='gray', alpha=0.5, 
-#                            arrowstyle='->',
-#                            arrowsize=30)
-
-#     plt.title('Evolution of similarities between generations', fontsize=sizes['labels'])
-#     plt.axis('off')
-
-#     if save:
-#         plt.savefig(folder + '/generation_similarities_graph'+str(seed)+'.png')
-#         print("Saved generation_similarities_graph"+str(seed)+".png")
+def plot_all_similarity_graphs(data, plot, fontsizes, saving_folder=None, save = True, initial_story = 'But I must explain to you how all this mistaken idea of denouncing of a pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but occasionally circumstances occur in which toil and pain can procure him some great pleasure.'):
     
-#     if plot:
-#         plt.show()
+    
+    plt.close('all')
 
-#     return G
-        
-    plt.figure(figsize=(16, 16))
 
     all_folder_stories = [data[folder]['all_seed_stories'] for folder in data]
     print(np.array(all_folder_stories).shape)
@@ -401,39 +370,46 @@ def plot_all_similarity_graphs(data, plot, fontsizes, saving_folder=None, save =
     n_seeds_per_folder = [len(data[folder]['all_seed_stories']) for folder in data]
     total_seeds = sum(n_seeds_per_folder)
     n_generations = len(all_folder_stories[0][0])
+    n_stories_per_generation = len(all_folder_stories[0][0][0])
+
+    labels = [data[folder]['label'] for folder in data]
 
     connected_edges_idx = [] 
 
     G = nx.Graph()
     G.add_nodes_from(range(n_generations*total_seeds))
 
-    print("Drawing similarity graph...")
+    print("Computing similarity graph...")
     try:
         with open(f'Results/Comparisons/{saving_folder}/connected_edges_idx.json', 'r') as f:
             connected_edges_idx = json.load(f)
         print("Connected edges loaded")
-        with open('Results/Comparisons/{saving_folder}/graph.json', 'r') as f:
+        with open(f'Results/Comparisons/{saving_folder}/graph.json', 'r') as f:
             graph_data = json.load(f)
             G = nx.node_link_graph(graph_data)
         print("Graph loaded")
     except:
+       
 
         for f1 in trange(n_folders):
             for s1 in range(n_seeds_per_folder[f1]):
                 for f2 in trange(n_folders):  # Avoid redundant calculations
                     for s2 in range(n_seeds_per_folder[f2]):
-                        stories1 = np.concatenate((np.array([initial_story]), np.array(all_folder_stories[f1][s1]).flatten()))
-                        stories2 = np.concatenate((np.array([initial_story]), np.array(all_folder_stories[f2][s2]).flatten()))
+                        # stories1 = np.concatenate((np.array([initial_story]), np.array(all_folder_stories[f1][s1]).flatten()))
+                        stories1 = np.array(all_folder_stories[f1][s1]).flatten()
+                        # stories2 = np.concatenate((np.array([initial_story]), np.array(all_folder_stories[f2][s2]).flatten()))
+                        stories2 = np.array(all_folder_stories[f2][s2]).flatten()
                         similarities = get_SBERT_similarity(stories1, stories2)
-                        for i in range(n_generations+1):
-                            for j in range(n_generations+1):  
+                        for i in range(n_generations):
+                            for j in range(n_generations):  
                                 similarity = similarities[i][j]
                                 if not(i == j and f1 == f2 and s1 == s2):
-                                    node1 = f1 * n_seeds_per_folder[f1] * n_generations + s1 * n_generations + i
-                                    node2 = f2 * n_seeds_per_folder[f2] * n_generations + s2 * n_generations + j
+                                    node1 = f1 * n_seeds_per_folder[f1] * (n_generations) + s1 * (n_generations) + i
+                                    node2 = f2 * n_seeds_per_folder[f2] * (n_generations) + s2 * (n_generations) + j
                                     G.add_edge(node1, node2, weight=similarity)
                                     if f1 == f2 and s1 == s2 and i == j - 1:
                                         connected_edges_idx.append((node1, node2))
+
 
                                 
         # Save connected_edges_idx to JSON
@@ -444,87 +420,405 @@ def plot_all_similarity_graphs(data, plot, fontsizes, saving_folder=None, save =
 
 
         # Save the graph to JSON
-        graph_data = nx.node_link_data(G)
+        graph_data = nx.readwrite.json_graph.node_link_data(G)
+        graph_data = convert_to_json_serializable(graph_data)
         with open(f'Results/Comparisons/{saving_folder}/graph.json', 'w') as f:
+            #dump = json.dumps(graph_data)
             json.dump(graph_data, f)
         print("Graph saved")
 
   
+    # print("Drawing 3D graph...")
+    # pos = nx.spring_layout(G, iterations=1000, dim = 3)
 
-    pos = nx.spring_layout(G, iterations=10000, dim = 3)
+    # node_xyz = np.array([pos[v] for v in sorted(G)])
+    # edge_xyz = np.array([(pos[u], pos[v]) for u, v in G.edges() if (u,v) in connected_edges_idx ])
 
-    node_xyz = np.array([pos[v] for v in sorted(G)])
-    edge_xyz = np.array([(pos[u], pos[v]) for u, v in G.edges() if (u,v) in connected_edges_idx ])
+    # # Create the 3D figure
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111, projection="3d")
 
-    # Create the 3D figure
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection="3d")
+    # # Plot the nodes - alpha is scaled by "depth" automatically
+    # color_list = ['blue', 'red', 'green', 'paleturquoise', 'purple', 'orange', 'pink', 'brown', 'black', 'gray', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'olive', 'navy', 'fuchsia', 'aqua', 'silver', 'lime', 'teal', 'indigo', 'maroon', 'olive', 'navy', 'fuchsia', 'aqua', 'silver']
+    # colors = list(np.array([[color_list[i]] * n_seeds_per_folder[i] * n_generations * n_stories_per_generation for i in range(n_folders)]).flatten())
 
-    # Plot the nodes - alpha is scaled by "depth" automatically
-    color_list = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'gray']
-    colors = list(np.array([[color_list[i]] * n_generations for i in range(total_seeds)]).flatten())
-    sizes = np.array(list(range(n_generations)) * total_seeds).flatten()
-    sizes = ([500] + [100] * n_generations) * total_seeds
-    scatter = ax.scatter(*node_xyz.T, s=100, ec="w", c=colors)
+    # # colors = list(np.array([[['black'] + [color_list[i]] * n_generations] for i in range(total_seeds)]).flatten())
+    # sizes = np.array(list(range(n_generations)) * total_seeds).flatten()
+    # # sizes = ([500] + [100] * n_generations) * total_seeds
+    # sizes = ([100] * n_generations) * total_seeds
+    # scatter = ax.scatter(*node_xyz.T, s=100, ec="w", c=colors)
 
-    legend1 = ax.legend(*scatter.legend_elements(),
-                    loc="lower left", title="Classes")
-    ax.add_artist(legend1)
+    # handles = [plt.Line2D([0], [0], marker='o', color='w', label=label, markersize=10, markerfacecolor=color) for label, color in zip(labels, color_list)]
 
-    # Plot the edges
-    for vizedge in edge_xyz:
-        ax.plot(*vizedge.T, color="tab:gray", alpha=0.5)
-
-
-    def _format_axes(ax):
-        """Visualization options for the 3D axes."""
-        # Turn gridlines off
-        ax.grid(False)
-        # Suppress tick labels
-        for dim in (ax.xaxis, ax.yaxis, ax.zaxis):
-            dim.set_ticks([])
-        # Set axes labels
-        ax.set_xlabel("x")
-        ax.set_ylabel("y")
-        ax.set_zlabel("z")
+    # plt.legend(handles=handles, loc='upper right')
 
 
-    _format_axes(ax)
-    fig.tight_layout()
-    plt.show()
+    # # Plot the edges
+    # for vizedge in edge_xyz:
+    #     ax.plot(*vizedge.T, color="tab:gray", alpha=0.5)
 
-    pos = nx.spring_layout(G, iterations=10000)
 
-    color_list = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'gray']
-    colors = list(np.array([[color_list[i]] * n_generations for i in range(total_seeds)]).flatten())
-    nx.draw_networkx_nodes(G, pos, node_size=300, node_color=colors, cmap='cool')
-    labels = {n:n%n_generations for n in range(n_generations*total_seeds)}
-    #nx.draw_networkx_labels(G, pos, labels=labels)
+    # def _format_axes(ax):
+    #     """Visualization options for the 3D axes."""
+    #     # Turn gridlines off
+    #     ax.grid(False)
+    #     # Suppress tick labels
+    #     for dim in (ax.xaxis, ax.yaxis, ax.zaxis):
+    #         dim.set_ticks([])
+    #     # Set axes labels
+    #     ax.set_xlabel("x")
+    #     ax.set_ylabel("y")
+    #     ax.set_zlabel("z")
 
-    edges = G.edges()
-    weights = [G[u][v]['weight'] for u, v in edges]
-    incr_plotted_weights = [3 if (u, v) in connected_edges_idx else 0 for u, v in edges]  # Simplified edge weight calculation
-    nx.draw_networkx_edges(G, pos, edgelist=edges, width=incr_plotted_weights, edge_color='gray', alpha=0.5,
-                           arrowstyle='->',
-                           arrowsize=30)
 
-    plt.title('Evolution of similarities between generations', fontsize=fontsizes['labels'])
-    plt.axis('off')
+    # _format_axes(ax)
+    # fig.tight_layout()
+    # plt.show()
+    # plt.clf()
 
-    if saving_folder:
-        saving_name = f'/similarity_graph.png'
-        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
-        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
-        print(f"Saved {saving_name}")
+
+
+
+
+
+
+
+    # print("Drawing 2D graph...")
+
+    # pos = nx.spring_layout(G, iterations=1000, dim=2)
+
+    # color_list = ['blue', 'red', 'green', 'paleturquoise', 'purple', 'orange', 'pink', 'brown', 'black', 'gray', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'olive', 'navy', 'fuchsia', 'aqua', 'silver', 'lime', 'teal', 'indigo', 'maroon', 'olive', 'navy', 'fuchsia', 'aqua', 'silver']
+    # colors = list(np.array([[color_list[i]] * n_seeds_per_folder[i] * n_generations * n_stories_per_generation for i in range(n_folders)]).flatten())
+
+
+    # shape_list = ['^', 'o', 's', 'x', '+', 'D', 'v', 'p', 'P', 'X']
+    # # shapes = list(np.array([[shape_list[i]] * n_generations for i in range(total_seeds)]).flatten())
+
+    # edge_colors = list(np.array([[color_list[i]] * (n_generations - 1) for i in range(total_seeds)]).flatten())
+    # #sizes = np.array(list([100] + [50] * (n_generations - 2) + [100]) * total_seeds).flatten()
+    # sizes = list(np.linspace(10, 100, n_generations)) * total_seeds
+    # #alphas = list(np.linspace(0.8, 1, n_generations)) * total_seeds
+    # #shapes = list(np.array( list(['^'] + ['o'] * ( n_generations - 2) + ['s']) * total_seeds).flatten())
+    # shapes = ['o'] * total_seeds * n_generations
+    # for node, shape, size, color in zip(G.nodes, shapes, sizes, colors):
+    #     nx.draw_networkx_nodes(G, pos, nodelist=[node], node_size=size, node_shape=shape, node_color=color, alpha=0.8)
+
+    # edges = G.edges()
+    # incr_plotted_weights = [3 if (u, v) in connected_edges_idx else 0 for u, v in edges]  # Simplified edge weight calculation
+    # nx.draw_networkx_edges(G, pos, edgelist=connected_edges_idx, width=1, edge_color=edge_colors, alpha=0.1)
+
+    # plt.title('Evolution of similarities between generations', fontsize=fontsizes['labels'])
+    # plt.axis('off')
+
+    # # Creating legend handles using group labels
+    # handles = [plt.Line2D([0], [0], marker='o', label=label, color = color, markersize=10, markerfacecolor=color) for shape, label, color in zip(shape_list, labels, color_list)]
+
+    # plt.legend(handles=handles, loc='upper right')
+
+    # if saving_folder:
+    #     saving_name = f'/similarity_graph2D.png'
+    #     os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+    #     plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+    #     print(f"Saved {saving_name}")
+
+        
+
+
+    # plt.show()
+
+    # for i in range(total_seeds - 2):
+
+    #     highlighted_nodes_pos = np.array([pos[node] for node in range(i * n_generations, (i + 1) * n_generations)])
+    #     hull = ConvexHull(highlighted_nodes_pos)
+    #     for simplex in hull.simplices:
+    #         plt.plot(highlighted_nodes_pos[simplex, 0], highlighted_nodes_pos[simplex, 1], color = color_list[i])
+
+    #     plt.fill(highlighted_nodes_pos[hull.vertices,0], highlighted_nodes_pos[hull.vertices,1], color =color_list[i], alpha=0.1)
+
+
+
 
     
-    plt.show()
+    # plt.show()
 
 
 
 
 
-    return G
+    # #return G
+
+
+    matrix = np.array([])
+
+    try:
+        with open(f'Results/Comparisons/{saving_folder}/embeddings.npy', 'rb') as f:
+            matrix = np.load(f)
+        print("Embeddings loaded")
+    except:
+
+        print("Computing embeddings...")
+
+        for folder in data:
+            for stories in data[folder]['all_seed_stories']:
+
+                print(np.array(stories).flatten().shape)
+
+
+            
+                embeddings = get_embeddings(np.array(stories).flatten())
+                matrix = np.concatenate((matrix, embeddings), axis=0) if matrix.size else embeddings
+        
+        # Save the embeddings to a file
+        with open(f'Results/Comparisons/{saving_folder}/embeddings.npy', 'wb') as f:
+            np.save(f, matrix)
+        print("Embeddings saved")
+
+        print("Embeddings shape:", matrix.shape)
+
+    viz_methods = {'TSNE-perplex5-lr200': TSNE(n_components=2, perplexity= 5, random_state=42, init='random', learning_rate=200),
+                   'TSNE-perplex20-lr200': TSNE(n_components=2, perplexity= 20, random_state=42, init='random', learning_rate=200),
+                   'TSNE-perplex5-lr50': TSNE(n_components=2, perplexity= 20, random_state=42, init='random', learning_rate=200),
+                   'TSNE-perplex20-lr50': TSNE(n_components=2, perplexity= 20, random_state=42, init='random', learning_rate=200),
+                   'UMAP-100nb': umap.UMAP(n_neighbors=100),
+                   'UMAP-200nb': umap.UMAP(n_neighbors=200),
+                   'UMAP-500nb': umap.UMAP(n_neighbors=500),
+                   'UMAP-500nb': umap.UMAP(n_neighbors=500),
+                   'PCA': PCA(n_components=2)
+
+    }
+
+    viz_methods = {'PCA': PCA(n_components=2)}
+
+
+
+    for method in viz_methods.items():
+        name, fit = method
+        print(fit, name)
+        
+        print("Computing t-SNE...")
+
+        
+
+        # Create a t-SNE model and transform the data
+        initial_story_embedding = get_embeddings([initial_story])
+
+        matrix = np.concatenate((initial_story_embedding, matrix), axis=0)
+
+        vis_dims = fit.fit_transform(np.array(matrix))
+        vis_dims.shape
+
+
+
+
+        x = [x for x,y in vis_dims]
+        y = [y for x,y in vis_dims]
+
+
+        color_list = ['blue', 'red', 'green', 'paleturquoise', 'purple', 'orange', 'pink', 'brown', 'black', 'gray', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'olive', 'navy', 'fuchsia', 'aqua', 'silver', 'lime', 'teal', 'indigo', 'maroon', 'olive', 'navy', 'fuchsia', 'aqua', 'silver']
+        colors = list(np.array([[color_list[i]] * n_seeds_per_folder[i] * n_generations * n_stories_per_generation for i in range(n_folders)]).flatten())
+        
+        shape_list = ['o', '^', 's', 'x', '+', 'D', 'v', 'p', 'P', 'X']
+
+        shapes = list(np.array([[[shape_list[i] ] * n_generations * n_stories_per_generation  for i in range(n_seeds_per_folder[j])] for j in range(n_folders)]).flatten())
+
+        sizes = np.array(list([10] *  n_stories_per_generation * (n_generations - 1) + [200] * n_stories_per_generation )   * total_seeds).flatten()
+
+        for xi, yi, color, shape, size in zip(x, y, colors, shapes, sizes):
+            plt.scatter(xi, yi, c=color, s=size, marker=shape, alpha=0.3)
+        #plt.scatter(x[1:], y[1:], c=colors,alpha=0.3)
+        handles = [plt.Line2D([0], [0], marker='o', label=label, color = color, markersize=10, markerfacecolor=color) for label, color in zip(labels, color_list)]
+
+        plt.scatter(x[0], y[0], c='black', s=100, marker='x', label='Initial story')
+
+        plt.legend(handles=handles, loc='upper right')
+
+        plt.title(name)
+
+
+        if saving_folder:
+            saving_name = f'/{name}graph_noedges_2D.png'
+            os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+            plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+            print(f"Saved {saving_name}")
+
+            
+
+
+        plt.show()
+
+
+        ##Only last generation
+        # matrix = np.reshape(matrix[1:], (total_seeds, n_generations, n_stories_per_generation, -1))
+
+        vis_dims = fit.transform(np.array(matrix[1:]).reshape(total_seeds * n_generations * n_stories_per_generation, -1))
+
+        x = [x for x,y in vis_dims]
+        y = [y for x,y in vis_dims]
+
+
+        # x = np.reshape(x[1:], (total_seeds, n_generations, n_stories_per_generation))
+        # y = np.reshape(y[1:], (total_seeds, n_generations, n_stories_per_generation))
+
+        vis_dims = fit.transform(np.array([initial_story_embedding]).reshape(1, -1))
+
+        fig, ax  = plt.subplots(1, 1, figsize=(20, 20))
+
+        for i in range(total_seeds):
+            for k in range(n_stories_per_generation):
+                xi = x[i * n_stories_per_generation + k]
+                yi = y[i * n_stories_per_generation + k]
+                ax.scatter(xi, yi, color = color_list[i//2], marker = shape_list[i%2], s=100, )  
+
+            
+            
+        plt.title(name)
+        if saving_folder:
+            saving_name = f'/{name}graph_noedges_2D_last_gen.png'
+            os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+            plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+            print(f"Saved {saving_name}")
+        plt.show()
+
+
+
+
+        ## 3D Layered graph
+
+        x = np.reshape(x[1:], (total_seeds, n_generations, n_stories_per_generation))
+        y = np.reshape(y[1:], (total_seeds, n_generations, n_stories_per_generation))
+
+
+        # fig = plt.figure()
+        # ax = fig.add_subplot(111, projection="3d")
+
+        # x = np.reshape(x[1:], (total_seeds, n_generations, n_stories_per_generation))
+        # y = np.reshape(y[1:], (total_seeds, n_generations, n_stories_per_generation))
+
+        # for i in range(total_seeds):
+        #     for j in range(n_generations):
+        #         for k in range(n_stories_per_generation):
+        #             xi = x[i, j, k]
+        #             yi = y[i, j, k]
+
+                    
+                    
+        #             ax.scatter([xi], [yi], [j], color = color_list[i])
+        
+        # plt.show()
+
+       
+
+        # vis_dims0 = fit.transform(np.array([initial_story_embedding]).reshape(1, -1))
+
+        # x0 = [x for x,y in vis_dims0]
+        # y0 = [y for x,y in vis_dims0]
+
+        # for i in range(total_seeds):
+        #     fig = plt.figure()
+        #     ax = fig.add_subplot(111, projection="3d")
+        
+        #     for k in range(n_stories_per_generation):
+        #         xi = np.concatenate((x0, x[i, :, k].flatten()))
+        #         yi = np.concatenate((y0, y[i, :, k].flatten()))
+        #         print(yi)
+        #         zi = np.arange(n_generations+1)
+
+                
+                
+
+        #         ax.plot(xi, yi, zi, color = color_list[i], alpha=0.5)
+        
+        #     plt.show()
+
+        fig = plt.figure(figsize=(20, 20))
+        ax = fig.add_subplot(111, projection="3d")
+        ax.set_zlim((0, n_generations))
+
+
+        def rotate(gen):
+            ax.clear()
+            for i in range(total_seeds):
+        
+                for k in range(n_stories_per_generation):
+                    # xi = np.concatenate((x0, x[i, :gen, k].flatten()))
+                    # yi = np.concatenate((y0, y[i, :gen, k].flatten()))
+                    xi = x[i, :gen, k].flatten()
+                    yi = y[i, :gen, k].flatten()
+                    zi = np.arange(gen+1)
+
+                    
+                    
+
+                    ax.plot(xi, yi, zi, color = color_list[i], alpha=0.5)
+
+       
+        # Uncomment the code block below
+        # for gen in range(n_generations):
+        #     rotate(gen)
+
+        print("Making animation")
+        rot_animation = animation.FuncAnimation(fig, rotate, frames=np.arange(1, n_generations), interval=1000)
+        if saving_folder:
+                saving_name = f'/{name}_animation.gif'
+                os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+                plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+                rot_animation.save(f"Results/Comparisons/{saving_folder}/{saving_name}", dpi=80, writer='imagemagick')
+                print(f"Saved {saving_name}")
+                
+
+
+
+
+
+
+        print("Drawing Embedding graph...")
+
+        fig = plt.figure()
+
+        pos = vis_dims
+
+        
+        shape_list = ['o', '^', 's', 'x', '+', 'D', 'v', 'p', 'P', 'X']
+        # shapes = list(np.array([[shape_list[i]] * n_generations for i in range(total_seeds)]).flatten())
+
+        edge_colors = list(np.array([[color_list[i]] * (n_generations - 1) for i in range(total_seeds)]).flatten())
+        sizes = np.array(list([200] + [75] * (n_generations - 2) + [200]) * total_seeds).flatten()
+        #sizes = list(np.linspace(10, 100, n_generations)) * total_seeds
+        #alphas = list(np.linspace(0.8, 1, n_generations)) * total_seeds
+        shapes = list(np.array( list(['^'] + ['o'] * ( n_generations - 2) + ['s']) * total_seeds).flatten())
+        #shapes = ['o'] * total_seeds * n_generations
+        for node, shape, size, color in zip(G.nodes, shapes, sizes, colors):
+            nx.draw_networkx_nodes(G, pos, nodelist=[node], node_size=size, node_shape=shape, node_color=color, alpha=0.5)
+
+        edges = G.edges()
+        incr_plotted_weights = [3 if (u, v) in connected_edges_idx else 0 for u, v in edges]  
+        nx.draw_networkx_edges(G, pos, edgelist=connected_edges_idx, width=2, edge_color=edge_colors, alpha=0.5)
+
+        plt.title('Evolution of similarities between generations', fontsize=fontsizes['labels'])
+        plt.axis('off')
+
+        # Creating legend handles using group labels
+        handles = [plt.Line2D([0], [0], marker='o', label=label, color = color, markersize=10, markerfacecolor=color) for label, color in zip(labels, color_list)]
+
+        plt.legend(handles=handles, loc='upper right')
+
+        if saving_folder:
+            saving_name = f'/{name}_embedding_graph2D.png'
+            os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+            plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+            print(f"Saved {saving_name}")
+
+            
+
+
+
+        if plot:
+            plt.show()
+        
+        plt.show()
+        
+
+        #return G
 
 
 
@@ -534,7 +828,87 @@ def plot_all_similarity_graphs(data, plot, fontsizes, saving_folder=None, save =
     
     all_folder_flat_stories, all_folder_keywords, all_folder_stem_words = preprocess_stories(all_folder_stories)
 
-    all_folder_similarity_matrix = get_similarity_matrix(all_folder_flat_stories)
+    all_folder_similarity_matrix = np.array(get_similarity_matrix(all_folder_flat_stories))
 
     plot_similarity_graph(all_folder_similarity_matrix, saving_folder, plot, sizes)
+
+
+
+def plot_between_treatment_matrix(data,  plot, fontsizes, saving_folder=None, save = True, initial_story = 'But I must explain to you how all this mistaken idea of denouncing of a pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but occasionally circumstances occur in which toil and pain can procure him some great pleasure.'):
+
+
+    print("Computing similarity matrix...")
+    all_folder_stories = [data[folder]['all_seed_stories'] for folder in data]
+    labels = [data[folder]['label'] for folder in data]
+
+    try:
+        with open(f'Results/Comparisons/{saving_folder}/similarity_matrix.npy', 'rb') as f:
+            sim_matrix = np.load(f)
+        print("Similarity matrix loaded")
+    except:
+
+        sim_matrix = np.zeros((len(all_folder_stories) * len(all_folder_stories[0]), len(all_folder_stories)* len(all_folder_stories[0])))
+
+        for f1 in trange(len(all_folder_stories)):
+            for f2 in trange(len(all_folder_stories)):
+                for s1 in range(len(all_folder_stories[f1])):
+                    for s2 in range(len(all_folder_stories[f2])):
+
+                        stories1 = np.array(all_folder_stories[f1][s1]).flatten()
+                        stories2 = np.array(all_folder_stories[f2][s2]).flatten()
+                        similarities = get_SBERT_similarity(stories1, stories2)
+                        sim_matrix[f1 * len(all_folder_stories[f1]) + s1 , f2 * len(all_folder_stories[f2]) + s2] = np.mean(similarities)
+        
+        # Save the similarity matrix to a file
+        with open(f'Results/Comparisons/{saving_folder}/similarity_matrix.npy', 'wb') as f:
+            np.save(f, sim_matrix)
+        print("Similarity matrix saved")
+        
+
+    labels = [label + ' seed' + str(i) for label in labels for i in range(len(all_folder_stories[0]))]
+
+    print(labels)
+
+
+    plt.figure(figsize=(10, 6))
+    plt.imshow(sim_matrix, cmap='viridis')
+    plt.title('Similarity between treatments', fontsize=fontsizes['title'], pad=PAD)
+    plt.xticks(range(len(all_folder_stories) * len(all_folder_stories[0])), labels, fontsize=fontsizes['ticks'], rotation=45)
+    plt.yticks(range(len(all_folder_stories) * len(all_folder_stories[0])), labels, fontsize=fontsizes['ticks'])
+    plt.colorbar(pad=0.02, shrink=0.84)
+
+    if saving_folder:
+        saving_name = '/treatment_similarity_matrix.png'
+        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        print(f"Saved {saving_name}")
+    
+    if plot:
+        plt.show()
+
+    plt.close('all')
+
+
+    mean_similarities_pure_0 = [np.mean(sim_matrix[0][i:i+2] ) for i in range(0, len(sim_matrix[0]), 2)]
+    mean_similarities_pure_1 = [np.mean(sim_matrix[-1][i:i+2] ) for i in range(0, len(sim_matrix[1]), 2)]    
+    std_similarities_pure_0 = [np.std(sim_matrix[0][i:i+2] ) for i in range(0, len(sim_matrix[0]), 2)]
+    std_similarities_pure_1 = [np.std(sim_matrix[-1][i:i+2] ) for i in range(0, len(sim_matrix[1]), 2)]
+    plt.plot(mean_similarities_pure_0, label = 'Similarity with the pure SciFi')
+    plt.fill_between(range(len(mean_similarities_pure_0)), mean_similarities_pure_0 - std_similarities_pure_0, mean_similarities_pure_0 + std_similarities_pure_0, alpha=0.3)
+
+    plt.plot(mean_similarities_pure_1, label = 'Similarity with the pure Romance')
+    plt.fill_between(range(len(mean_similarities_pure_1)), mean_similarities_pure_1 - std_similarities_pure_0, mean_similarities_pure_1 + std_similarities_pure_0, alpha=0.3)
+    plt.legend(fontsize=fontsizes['legend'])
+    plt.xticks(range(len(sim_matrix[0])), labels, fontsize=fontsizes['ticks'], rotation=90)
+
+    if saving_folder:
+        saving_name = '/similarity_with_pure.png'
+        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        print(f"Saved {saving_name}")
+    plt.show()
+    if plot:
+        plt.show()
+
+
 

@@ -15,7 +15,7 @@ def get_answer(access_url, prompt, debug=False):
     history = []
 
     #prompt = '<|im_start|>user' + prompt + '<|im_end|> <|im_start|>assistant'
-
+    
     history.append({"role": "user", "content": prompt})
     data = {
         "mode": "chat",

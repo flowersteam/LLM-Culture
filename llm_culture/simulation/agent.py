@@ -24,7 +24,10 @@ class Agent:
         self.prompt_format = format_prompt
         self.start_flag = start_flag
         self.end_flag = end_flag
-        self.pattern = rf"{start_flag}(.*?){end_flag}"
+        if start_flag != None and end_flag != None:
+            self.pattern = rf"{start_flag}(.*?){end_flag}"
+        else:
+            self.pattern = None
 
     def update_neighbours(self, graph, agentList):
         # get the neighbours of the agent from the graph (networkx graph)
@@ -39,7 +42,6 @@ class Agent:
         #print(neighbour.get_story() for neighbour in self.neighbours if neighbour.get_story() is not None)
             return [neighbour.get_story() for neighbour in self.neighbours if neighbour.get_story() is not None]
         else:
-            print([neighbour.get_story() for neighbour in self.neighbours if neighbour.get_story() is not None])
 
             matches = [re.search(self.pattern, neighbour.get_story()).group(1).strip() for neighbour in self.neighbours if neighbour.get_story() is not None]
             return matches
@@ -64,7 +66,7 @@ class Agent:
             prompt = None
         
         self.prompt = prompt
-        print(f'Prompt: {self.prompt}')
+        #print(f'Prompt: {self.prompt}')
         # if self.is_new:
         #     if self.wait == 0:
         #         self.go = True
@@ -103,10 +105,17 @@ class Agent:
             while not format_ok:
                 self.story = get_answer(self.access_url, self.prompt, debug=self.debug)
                 try:
-                    test = re.search(self.pattern, self.story).group(1).strip()
-                    format_ok = True
+                    if self.pattern != None:
+                        test = re.search(self.pattern, self.story).group(1).strip()
+                        format_ok = True
+                    else:
+                        format_ok = True
                 except:
                     print('Format not ok')
+                    # print('Format not ok: Prompt was:')
+                    # print(self.prompt)
+                    # print('Answer was:')
+                    # print(self.story)
                     pass
             #print(f"AgentId: {self.agent_id}) /n Prompt: {self.prompt} /n Answer: {self.story}")
             # print(f"Prompt: {self.prompt}")

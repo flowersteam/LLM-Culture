@@ -33,7 +33,9 @@ nlp = spacy.load('en_core_web_sm')
 
 
 def get_stories(folder, start_flag = None, end_flag = None):
-    pattern = rf"{start_flag}(.*?){end_flag}"
+    if start_flag != None and end_flag != None:
+        pattern = rf"{start_flag}(.*?){end_flag}"
+    
     json_files = [file for file in os.listdir(folder) if file.endswith('.json')]
     all_stories = []
     # json_file  = folder + '/output.json'
@@ -48,7 +50,10 @@ def get_stories(folder, start_flag = None, end_flag = None):
                 if start_flag is not None and end_flag is not None:
                     stories_gen = []
                     for gen in stories:
-                        stories_gen.append([re.search(pattern, story).group(1).strip() for story in gen])
+                        if start_flag != None and end_flag != None:
+                            stories_gen.append([re.search(pattern, story).group(1).strip() for story in gen])
+                        else:
+                            stories_gen.append(gen)
                     all_stories.append(stories_gen)
                     print("0::",len(stories_gen))
                     print("1::",len(stories_gen[0]))
@@ -83,11 +88,18 @@ def preprocess_stories(all_seeds_stories):
     
     return all_seeds_flat_stories, all_seeds_keywords, all_seeds_stem_words
 
-def get_similarity_matrix_single_seed(flat_stories):
+def get_similarity_matrix_single_seed(flat_stories, initial_story = None):
     vect = TfidfVectorizer(min_df=1, stop_words="english", norm="l2")
+    if initial_story is not None:
+        flat_stories = [initial_story] + flat_stories
     tfidf = vect.fit_transform(flat_stories)                                                                                                                                                                                                                       
     similarity_matrix = tfidf * tfidf.T 
     return similarity_matrix.toarray()
+
+def get_embeddings(stories, model = "distiluse-base-multilingual-cased-v1"):
+    model = SentenceTransformer(model)
+    embeddings = model.encode(stories, convert_to_tensor=True)
+    return embeddings.cpu().numpy()
 
 def get_SBERT_similarity(story1, story2):
     model = SentenceTransformer("distiluse-base-multilingual-cased-v1")
@@ -115,6 +127,21 @@ def get_similarity_matrix(all_seed_flat_stories):
         all_seeds_similarity_matrix.append(similarity_matrix)
     return all_seeds_similarity_matrix
 
+
+def convert_to_json_serializable(obj):
+    """
+    Recursively converts non-JSON serializable objects to JSON serializable format.
+    """
+    if isinstance(obj, np.float32):
+        return float(obj)
+    elif isinstance(obj, dict):
+        return {convert_to_json_serializable(k): convert_to_json_serializable(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_to_json_serializable(item) for item in obj]
+    elif isinstance(obj, tuple):
+        return tuple(convert_to_json_serializable(item) for item in obj)
+    else:
+        return obj
 
 
 

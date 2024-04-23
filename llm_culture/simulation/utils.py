@@ -47,8 +47,8 @@ def run_simul(access_url, n_timesteps=5, network_structure=None, prompt_init=Non
         state_history_path = f'{output_folder}/state_history.json'
     for t in trange(n_timesteps):
         new_stories = update_step(agent_list, t, state_history_path)
-        print(f'Timestep: {t}')
-        print(f'Number of new_stories: {len(new_stories)}')
+        #print(f'Timestep: {t}')
+        #print(f'Number of new_stories: {len(new_stories)}')
         stories_history.append(new_stories)
 
     return stories_history
@@ -60,8 +60,9 @@ def update_step(agent_list, timestep, state_history_path):
     for agent in agent_list:
         agent.update_prompt()
 
-    for agent in agent_list:
-        print(f'Agent: {agent.agent_id}')
+    for a in trange(len(agent_list)):
+        agent = agent_list[a]
+       # print(f'Agent: {agent.agent_id}')
         story = agent.get_updated_story()
         if story is not None:
             new_stories.append(story)

@@ -30,5 +30,9 @@
     {
         "name": "permutation_same_for_all",
         "prompt": "You will receive a story. You can change up to 10 words of this story. Your goal is to produce a story that is as close as possible to your favorite genre.\n\tHere is the story: \"In the quaint town of Willowbrook, a peculiar old bookstore stood at the corner of Elm Street. It was rumored to hold books of ancient magic. One rainy afternoon, Sarah stumbled upon it. Drawn by an unseen force, she entered. The books whispered secrets, promising power. Sarah hesitated, but curiosity won. She chose a tome bound in cracked leather. As she flipped through its pages, a surge of energy enveloped her. Outside, the rain ceased, and the sun bathed Willowbrook in golden light. Sarah smiled, realizing she held the key to changing her world forever.\""
+    },
+    {
+        "name": "permutation_Lorem_Ipsum",
+        "prompt": "You will receive a story. You can change up to 10 words of this story. Your goal is to produce a story that is as close as possible to your favorite genre.\n\tHere is the story: \"But I must explain to you how all this mistaken idea of denouncing of a pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but occasionally circumstances occur in which toil and pain can procure him some great pleasure.\""
     }
 ]
