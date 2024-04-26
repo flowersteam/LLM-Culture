@@ -1,4 +1,5 @@
 # TODO : Refactor the file to decompose huge functions into smaller ones
+# TODO : Combine this file with run_simulation 
 
 import os
 import json
@@ -7,6 +8,8 @@ from pathlib import Path
 import networkx as nx
 
 from llm_culture.simulation.utils import run_simul
+
+RESULTS_DIR = 'Results/experiments'
 
 
 def _create_network_structure(network_structure_name, n_agents, n_cliques):
@@ -64,6 +67,7 @@ def run_simulation(
     output_dict["prompt_update"] = [prompt_update]
 
     personality_list = []
+    print("\nAgents personalities:")
     with open(json_personnalities, 'r') as file:
         data = json.load(file)
         for perso in personalities:
@@ -76,7 +80,7 @@ def run_simulation(
     os.makedirs(os.path.dirname(output_dir + '/'), exist_ok=True)
     
     for seed in range(n_seeds):
-        print(f"Seed {seed}")
+        print(f"\nSeed {seed}")
         stories = run_simul(
             server_url,
             n_timesteps,

@@ -10,7 +10,13 @@
     <nav>
         <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('simulation') }}">Simulation</a>
-        <a href="{{ url_for('analyze') }}">Analyze Results</a>
+        <div class="dropdown">
+            <button class="dropbtn">Analysis</button>
+            <div class="dropdown-content">
+                <a href="{{ url_for('analyze') }}">Analyze simulation</a>
+                <a href="{{ url_for('comparison_analysis') }}">Comparison simulations</a>
+            </div>
+        </div>
         <a href="{{ url_for('results') }}">Results</a>
     </nav>
 

@@ -16,21 +16,13 @@ window.onload = function() {
     });
 };
 </script>
-
-<style>
-    #loading-message {
-        font-size: 1.2em;
-        font-weight: normal;
-        color: #333;
-        text-align: center;
-        margin-top: 20px;
-    }
-    </style>
 {% endblock %}
 
 {% block body %}
 
-<h1>Run an analysis on an experiment</h1>
+<h1 class="smaller-heading">Run an analysis on a simulation</h1>
+
+<a href="comparison_analysis" class="switch_comparison">Compare multiple simulations</a>
 
 <form id="analysis-form" method="POST">
     <label for="dir">Experiment directory</label>

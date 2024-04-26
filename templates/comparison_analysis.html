@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Analyze Results</title>
+
+<script>
+window.onload = function() {
+    document.getElementById('analysis-form').addEventListener('submit', function(event) {
+        // Show the loading message
+        document.getElementById('loading-message').style.display = 'block';
+
+        // Submit the form
+        setTimeout(function() {
+            event.target.submit();
+        }, 100);
+    });
+};
+
+
+</script>
+{% endblock %}
+
+{% block body %}
+
+<h1 class="smaller-heading">Run a comparison analysis of multiple simulations</h1>
+
+<a href="analyze" class="switch_comparison">Analyze only one simulation</a>
+
+<form id="analysis-form" method="POST">
+    <div class="custom-select-container">
+        <label for="dir">Select your experiments</label>
+        <p>(ctrl+click to add a new one)</p>
+        <select name="result_dir[]" multiple class="custom-select">
+            {% for dir in result_dirs %}
+            <option value="{{ dir }}">{{ dir }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-agents" id="form-agents">
+        <h2>Agents parameters</h2>
+    </div>
+      
+
+    <h4>Figure font sizes:</h4>
+
+    <div class="size-fields">
+        <div>
+            <label for="ticks_font_size">Ticks:</label><br>
+            <input type="number" id="ticks_font_size" name="ticks_font_size" value="12">
+        </div>
+        <div>
+            <label for="labels_font_size">Labels:</label><br>
+            <input type="number" id="labels_font_size" name="labels_font_size" value="14">
+        </div>
+        <div>
+            <label for="title_font_size">Title:</label><br>
+            <input type="number" id="title_font_size" name="title_font_size" value="16">
+        </div>
+    </div>
+
+    <input type="submit" value="Launch Analysis">
+    <div id="loading-message" style="display: none;">Analyzing experiment, please wait ...</div>
+</form>
+
+{% endblock %}

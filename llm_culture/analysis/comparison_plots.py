@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 PAD = 20
 LABEL_PAD = 10
 MATRIX_SIZE = 10
+COMPARISON_DIR = 'Results/experiments_comparisons'
+
 
 def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
@@ -38,8 +40,8 @@ def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folde
     
     if saving_folder:
         saving_name = '/similarity_first_gen_comparison.png'
-        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
-        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
+        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
         print(f"Saved {saving_name}")
     
     if plot:
@@ -79,8 +81,8 @@ def compare_within_generation_similarity_evolution(data, plot, sizes, saving_fol
     
     if saving_folder:
         saving_name = '/similarity_within_gen_comparison.png'
-        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
-        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
+        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
         print(f"Saved {saving_name}")
     
     if plot:
@@ -121,8 +123,8 @@ def compare_successive_generations_similarities(data, plot, sizes, saving_folder
     
     if saving_folder:
         saving_name = '/similarity_successive_gen_comparison.png'
-        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
-        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
+        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
         print(f"Saved {saving_name}")
     
     if plot:
@@ -170,8 +172,8 @@ def compare_positivity_evolution(data, plot, sizes, saving_folder=None, scale_y_
     
     if saving_folder:
         saving_name = '/positivity_gen_comparison.png'
-        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
-        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
+        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
         print(f"Saved {saving_name}")
     
     if plot:
@@ -216,8 +218,8 @@ def compare_subjectivity_evolution(data, plot, sizes, saving_folder=None, scale_
     
     if saving_folder:
         saving_name = '/subjectivity_gen_comparison.png'
-        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
-        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
+        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
         print(f"Saved {saving_name}")
     
     if plot:
@@ -262,8 +264,8 @@ def compare_creativity_evolution(data, plot, sizes, saving_folder=None, scale_y_
     
     if saving_folder:
         saving_name = '/creativity_gen_comparison.png'
-        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
-        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
+        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
         print(f"Saved {saving_name}")
     
     if plot:
@@ -299,8 +301,8 @@ def plot_similarity_matrix(similarity_matrix, label, n_gen, n_agents, plot, size
 
     if saving_folder:
         saving_name = f'/stories_similarity_matrix_{label}_{seed}.png'
-        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
-        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}")
+        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
+        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
         print(f"Saved {saving_name}")
 
     if plot:

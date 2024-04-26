@@ -5,9 +5,10 @@ from llm_culture.analysis.utils import compute_between_gen_similarities, get_pol
 from llm_culture.analysis.plots import plot_similarity_matrix
 from llm_culture.analysis.comparison_plots import *
 
+RESULTS_DIR = 'Results/experiments'
+COMPARISON_DIR = 'Results/experiments_comparisons'
 
-
-def main_analysis(folders, plot, scale_y_axis, labels, sizes):
+def run_comparison_analysis(folders, plot, scale_y_axis, labels, sizes):
     saving_folder = '-'.join(os.path.basename(folder) for folder in folders)
     data = {}
         
@@ -66,7 +67,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     analyzed_dirs = args.dirs.split('+')
-    dirs_list = [f"Results/{dir_name}" for dir_name in analyzed_dirs]
+    dirs_list = [f"{RESULTS_DIR}/{dir_name}" for dir_name in analyzed_dirs]
 
     labels = args.labels.split('+')
     sizes = {'ticks': args.ticks_font_size,
@@ -77,4 +78,4 @@ if __name__ == "__main__":
 
     print(f"\nLaunching analysis on the {args.dirs} results")
     print(f"plot = {args.plot}")
-    main_analysis(dirs_list, args.plot, args.scale_y_axis, labels, sizes)
+    run_comparison_analysis(dirs_list, args.plot, args.scale_y_axis, labels, sizes)

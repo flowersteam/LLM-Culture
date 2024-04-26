@@ -2,7 +2,9 @@
 
 {% block head %}
 <title>Simulation</title>
+
 <script>
+
 function toggleCliques() {
     var network_structure = document.getElementById("network_structure");
     var n_cliques_container = document.getElementById("n_cliques_container");
@@ -116,22 +118,28 @@ function generateAgentsInput() {
 }
 
 
-
 window.onload = function() {
     generateAgentsInput();
-};
 
+    document.getElementById('simulation-form').addEventListener('submit', function(event) {
+        // Show the loading message
+        document.getElementById('loading-message').style.display = 'block';
+
+        // Submit the form
+        setTimeout(function() {
+            event.target.submit();
+        }, 100);
+    });
+};
     
 </script>
-
-
 {% endblock %}
 
+
 {% block body %}
+<h1 class="smaller-heading">Run a transmission simulation</h1>
 
-<h1>Run a transmission simulation</h1>
-
-<form method="POST">
+<form id="simulation-form" method="POST">
     <h2>Experiment parameters</h2>
 
     <div class="form-column">
@@ -201,8 +209,7 @@ window.onload = function() {
     <div class="form-button">
         <input type="submit" name="run_simulation" value="Run simulation">
     </div> 
-    <div id="loading-message" style="display: none;">Simulation running, please wait ...</div>
+    <div id="loading-message" style="display: none;">Simulation running ... you will be redirected to the analysis page when it finishes</div>
 </form>
-
 {% endblock %}
 
