@@ -57,11 +57,11 @@ def simulation():
             init_prompt = init_prompts[0]
             update_prompt = update_prompts[0]
 
-            output_dir = f"Results/{experiment_name}"
+            # TODO : Change this mechanism so that you only have to provide experiment name
+            output_dir = f"{RESULTS_DIR}/{experiment_name}"
             server_url = request.form.get('server_url')
 
-            print(f"Launching the analysis")
-
+            print("\nLaunching the analysis")
             run_simulation(
                 n_agents=n_agents,
                 n_timesteps=n_timesteps,
@@ -75,7 +75,9 @@ def simulation():
                 server_url=server_url
             )
 
-            return "Simulation done"
+            # Update the results dir with the new experiment and redirect to comparison
+            result_dirs = _get_results_dir()
+            return render_template('analysis.html', result_dirs=result_dirs)
   
     prompt_options = _get_prompt_options()
 
@@ -225,4 +227,5 @@ def _write_prompt_option(prompt_type, name, prompt):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True, host="10.17.5.125", port="5050")
+    app.run(debug=True, port=5002)
