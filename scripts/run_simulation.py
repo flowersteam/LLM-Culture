@@ -1,3 +1,5 @@
+# TODO : Combine this file with run_simulation 
+
 import os
 import json
 import argparse

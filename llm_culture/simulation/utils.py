@@ -30,10 +30,8 @@ def run_simul(access_url, n_timesteps=5, network_structure=None, prompt_init=Non
     
 
 
-    # print the agent id and wait time
     for agent in agent_list:
         agent.update_neighbours(network_structure, agent_list )
-        # print(f'Agent: {agent.agent_id}, wait: {agent.wait}')
 
     #MAIN LOOP
     if output_folder is None:
@@ -42,7 +40,7 @@ def run_simul(access_url, n_timesteps=5, network_structure=None, prompt_init=Non
         state_history_path = f'{output_folder}/state_history.json'
     for t in range(n_timesteps):
         new_stories = update_step(agent_list, t, state_history_path)
-        print(f'Timestep: {t}')
+        print(f'\nTimestep: {t}')
         print(f'Number of new_stories: {len(new_stories)}')
         stories_history.append(new_stories)
 
@@ -60,7 +58,5 @@ def update_step(agent_list, timestep, state_history_path):
         story = agent.get_updated_story()
         if story is not None:
             new_stories.append(story)
-        # update the state history of the agent at the current timestep
-        # update_state_history(agent, timestep, state_history_path)
 
     return new_stories
