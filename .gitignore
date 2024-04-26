@@ -11,7 +11,5 @@ test.ipynb
 
 # Only include the paper results 
 Results/*
-!Results/experiments/Chain_50_kid/
-!Results/experiments_comparisons/FC_10_10_combine5seeds-CAVEMAN_10_10_combine5seeds-CIRCLE_10_10_combine5seeds
-!Results/experiments_comparisons/FC_10_10_combine5seeds-FC_10_10_creative5seeds-FC_10_10_notCreative5seeds-FC_10_10_combine_mixedPop_5seeds
-!Results/experiments_comparisons/FC_10_10_combine5seeds-FC_10_10_minorChanges5seeds-FC_10_10_repeat5seeds-FC_10_10_different5seeds
+!Results/experiments/
+!Results/experiments_comparisons/

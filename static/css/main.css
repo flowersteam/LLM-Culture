@@ -86,6 +86,10 @@ h2 {
     margin-top: 0;
 }
 
+h2.results_plots {
+    margin-top: 30px;
+}
+
 p {
     font-size: 1.1em;
     color: #333;
@@ -212,8 +216,7 @@ input[type="submit"]:hover {
 /* Plotting analysis results */
 
 .plot-img {
-    max-width: 25%;
-    height: auto;
+    max-width: 30%;
   }
 
 .intro-fig {

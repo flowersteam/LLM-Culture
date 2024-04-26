@@ -171,8 +171,8 @@ def plots(dir_name):
 
     dir_path = os.path.join(results_dir, dir_name)
     plot_names = [f.replace('.png', '') for f in os.listdir(dir_path) if f.endswith('.png')]
-    # Plot the matrix elements before the other figures
-    plot_names.sort(key=_matrix_sort_key)
+    # Plot the matrix elements before the other figures if clasical experiment, and at the end if comparison
+    plot_names.sort(key=lambda name: _matrix_sort_key(name, comparison))
     plot_paths = _get_plot_paths_dict(dir_name, plot_names, comparison)
 
     return render_template('plots.html', dir_name=dir_name, plot_names=plot_names, plot_paths=plot_paths)
@@ -180,12 +180,11 @@ def plots(dir_name):
 
 # Helper functions
 
-def _matrix_sort_key(name):
-    if "matrix" in name:
-        return (0, name)
-    else:
-        return (1, name)
-
+def _matrix_sort_key(name, comparison):
+    # Sort the matrix at the start of the array if not comparison else at the end 
+    matrix_prio, other_figs_prio = (1, 0) if comparison else(0, 1)
+    return (matrix_prio, name) if "matrix" in name else (other_figs_prio, name)
+        
 def _get_plot_paths_dict(dir_name, plot_names, comparison):
     plot_paths = {plot_name: f"{dir_name}/{plot_name}.png" for plot_name in plot_names}
     return plot_paths
