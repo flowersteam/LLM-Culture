@@ -62,5 +62,13 @@
     {
         "name": "permutations_chain",
         "prompt": "You will receive one story.You can change up to 10 words of this story. Your goal is to produce a story that is as close as possible to your favorite genre.\nHere is the  story: "
-    }
+    },
+    {
+    "name": "rephrase",
+    "prompt": "You will receive a text. Your task is to rephrase this text without modifying its meaning. Juste output your new text, nothing else. Here is the text:"
+    },
+    {
+    "name": "inspiration",
+    "prompt": "You will receive a text. Your task is to create a new original text by taking inspiration from this text. Juste output your new text, nothing else. Here is the text:"
+    }  
 ]

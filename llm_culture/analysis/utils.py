@@ -3,6 +3,7 @@ import pickle
 
 import nltk
 import gensim
+import pandas as pd
 import spacy
 import numpy as np
 import ssl
@@ -15,7 +16,10 @@ from nltk.probability import FreqDist
 from sklearn.feature_extraction.text import TfidfVectorizer
 from textblob import TextBlob
 import os
+from GRUEN.main import get_focus_score, get_grammaticality_score, get_redundancy_score, preprocess_candidates
 from sentence_transformers import SentenceTransformer, util
+import whylogs as why
+from langkit import light_metrics, extract
 
 
 try:
@@ -63,6 +67,20 @@ def get_stories(folder, start_flag = None, end_flag = None):
                     all_stories.append(stories)
     
     return all_stories
+
+
+def get_initial_story(folder, marker = "Here is the text:"):
+    json_files = [file for file in os.listdir(folder) if file.endswith('.json')]
+
+    for json_file in json_files:
+        with open(folder + '/' + json_file, 'r') as file:
+            data = json.load(file)
+            prompt_init = data["prompt_init"][0]
+            index = prompt_init.find(marker)
+
+            initial_story = prompt_init[index + len(marker):].strip()
+            return initial_story
+
     
 
 def get_plotting_infos(stories):  
@@ -300,3 +318,140 @@ def get_creativity_indexes(all_seed_stories, folder):
         creativities.append(get_creativity_indexes_single_seed(stories, folder, seed))
     return creativities
 
+
+
+
+def get_grammaticality_score_single_seed(stories):
+    return
+    grammaticality_score = []
+    for gen in stories:
+        for story in gen:
+            grammaticality_score.append(get_grammaticality_score([story]))
+    return grammaticality_score
+
+def get_redundancy_score_single_seed(stories):
+    redundancy_score = []
+    for gen in stories:
+        for story in gen:
+            redundancy_score.append(get_redundancy_score([story]))
+    return redundancy_score
+
+def get_focus_score_single_seed(stories):
+    focus_score = []
+    for gen in stories:
+        for story in gen:
+            focus_score.append(get_focus_score([story]))
+            print(f"Focus score: {focus_score[-1]}")
+    return focus_score
+
+def get_gramm_score(all_seed_flat_stories):
+    return
+    all_seeds_grammaticality_score = []
+    for flat_stories in all_seed_flat_stories:
+        grammaticality_score = get_grammaticality_score_single_seed(flat_stories)
+        all_seeds_grammaticality_score.append(grammaticality_score)
+    return all_seeds_grammaticality_score
+
+def get_red_score(all_seed_flat_stories):
+    return
+    all_seeds_redundancy_score = []
+    print("Getting redundancy scores...")
+    i = 0
+    for flat_stories in all_seed_flat_stories:
+        i += 1
+        print(f"Story {i} / {len(all_seed_flat_stories)}")
+        redundancy_score = get_redundancy_score_single_seed(flat_stories)
+        all_seeds_redundancy_score.append(redundancy_score)
+    print(f"redundancy:{all_seeds_redundancy_score}")
+    return all_seeds_redundancy_score
+
+def get_foc_score(all_seed_flat_stories):
+    return
+    print("Getting focus scores...")
+    all_seeds_focus_score = []
+    i = 0
+    for flat_stories in all_seed_flat_stories:
+        i += 1
+        print(f"Seed {i} / {len(all_seed_flat_stories)}")
+        focus_score = get_focus_score_single_seed(flat_stories)
+        all_seeds_focus_score.append(focus_score)
+    print(f"focus:{all_seeds_focus_score}")
+    return all_seeds_focus_score
+
+def get_langkit_scores_single_seed(stories):
+    flesch_reading_ease = []
+    automated_readability_index = []
+    aggregate_reading_level = []
+    syllable_count = []
+    lexicon_count = []
+    sentence_count = []
+    character_count = []
+    letter_count = []
+    polysyllable_count = []
+    monosyllable_count = []
+    difficult_words = []
+    difficult_words_ratio = []
+    polysyllable_ratio = []
+    monosyllable_ratio = []
+
+    for gen in stories:
+
+        llm_schema = light_metrics.init()
+        df = pd.DataFrame({'response': gen})
+        enhanced_df = extract(df, schema=llm_schema)
+        flesch_reading_ease.append(enhanced_df['response.flesch_reading_ease'])
+        automated_readability_index.append(enhanced_df['response.automated_readability_index'])
+        aggregate_reading_level.append(enhanced_df['response.aggregate_reading_level'])
+        syllable_count.append(enhanced_df['response.syllable_count'])
+        lexicon_count.append(enhanced_df['response.lexicon_count'])
+        sentence_count.append(enhanced_df['response.sentence_count'])
+        character_count.append(enhanced_df['response.character_count'])
+        letter_count.append(enhanced_df['response.letter_count'])
+        polysyllable_count.append(enhanced_df['response.polysyllable_count'])
+        monosyllable_count.append(enhanced_df['response.monosyllable_count'])
+        difficult_words.append(enhanced_df['response.difficult_words'])
+        difficult_words_ratio.append(np.array(enhanced_df['response.difficult_words']) / np.array(enhanced_df['response.lexicon_count']))
+        polysyllable_ratio.append(np.array(enhanced_df['response.polysyllable_count']) / np.array(enhanced_df['response.lexicon_count']))
+        monosyllable_ratio.append(np.array(enhanced_df['response.monosyllable_count']) / np.array(enhanced_df['response.lexicon_count']))
+
+
+    return flesch_reading_ease, automated_readability_index, aggregate_reading_level, syllable_count, lexicon_count, sentence_count, character_count, letter_count, polysyllable_count, monosyllable_count, difficult_words, difficult_words_ratio, polysyllable_ratio, monosyllable_ratio
+            
+    
+
+def get_langkit_scores(all_seed_flat_stories):
+    all_seeds_flesch_reading_ease = []
+    all_seeds_automated_readability_index = []
+    all_seeds_aggregate_reading_level = []
+    all_seeds_syllable_count = []
+    all_seeds_lexicon_count = []
+    all_seeds_sentence_count = []
+    all_seeds_character_count = []
+    all_seeds_letter_count = []
+    all_seeds_polysyllable_count = []
+    all_seeds_monosyllable_count = []
+    all_seeds_difficult_words = []
+    all_seeds_difficult_words_ratio = []
+    all_seeds_polysyllable_ratio = []
+    all_seeds_monosyllable_ratio = []
+
+    for flat_stories in all_seed_flat_stories:
+        flesch_reading_ease, automated_readability_index, aggregate_reading_level, syllable_count, lexicon_count, sentence_count, character_count, letter_count, polysyllable_count, monosyllable_count, difficult_words, difficult_words_ratio, monosyllable_ratio, polysyllable_ratio = get_langkit_scores_single_seed(flat_stories)
+        all_seeds_flesch_reading_ease.append(flesch_reading_ease)
+        all_seeds_automated_readability_index.append(automated_readability_index)
+        all_seeds_aggregate_reading_level.append(aggregate_reading_level)
+        all_seeds_syllable_count.append(syllable_count)
+        all_seeds_lexicon_count.append(lexicon_count)
+        all_seeds_sentence_count.append(sentence_count)
+        all_seeds_character_count.append(character_count)
+        all_seeds_letter_count.append(letter_count)
+        all_seeds_polysyllable_count.append(polysyllable_count)
+        all_seeds_monosyllable_count.append(monosyllable_count)
+        all_seeds_difficult_words.append(difficult_words)
+        all_seeds_difficult_words_ratio.append(difficult_words_ratio)
+        all_seeds_polysyllable_ratio.append(polysyllable_ratio)
+        all_seeds_monosyllable_ratio.append(monosyllable_ratio)
+    
+    #print('all_seeds_flesch_reading_ease:', all_seeds_flesch_reading_ease)
+    
+    return all_seeds_flesch_reading_ease, all_seeds_automated_readability_index, all_seeds_aggregate_reading_level, all_seeds_syllable_count, all_seeds_lexicon_count, all_seeds_sentence_count, all_seeds_character_count, all_seeds_letter_count, all_seeds_polysyllable_count, all_seeds_monosyllable_count, all_seeds_difficult_words, all_seeds_difficult_words_ratio, all_seeds_polysyllable_ratio, all_seeds_monosyllable_ratio

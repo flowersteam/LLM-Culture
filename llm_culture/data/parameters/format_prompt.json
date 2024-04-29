@@ -6,5 +6,13 @@
     {
         "name": "permutations",
         "prompt": "Use the following format for your answers: 1. ##CHOICE##: [[number_of_the_chosen_story]] ##CHOICEEND## 2. ##PERMUTATIONS## [[list_of_the_10_permutations_you_made]] ##PERMUTATIONSEND# 3. ##STORY## [[new_story_with_permutations]] ##STORYEND##"
+    },
+    {
+        "name": "##STORY##",
+        "prompt":"Use the following format for your answers: ##STORY## your_new_story ##STORYEND##"
+    },
+    {
+        "name": "##TEXT##",
+        "prompt":"Use the following format for your answers: ##TEXT## your_new_text ##TEXTEND##"
     }
 ]
