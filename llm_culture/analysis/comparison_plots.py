@@ -13,6 +13,8 @@ from llm_culture.analysis.utils import convert_to_json_serializable, get_SBERT_s
 import networkx as nx
 from scipy.spatial import ConvexHull
 import umap
+from sklearn.neighbors import KernelDensity
+import diptest
 
 
 PAD = 20
@@ -134,9 +136,211 @@ def compare_within_generation_similarity_evolution(data, plot, sizes, saving_fol
     
     plt.clf()
 
+
+def compare_change_frequency_magnitude(data, plot, sizes, saving_folder=None, scale_y_axis=False):
+    for bandwith in [0.001, 0.01, 0.05, 0.1, 0.2]:
+
+        plt.figure(figsize=(10, 6))
+        plt.title('Change magntiude and frequencies', fontsize=sizes['title'], pad=PAD)
+
+
+        max_num_ticks = 0 
+
+        for folder in data:
+            num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
+            if num_ticks > max_num_ticks:
+                max_num_ticks = num_ticks
+                x_ticks_space = data[folder]['x_ticks_space']
+        
+        if scale_y_axis:
+            plt.ylim(0, 1)
+            plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
+        
+        #plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
+        plt.grid()
+
+        color_list = ['blue', 'red', 'green', 'purple', 'orange', 'black', 'gray', 'cyan', 'magenta', 'lime', 'teal', 'indigo', 'maroon', 'olive', 'navy', 'fuchsia', 'aqua', 'silver', 'lime', 'teal', 'indigo', 'maroon', 'olive', 'navy', 'fuchsia', 'aqua', 'silver']
+
+        for i, folder in enumerate(data):
+            color = color_list[i]
+            all_seeds_between_gen_similarity_matrix = data[folder]['all_seeds_between_gen_similarity_matrix']
+            successive_sim = [[all_seeds_between_gen_similarity_matrix[seed][i, i+1] for i in range(all_seeds_between_gen_similarity_matrix[0].shape[0] - 1)] for seed in range(len(all_seeds_between_gen_similarity_matrix))]
+            
+            for seed in range(len(all_seeds_between_gen_similarity_matrix)):
+                kde = KernelDensity(kernel='gaussian', bandwidth=bandwith).fit(np.array(successive_sim[seed]).reshape(-1, 1))
+                x = np.linspace(0, 1, 1000)
+                log_dens = kde.score_samples(x.reshape(-1, 1))
+
+                local_maxes = []
+                for i in range(1, len(log_dens) - 1):
+                    if log_dens[i] > log_dens[i-1] and log_dens[i] > log_dens[i+1]:
+                        local_maxes.append((x[i], np.exp(log_dens[i])))
+                
+                plt.scatter([x[0] for x in local_maxes], [x[1] for x in local_maxes], color=color)
+
+                # max, argmax = np.max(np.exp(log_dens)), np.argmax(np.exp(log_dens))
+
+                # plt.scatter(argmax/1000, max, color=color)
+        
+        handles = [plt.Line2D([0], [0], marker='o', color=color_list[i], markerfacecolor=color, markersize=10, label=data[folder]['label']) for i, folder in enumerate(data)]
+        
+        plt.legend(handles=handles, loc='upper right')
+
+        plt.xlabel('Change magnitude', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+        plt.ylabel('Frequency', fontsize=sizes['labels'], labelpad=LABEL_PAD)
+
+
+
+
+
+
+        
+        if saving_folder:
+            saving_name = f'/change_freq_magni_bandwith_{bandwith}.png'
+            os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+            plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}", transparent=True)
+            print(f"Saved {saving_name}")
+        
+        if plot:
+            plt.show()
+
+
+
+
+def compare_dips(data, plot, sizes, saving_folder=None, scale_y_axis=False):
+    plt.figure(figsize=(10, 6))
+    plt.title('Distributions of distances between successive generations', fontsize=sizes['title'], pad=PAD)
+
+
+    max_num_ticks = 0 
+
+    for folder in data:
+        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
+        if num_ticks > max_num_ticks:
+            max_num_ticks = num_ticks
+            x_ticks_space = data[folder]['x_ticks_space']
+    
+    if scale_y_axis:
+        plt.ylim(0, 1)
+        plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
+    
+    plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
+    plt.grid()
+
+    for i, folder in enumerate(data):
+        all_seeds_between_gen_similarity_matrix = data[folder]['all_seeds_between_gen_similarity_matrix']
+        successive_sim = [[all_seeds_between_gen_similarity_matrix[seed][i, i+1] for i in range(all_seeds_between_gen_similarity_matrix[0].shape[0] - 1)] for seed in range(len(all_seeds_between_gen_similarity_matrix))]
+
+        dips = []
+        for seed in range(len(all_seeds_between_gen_similarity_matrix)):
+            
+            dip, pval = diptest.diptest(np.array(successive_sim[seed]))
+            dips.append(dip)
+        
+        plt.errorbar([i], [np.mean(dips)], yerr=[np.std(dips)], fmt='o', label=data[folder]['label'])
+        plt.xticks([i], [data[folder]['label']])
+        plt.grid()
+
+
+
+
+
+
+    plt.legend(fontsize=sizes['legend'])
+    
+    if saving_folder:
+        saving_name = '/dips.png'
+        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}", transparent=True)
+        print(f"Saved {saving_name}")
+    
+    if plot:
+        plt.show()
+    
+    #plt.show()
+
+
+    
     
 
+def compare_similarity_distribution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
+    plt.figure(figsize=(10, 6))
+    plt.title('Distributions of distances between successive generations', fontsize=sizes['title'], pad=PAD)
 
+
+    max_num_ticks = 0 
+
+    for folder in data:
+        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
+        if num_ticks > max_num_ticks:
+            max_num_ticks = num_ticks
+            x_ticks_space = data[folder]['x_ticks_space']
+    
+    if scale_y_axis:
+        plt.ylim(0, 1)
+        plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
+    
+    plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
+    plt.grid()
+
+    for i, folder in enumerate(data):
+        all_seeds_between_gen_similarity_matrix = data[folder]['all_seeds_between_gen_similarity_matrix']
+        successive_sim = [[all_seeds_between_gen_similarity_matrix[seed][i, i+1] for i in range(all_seeds_between_gen_similarity_matrix[0].shape[0] - 1)] for seed in range(len(all_seeds_between_gen_similarity_matrix))]
+        flat_successive_sim = np.array(successive_sim).flatten()
+        kde = KernelDensity(kernel='gaussian', bandwidth=0.01).fit(np.array(flat_successive_sim).reshape(-1, 1))
+        x = np.linspace(0, 1, 1000)
+        log_dens = kde.score_samples(x.reshape(-1, 1))
+        plt.plot(x, np.exp(log_dens), label=data[folder]['label'])
+        plt.hist(flat_successive_sim, bins=20, density=True, alpha=0.3)
+        saving_name = f'/similarity_distributions_{data[folder]['label']}.png'
+        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}", transparent=True)
+        
+        #plt.show()
+        plt.clf()
+        dips = []
+        for seed in range(len(all_seeds_between_gen_similarity_matrix)):
+            kde = KernelDensity(kernel='gaussian', bandwidth=0.01).fit(np.array(successive_sim[seed]).reshape(-1, 1))
+            x = np.linspace(0, 1, 1000)
+            log_dens = kde.score_samples(x.reshape(-1, 1))
+            plt.plot(x, np.exp(log_dens), label=data[folder]['label'])
+            plt.hist(successive_sim[seed], bins=20, density=True, alpha=0.3)
+            saving_name = f'/similarity_distributions_{data[folder]['label']}{seed}.png'
+            os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+            plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}", transparent=True)
+            #plt.show()
+            plt.clf()
+
+            dip, pval = diptest.diptest(flat_successive_sim)
+            print(f'res{saving_name} : {dip}, {pval}')
+            dips.append(dip)
+        
+        plt.clf()
+        plt.errorbar([i], [np.mean(dips)], yerr=[np.std(dips)], fmt='o', label=data[folder]['label'])
+        plt.xticks([i], [data[folder]['label']])
+        plt.grid()
+
+
+
+
+
+
+    plt.legend(fontsize=sizes['legend'])
+    
+    if saving_folder:
+        saving_name = '/similarity_distributions.png'
+        os.makedirs(f"Results/Comparisons/{saving_folder}", exist_ok=True)
+        plt.savefig(f"Results/Comparisons/{saving_folder}/{saving_name}", transparent=True)
+        print(f"Saved {saving_name}")
+    
+    if plot:
+        plt.show()
+    
+    #plt.show()
+
+
+    
+    
 
 
 def compare_successive_generations_similarities(data, plot, sizes, saving_folder=None, scale_y_axis=False):
@@ -1224,7 +1428,7 @@ def compare_langkit_score(data, plot, sizes, saving_folder, scale_y_axis):
         for folder in data:
             all_seeds_langkit = data[folder][langkit_score]
 
-            print(all_seeds_langkit)
+            #print(all_seeds_langkit)
             
             all_seeds_gen_langkit = []
             for polarities in all_seeds_langkit:

@@ -232,9 +232,19 @@ def compute_between_gen_similarities(all_seeds_similarity_matrix, n_gen, n_agent
     return all_seeds_between_gen_similarity_matrix
 
 
-def get_polarities_subjectivities_single_seed(stories):
+
+def get_polarities_subjectivities_single_seed(initial_story, stories):
     polarities = []
     subjectivities = []
+
+    initial_story_blob = TextBlob(initial_story)
+    pol = []
+    subj = []
+    pol.append(initial_story_blob.polarity)
+    subj.append(initial_story_blob.subjectivity)
+    polarities.append(pol)
+    subjectivities.append(subj)
+
 
     for gen in stories:
         pol = []
@@ -248,11 +258,11 @@ def get_polarities_subjectivities_single_seed(stories):
 
     return polarities, subjectivities
 
-def get_polarities_subjectivities(all_seed_stories):
+def get_polarities_subjectivities(intial_story, all_seed_stories):
     all_seeds_polarities = []
     all_seeds_subjectivities = []
     for stories in all_seed_stories:
-        polarities, subjectivities = get_polarities_subjectivities_single_seed(stories)
+        polarities, subjectivities = get_polarities_subjectivities_single_seed(intial_story, stories)
         all_seeds_polarities.append(polarities)
         all_seeds_subjectivities.append(subjectivities)
     return all_seeds_polarities, all_seeds_subjectivities
@@ -378,7 +388,7 @@ def get_foc_score(all_seed_flat_stories):
     print(f"focus:{all_seeds_focus_score}")
     return all_seeds_focus_score
 
-def get_langkit_scores_single_seed(stories):
+def get_langkit_scores_single_seed(intial_story, stories):
     flesch_reading_ease = []
     automated_readability_index = []
     aggregate_reading_level = []
@@ -393,8 +403,12 @@ def get_langkit_scores_single_seed(stories):
     difficult_words_ratio = []
     polysyllable_ratio = []
     monosyllable_ratio = []
+    
+    stories = [[intial_story]] + stories
 
     for gen in stories:
+
+
 
         llm_schema = light_metrics.init()
         df = pd.DataFrame({'response': gen})
@@ -419,7 +433,7 @@ def get_langkit_scores_single_seed(stories):
             
     
 
-def get_langkit_scores(all_seed_flat_stories):
+def get_langkit_scores(intial_story, all_seed_flat_stories):
     all_seeds_flesch_reading_ease = []
     all_seeds_automated_readability_index = []
     all_seeds_aggregate_reading_level = []
@@ -436,7 +450,8 @@ def get_langkit_scores(all_seed_flat_stories):
     all_seeds_monosyllable_ratio = []
 
     for flat_stories in all_seed_flat_stories:
-        flesch_reading_ease, automated_readability_index, aggregate_reading_level, syllable_count, lexicon_count, sentence_count, character_count, letter_count, polysyllable_count, monosyllable_count, difficult_words, difficult_words_ratio, monosyllable_ratio, polysyllable_ratio = get_langkit_scores_single_seed(flat_stories)
+
+        flesch_reading_ease, automated_readability_index, aggregate_reading_level, syllable_count, lexicon_count, sentence_count, character_count, letter_count, polysyllable_count, monosyllable_count, difficult_words, difficult_words_ratio, monosyllable_ratio, polysyllable_ratio = get_langkit_scores_single_seed(intial_story, flat_stories)
         all_seeds_flesch_reading_ease.append(flesch_reading_ease)
         all_seeds_automated_readability_index.append(automated_readability_index)
         all_seeds_aggregate_reading_level.append(aggregate_reading_level)

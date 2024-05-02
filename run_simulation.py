@@ -83,10 +83,15 @@ def main(args=None):
         network_structure = nx.connected_caveman_graph(int(args.n_cliques), n_agents // int(args.n_cliques))
 
     elif args.network_structure == 'fully_connected':
-                network_structure = nx.complete_graph(n_agents, int(args.n_edges))
+                network_structure = nx.complete_graph(n_agents)
+                
     
     elif args.network_structure == 'random':
          network_structure = nx.dense_gnm_random_graph(n_agents, args.n_edges )
+    
+    ## Adding self-loops:
+    for i in range(n_agents):
+        network_structure.add_edge(i, i)
 
     # save adjacency matrix to output_dict
     output_dict["adjacency_matrix"] = nx.to_numpy_array(network_structure).tolist()

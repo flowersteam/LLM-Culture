@@ -16,19 +16,22 @@ def main_analysis(folders, plot, scale_y_axis, labels, sizes, folder_tag = ''):
     for i, folder in enumerate(folders):
         # Compute all the metric that will be used for plotting
         all_seeds_stories = get_stories(folder, start_flag = None, end_flag = None)
+        intial_story = get_initial_story(folder)
+
         n_gen, n_agents, x_ticks_space = get_plotting_infos(all_seeds_stories[0])
         all_seed_flat_stories, all_seed_keywords, all_seed_stem_words = preprocess_stories(all_seeds_stories)
         all_seed_similarity_matrix = get_similarity_matrix(all_seed_flat_stories)
         all_seed_between_gen_similarity_matrix = compute_between_gen_similarities(all_seed_similarity_matrix, n_gen, n_agents)
-        all_seed_polarities, all_seed_subjectivities = get_polarities_subjectivities(all_seeds_stories)
+        all_seed_polarities, all_seed_subjectivities = get_polarities_subjectivities(intial_story, all_seeds_stories)
         all_seed_gram_score = get_gramm_score(all_seed_flat_stories)
         all_seed_redundancy_score = get_red_score(all_seed_flat_stories)
         all_seed_focus_score = get_foc_score(all_seed_flat_stories)
-        all_seeds_flesch_reading_ease, all_seeds_automated_readability_index, all_seeds_aggregate_reading_level, all_seeds_syllable_count, all_seeds_lexicon_count, all_seeds_sentence_count, all_seeds_character_count, all_seeds_letter_count, all_seeds_polysyllable_count, all_seeds_monosyllable_count, all_seeds_difficult_words, all_seeds_difficult_words_ratio, all_seeds_polysyllable_ratio, all_seeds_monosyllable_ratio  = get_langkit_scores(all_seeds_stories)
 
 
-        intial_story = get_initial_story(folder)
-        print(f"Initial story: {intial_story}")
+        all_seeds_flesch_reading_ease, all_seeds_automated_readability_index, all_seeds_aggregate_reading_level, all_seeds_syllable_count, all_seeds_lexicon_count, all_seeds_sentence_count, all_seeds_character_count, all_seeds_letter_count, all_seeds_polysyllable_count, all_seeds_monosyllable_count, all_seeds_difficult_words, all_seeds_difficult_words_ratio, all_seeds_polysyllable_ratio, all_seeds_monosyllable_ratio  = get_langkit_scores(intial_story, all_seeds_stories)
+
+
+        #print(f"Initial story: {intial_story}")
         #all_seed_creativities = get_creativity_indexes(all_seeds_stories, folder)
         label = labels[i]
         # Plot the individual similarity matrix in the same folder
@@ -73,6 +76,10 @@ def main_analysis(folders, plot, scale_y_axis, labels, sizes, folder_tag = ''):
    
     # Plot all the desired graphs :
     # #save_time = """
+    compare_dips(data, plot, sizes, saving_folder)
+    compare_change_frequency_magnitude(data, plot, sizes, saving_folder)
+    compare_similarity_distribution(data, plot, sizes, saving_folder)
+    
     compare_init_generation_similarity_evolution(data, plot, sizes, saving_folder, scale_y_axis)
     compare_within_generation_similarity_evolution(data, plot, sizes, saving_folder, scale_y_axis)
     compare_successive_generations_similarities(data, plot, sizes, saving_folder, scale_y_axis)

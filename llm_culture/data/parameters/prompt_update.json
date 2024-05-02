@@ -70,5 +70,13 @@
     {
     "name": "inspiration",
     "prompt": "You will receive a text. Your task is to create a new original text by taking inspiration from this text. Juste output your new text, nothing else. Here is the text:"
-    }  
+    },
+    {
+        "name": "rephrase_multi",
+        "prompt": "You will receive several texts. Your task is to pick one of those texts and rephrase it without modifying its meaning. Juste output your new text, nothing else. Here is the text:"
+        },
+        {
+        "name": "inspiration_multi",
+        "prompt": "You will receive several texts. Your task is to pick one of those texts and create a new original text by taking inspiration from the text you picked. Juste output your new text, nothing else. Here is the text:"
+        }
 ]
