@@ -21,9 +21,7 @@ n_seeds = 4
 n_cliques = 1
 
 # enter the correct url here
-access_url = 'https://nevada-integrating-employment-astronomy.trycloudflare.com'
-
-
+access_url = 'https://ve-breathing-msgid-look.trycloudflare.com'
 
 
 ## SIMULATION LOOP
@@ -36,16 +34,10 @@ for n_agents in n_agents_var:
 
 
         ## MODIFY MODEL NAME HERE
-        model = 'mixtral-8x7b-instruct-v0.1.Q4_K_M.gguf'
+        model = 'mistral-7b-instruct-v0.2.Q5_K_M.gguf'
 
 
         output_folder_path = f"{prompt_init}_{n_agents}Agents_50gen_{model}"
-
-
-
-
-
-
 
 
         args = argparse.Namespace()
