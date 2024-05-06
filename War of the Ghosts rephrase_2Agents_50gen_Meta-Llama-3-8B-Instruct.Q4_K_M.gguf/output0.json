@@ -1,0 +1,227 @@
+{
+    "adjacency_matrix": [
+        [
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0
+        ]
+    ],
+    "prompt_init": [
+        "You will receive a text. Your task is to rephrase this text without modifying its meaning. Juste output your new text, nothing else. Here is the text: One night two young men from Egulac went down to the river to hunt seals and while they were there it became foggy and calm. Then they heard war-cries, and they thought: 'Maybe this is a war-party'. They escaped to the shore, and hid behind a log. Now canoes came up, and they heard the noise of paddles, and saw one canoe coming up to them. There were five men in the canoe, and they said: 'What do you think? We wish to take you along. We are going up the river to make war on the people.' One of the young men said,'I have no arrows.' 'Arrows are in the canoe,' they said. 'I will not go along. I might be killed. My relatives do not know where I have gone. But you,' he said, turning to the other, 'may go with them.' So one of the young men went, but the other returned home. And the warriors went on up the river to a town on the other side of Kalama. The people came down to the water and they began to fight, and many were killed. But presently the young man heard one of the warriors say, 'Quick, let us go home: that Indian has been hit.' Now he thought: 'Oh, they are ghosts.' He did not feel sick, but they said he had been shot. So the canoes went back to Egulac and the young man went ashore to his house and made a fire. And he told everybody and said: 'Behold I accompanied the ghosts, and we went to fight. Many of our fellows were killed, and many of those who attacked us were killed. They said I was hit, and I did not feel sick.' He told it all, and then he became quiet. When the sun rose he fell down. Something black came out of his mouth. His face became contorted. The people jumped up and cried.He was dead."
+    ],
+    "prompt_update": [
+        "You will receive several texts. Your task is to pick one of those texts and rephrase it without modifying its meaning. Juste output your new text, nothing else. Here is the text:"
+    ],
+    "personality_list": [
+        " ",
+        " "
+    ],
+    "format_prompt": [
+        ""
+    ],
+    "stories": [
+        [
+            "One night, two young men from Egulac ventured out to hunt seals by the river, but as they were there, a thick fog rolled in and the atmosphere grew quiet. Suddenly, they heard war cries and thought it was a war party. They quickly retreated to the shore and hid behind a log. As they peeked out, they saw a canoe approaching, carrying five men who invited them to join their war expedition up the river. One of the young men politely declined due to a lack of arrows, but the other was persuaded to join the warriors. The anecdote proceeds to describe the battle and eventual retreat, with one of the warriors reporting that the young man had been hit and requiring them to leave hastily. As the canoes returned to Egulac, the young man arrived at his home, telling everyone about his remarkable experience, claiming that he had traveled with ghosts and witnessed numerous casualties, both from their own side and the enemy's. However, when the sun rose the next morning, he suddenly became sick and died, with a dark substance emerging from his mouth and his face contorting in pain.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but as they arrived, the fog rolled in and the atmosphere grew calm. As they were there, they heard war cries and thought they might be under attack by a hostile group. The pair fled to the shore and hid behind a log, but it was too late. Canoes appeared, and the men inside declared their intention to make war on the local population. One of the young men, fearing his relatives would be concerned if they knew he was absent, refused to join the warriors and returned home. The remaining youth, however, was convinced by the promise of access to arrows and consented to accompany the warriors. They paddled upstream to a town on the other side of Kalama, where a battle erupted, resulting in significant casualties on both sides. As the fight concluded, one of the warriors suddenly exclaimed, \"Quick, let's head back home; that native has been hit.\" The youth was puzzled, as if something didn't add up. Despite being told he had been wounded, he claimed not to feel any pain, but eventually, a black substance emerged from his mouth, and he succumbed to his injuries, passing away at sunrise."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to hunt seals by the river, but as they were there, a thick fog rolled in and the atmosphere grew quiet. Suddenly, they heard war cries and thought it was a war party. They quickly retreated to the shore and hid behind a log. As they peeked out, they saw a canoe approaching, carrying five men who invited them to join their war expedition up the river.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but as they arrived, the fog rolled in and the atmosphere grew calm. As they were there, they heard war cries and thought they might be under attack by a hostile group. The pair fled to the shore and hid behind a log, but it was too late. Canoes appeared, and the men inside declared their intention to make war on the local population. One of the young men, fearing his relatives would be concerned if they knew he was absent, refused to join the warriors and returned home. The remaining youth, however, was convinced by the promise of access to arrows and consented to accompany the warriors. They paddled upstream to a town on the other side of Kalama, where a battle erupted, resulting in significant casualties on both sides. As the fight concluded, one of the warriors suddenly exclaimed, \"Quick, let's head back home; that native has been hit.\" The youth was puzzled, as if something didn't add up. Despite being told he had been wounded, he claimed not to feel any pain, but eventually, a black substance emerged from his mouth, and he succumbed to his injuries, passing away at sunrise."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to hunt seals by the river, but as they were there, a thick fog rolled in and the atmosphere grew quiet. It was then that they heard war cries and thought they might be under attack by a hostile group. The pair fled to the shore and hid behind a log, where they watched as canoes appeared, carrying five men who declared their intention to make war on the local population.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but as they arrived, a thick fog rolled in and the atmosphere grew quiet. Suddenly, they heard war cries and thought it was a war party. They quickly retreated to the shore and hid behind a log. As they peeked out, they saw a canoe approaching, carrying five men who invited them to join their war expedition up the river."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to hunt seals by the river, but as they were there, a thick fog rolled in and the silence grew oppressive. Suddenly, they heard war cries and thought they might be under attack by a hostile group. They quickly fled to the shore and hid behind a log, where they watched as a canoe drew near, carrying five men who invited them to join their war expedition up the river.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but as they arrived, a thick fog rolled in and the atmosphere grew quiet. Suddenly, they heard war cries and thought it was a war party. They quickly retreated to the shore and hid behind a log. As they looked out, they saw canoes appearing, carrying five men who declared their intention to make war on the local population."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to hunt seals by the river, but as they were there, a thick fog rolled in and the silence grew oppressive. Suddenly, they heard war cries and thought they might be under attack by a hostile group. They quickly fled to the shore and hid behind a log, where they watched as a canoe drew near, carrying five men who declared their intention to make war on the local population.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but as they arrived, a thick fog rolled in and the atmosphere grew quiet. Suddenly, they heard war cries and thought it was a war party. They quickly retreated to the shore and hid behind a log. As they looked out, they saw canoes appearing, carrying five men who declared their intention to make war on the local population."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to hunt seals by the river, but as they arrived, a thick fog rolled in and the atmosphere grew quiet. Suddenly, they heard war cries and thought it was a war party. They quickly retreated to the shore and hid behind a log. As they looked out, they saw canoes appearing, carrying five men who declared their intention to make war on the local population.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but as they arrived, a thick fog rolled in and the atmosphere grew quiet. Suddenly, they heard war cries and thought it was a war party. They quickly retreated to the shore and hid behind a log. As they looked out, they saw canoes appearing, carrying five men who declared their intention to make war on the local population."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the atmosphere grew quiet. Suddenly, they heard war cries and thought it was a war party. They quickly retreated to the shore and hid behind a log. As they looked out, they saw canoes appearing, carrying five men who declared their intention to make war on the local population.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but as they arrived, a thick fog rolled in and the atmosphere grew quiet. Suddenly, they heard war cries and thought it was a war party. They quickly retreated to the shore and hid behind a log. As they looked out, they saw canoes appearing, carrying five men who declared their intention to make war on the local population."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was oppressive. Suddenly, they were startled by war cries and thought it was a war party advancing on them. They quickly retreated to the shore and took cover behind a log. As they peeked out, they saw canoes emerging, carrying five men who declared their intention to wage war on the people of Egulac.",
+            "Two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "Two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "Two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "Two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "Two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "'One night, two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people.'"
+        ],
+        [
+            "\"One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.\"",
+            "\"One night, two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people.\""
+        ],
+        [
+            "\"One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.\"",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "\"One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.\"",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "\"One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.\"",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but a thick fog rolled in as they arrived, and the atmosphere grew quiet. Then, they heard war cries and thought a war party was coming. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the local people."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as they arrived, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as darkness fell, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and then a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as darkness fell, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and then a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as darkness fell, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and then a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, but as darkness fell, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought a war party was approaching. They quickly hid behind a log on the shore as canoes appeared, carrying five men who said they intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and then a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "Here is the rephrased text:\n\nOne night, two young men from Egulac ventured out to the river to hunt seals, but as darkness fell, a thick fog rolled in and the silence was heavy. Then, they were startled by war cries and thought they were being approached by a war party. They quickly hid behind a log on the shore as canoes emerged, carrying five men who said they intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and then a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where the sudden onset of fog created an unsettling stillness. Abruptly, the sound of war cries pierced the air, prompting them to assume a war party was imminent. Meanwhile, canoes appeared, carrying five men who claimed their intention was to assault the inhabitants of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and then a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where the sudden onset of fog created an unsettling stillness. Abruptly, the sound of war cries pierced the air, prompting them to assume a war party was imminent. Meanwhile, canoes appeared, carrying five men who claimed their intention was to assault the inhabitants of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and then a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where the sudden onset of fog created an unsettling stillness. Abruptly, the sound of war cries pierced the air, prompting them to assume a war party was imminent. Meanwhile, canoes appeared, carrying five men who claimed their intention was to assault the inhabitants of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and then a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and then a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and as a thick fog rolled in, casting an eerie silence, they were suddenly startled by the sound of war cries and assumed a war party was approaching. Instead, they hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and as a thick fog rolled in, casting an eerie silence, they were suddenly startled by the sound of war cries and assumed a war party was approaching. Instead, they hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and as a thick fog rolled in, casting an eerie silence, they were suddenly startled by the sound of war cries and assumed a war party was approaching. Instead, they hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and as a thick fog rolled in, casting an eerie silence, they were suddenly startled by the sound of war cries and assumed a war party was approaching. Instead, they hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and as a thick fog rolled in, casting an eerie silence, they were suddenly startled by the sound of war cries and assumed a war party was approaching. Instead, they hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and as a thick fog rolled in, casting an eerie silence, they were suddenly startled by the sound of war cries and assumed a war party was approaching. Instead, they hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and as a thick fog rolled in, casting an eerie silence, they were suddenly startled by the sound of war cries and assumed a war party was approaching. Instead, they hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and as a thick fog rolled in, casting an eerie silence, they were suddenly startled by the sound of war cries and assumed a war party was approaching. Instead, they hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, where a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. Alternatively, they quickly hid behind a log on the shore as canoes emerged, carrying five men who claimed their intention was to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. They were shaken to hear the sound of war cries and thought a war party was coming. However, they took cover behind a log on the shore as canoes appeared, carrying five men who intended to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. However, they quickly hid behind a log on the shore as canoes emerged, carrying five men who intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. They were shaken to hear the sound of war cries and thought a war party was coming. However, they took cover behind a log on the shore as canoes appeared, carrying five men who intended to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. However, they quickly hid behind a log on the shore as canoes emerged, carrying five men who intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. They were shaken to hear the sound of war cries and thought a war party was coming. However, they took cover behind a log on the shore as canoes appeared, carrying five men who intended to attack the people of Egulac."
+        ],
+        [
+            "1: One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. However, they quickly hid behind a log on the shore as canoes emerged, carrying five men who intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. They were shaken to hear the sound of war cries and thought a war party was coming. However, they took cover behind a log on the shore as canoes appeared, carrying five men who intended to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. However, they quickly hid behind a log on the shore as canoes emerged, carrying five men who intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. They were shaken to hear the sound of war cries and thought a war party was coming. However, they took cover behind a log on the shore as canoes appeared, carrying five men who intended to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. However, they quickly hid behind a log on the shore as canoes emerged, carrying five men who intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. They were shaken to hear the sound of war cries and thought a war party was coming. However, they took cover behind a log on the shore as canoes appeared, carrying five men who intended to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. However, they quickly hid behind a log on the shore as canoes emerged, carrying five men who intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. They were shaken to hear the sound of war cries and thought a war party was coming. However, they took cover behind a log on the shore as canoes appeared, carrying five men who intended to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. However, they quickly hid behind a log on the shore as canoes emerged, carrying five men who intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. They were shaken to hear the sound of war cries and thought a war party was coming. However, they took cover behind a log on the shore as canoes appeared, carrying five men who intended to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. However, they quickly hid behind a log on the shore as canoes emerged, carrying five men who intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. They were shaken to hear the sound of war cries and thought a war party was coming. However, they took cover behind a log on the shore as canoes appeared, carrying five men who intended to attack the people of Egulac."
+        ],
+        [
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. Suddenly, they were startled by the sound of war cries and assumed a war party was approaching. However, they quickly hid behind a log on the shore as canoes emerged, carrying five men who intended to attack the people of Egulac.",
+            "One night, two young men from Egulac ventured out to the river to hunt seals, and a thick fog rolled in, casting an eerie silence. They were shaken to hear the sound of war cries and thought a war party was coming. However, they took cover behind a log on the shore as canoes appeared, carrying five men who intended to attack the people of Egulac."
+        ]
+    ]
+}

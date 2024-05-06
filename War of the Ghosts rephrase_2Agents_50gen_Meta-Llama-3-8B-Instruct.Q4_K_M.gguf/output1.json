@@ -1,0 +1,227 @@
+{
+    "adjacency_matrix": [
+        [
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0
+        ]
+    ],
+    "prompt_init": [
+        "You will receive a text. Your task is to rephrase this text without modifying its meaning. Juste output your new text, nothing else. Here is the text: One night two young men from Egulac went down to the river to hunt seals and while they were there it became foggy and calm. Then they heard war-cries, and they thought: 'Maybe this is a war-party'. They escaped to the shore, and hid behind a log. Now canoes came up, and they heard the noise of paddles, and saw one canoe coming up to them. There were five men in the canoe, and they said: 'What do you think? We wish to take you along. We are going up the river to make war on the people.' One of the young men said,'I have no arrows.' 'Arrows are in the canoe,' they said. 'I will not go along. I might be killed. My relatives do not know where I have gone. But you,' he said, turning to the other, 'may go with them.' So one of the young men went, but the other returned home. And the warriors went on up the river to a town on the other side of Kalama. The people came down to the water and they began to fight, and many were killed. But presently the young man heard one of the warriors say, 'Quick, let us go home: that Indian has been hit.' Now he thought: 'Oh, they are ghosts.' He did not feel sick, but they said he had been shot. So the canoes went back to Egulac and the young man went ashore to his house and made a fire. And he told everybody and said: 'Behold I accompanied the ghosts, and we went to fight. Many of our fellows were killed, and many of those who attacked us were killed. They said I was hit, and I did not feel sick.' He told it all, and then he became quiet. When the sun rose he fell down. Something black came out of his mouth. His face became contorted. The people jumped up and cried.He was dead."
+    ],
+    "prompt_update": [
+        "You will receive several texts. Your task is to pick one of those texts and rephrase it without modifying its meaning. Juste output your new text, nothing else. Here is the text:"
+    ],
+    "personality_list": [
+        " ",
+        " "
+    ],
+    "format_prompt": [
+        ""
+    ],
+    "stories": [
+        [
+            "On a single night, two young men from Egulac ventured down to the river to hunt seals, but as they were there, a thick fog rolled in, accompanied by a serene calm. Suddenly, they heard eerie war cries, and they suspected a war party. They swiftly fled to the shore and hid behind a log. As the fog lifted, canoes appeared, and the sound of paddles echoed through the air. One canoe approached them, carrying five warriors who proclaimed their intentions to wage war on the people up the river. One of the young men declined, citing lack of arrows and a fear of being killed, unknown to his relatives. The other, however, accepted the invitation, leaving his companion to return home. The warriors proceeded up the river, eventually engaging the people of a town on the opposite side of Kalama. The battle was fierce, with many casualties on both sides. Meanwhile, the young man who had joined the warriors heard one of them cry, \"Quick, let's return home \u2013 that Indian has been hit!\" Believing the warriors to be ghosts, he felt no pain despite being told he'd been shot. The canoes returned to Egulac, and the young man arrived home to share his tale: \"Behold, I journeyed with the ghosts, and we fought. Many of our comrades fell, as did those who attacked us. I was told I'd been hit, yet I felt no pain.\" He finished his story, and as the sun rose, he succumbed to his injuries, a dark substance emerging from his mouth. His face contorted in agony, and the people were shocked and saddened by his sudden demise.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but as they arrived, the atmosphere became foggy and calm. Suddenly, they heard war cries and thought it might be a war party. They quickly escaped to the shore, hiding behind a log as canoes approached. One canoe in particular caught their attention, with five men aboard. The men invited the young men to join them on a war expedition against the people upstream, but one of the young men declined, citing concerns about being killed and not being able to inform his relatives of his whereabouts. The other young man, however, agreed to join the expedition. After the battle, the young man who stayed with the warriors suddenly heard one of them shout, \"Quick, let's go home - that Indian has been hit.\" He became convinced that they were ghosts, as he didn't feel any pain despite their claim that he was injured. The warriors returned to Egulac, and the young man went home, where he started a fire and Shared his story with the others. He claimed that he had accompanied the ghosts, and that many of their comrades and enemies had been killed. Although the warriors claimed he was injured and didn't feel sick, he later fell ill and died, spewing forth a black substance from his mouth before passing away."
+        ],
+        [
+            "On a single night, two young men from Egulac ventured down to the river to hunt seals, but as they were there, a thick fog rolled in, accompanied by a serene calm. Suddenly, they heard eerie war cries, and they suspected a war party. They swiftly fled to the shore and hid behind a log.",
+            "I picked the first text and rephrased it without modifying its meaning. Here is the new text:\n\n['One evening, two young men from Egulac ventured down to the river to hunt seals, but as they arrived, a thick fog rolled in, accompanied by a serene calm. Suddenly, they heard eerie war cries, and they suspected a war party. They swiftly fled to the shore and hid behind a log. As the fog lifted, canoes appeared, and the sound of paddles echoed through the air. One canoe approached them, carrying five warriors who proclaimed their intentions to wage war on the people up the river. One of the young men declined, citing lack of arrows and a fear of being killed, unknown to his relatives. The other, however, accepted the invitation, leaving his companion to return home. The warriors proceeded up the river, eventually engaging the people of a town on the opposite side of Kalama. The battle was fierce, with many casualties on both sides. Meanwhile, the young man who had joined the warriors heard one of them cry, \"Quick, let's return home \u2013 that Indian has been hit!\" Believing the warriors to be ghosts, he felt no pain despite being told he'd been shot. The canoes returned to Egulac, and the young man arrived home to share his tale: \"Behold, I journeyed with the ghosts, and we fought. Many of our comrades fell, as did those who attacked us. I was told I'd been hit, yet I felt no pain.\" He finished his story, and as the sun rose, he succumbed to his injuries, a dark substance emerging from his mouth. His face contorted in agony, and the people were shocked and saddened by his sudden demise."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but as they were there, a thick fog rolled in, accompanied by a serene calm. Suddenly, they heard eerie war cries, and they suspected a war party. They swiftly fled to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but as they arrived, a thick fog rolled in, accompanied by a serene calm. Suddenly, they heard eerie war cries, and they suspected a war party. They swiftly fled to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, yet as they were arriving, a thick fog rolled in, accompanied by a serene calm. Suddenly, they heard eerie war cries, and they suspected a war party. They swiftly fled to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but as they arrived, a thick fog rolled in, accompanied by a serene calm. Suddenly, they heard eerie war cries, and they suspected a war party. They swiftly fled to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, yet as they were arriving, a thick fog rolled in, accompanied by a serene calm. Suddenly, they heard eerie war cries, and they suspected a war party. They swiftly fled to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but a sudden thick fog rolled in, accompanied by a serene calm. Until then, they heard eerie war cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, yet as they were arriving, a thick fog rolled in, accompanied by a serene calm. Suddenly, they heard eerie war cries, and they suspected a war party. They swiftly fled to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but a sudden thick fog rolled in, accompanied by a serene calm. Until then, they heard eerie war cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, yet as they were arriving, a thick fog rolled in, accompanied by a serene calm. Suddenly, they heard eerie war cries, and they suspected a war party. They swiftly fled to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but a sudden thick fog rolled in, accompanied by a serene calm. Until then, they heard eerie war cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, yet as they were arriving, a suddenly thick fog rolled in, accompanied by a serene calm. Until then, they heard eerie war cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but a sudden thick fog rolled in, accompanied by a serene calm. Until then, they heard eerie war cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, yet as they were arriving, a thick fog rolled in, accompanied by a calm. Until then, they heard eerie cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but a sudden wall of fog rolled in, accompanied by a serene calm. Until then, they had heard eerie war cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, yet as they were arriving, a thick fog rolled in, accompanied by a calm. Until then, they had heard eerie cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but a sudden wall of fog rolled in, accompanied by a serene calm. Until then, they had heard eerie war cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, yet as they were arriving, a thick fog rolled in, accompanied by a serene calm. Until then, they had heard eerie war cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but as they were arriving, a thick fog rolled in, accompanied by a calm. Until then, they had heard eerie cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, yet as they were arriving, a dense mist settled in, accompanied by a peaceful quiet. Until then, they had heard unsettling battle cries, and they suspected a war party. Immediately, they hastened to the shore and concealed themselves behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but as they were approaching, a thick fog rolled in, accompanied by an eerie silence. Until then, they had heard eerie cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, yet as they were approaching, a thick fog rolled in, accompanied by an eerie silence. Until then, they had heard unsettling cries, and they suspected a war party. Swiftly, they hastened to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but as they were approaching, a thick fog rolled in, accompanied by an eerie silence. Until then, they had heard eerie cries, and they suspected a war party. Swiftly, they fled to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, yet as they were approaching, a thick fog rolled in, accompanied by an eerie silence. Until then, they had heard unsettling cries, and they suspected a war party. Swiftly, they hastened to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but as they were approaching, a thick fog rolled in, accompanied by an eerie silence. Until then, they had heard eerie cries, and they suspected a war party. Swiftly, they hastened to the shore and hid behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals; yet as they were approaching, a thick fog rolled in, accompanied by an eerie stillness. Until then, they had heard disquieting screams, and they suspected a war party. Swiftly, they hastened to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt for seals, but as they were approaching, a thick fog rolled in, accompanied by a heavy stillness. Until then, they had heard unsettling distant calls, and they suspected a band of warriors. Quickly, they made their way to the shore and concealed themselves behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals; yet as they were approaching, a thick fog rolled in, accompanied by an eerie stillness. Until then, they had heard disquieting screams, and they suspected a war party. Swiftly, they hastened to the shore and hid behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt for seals, but as they were approaching, a thick fog rolled in, accompanied by a heavy stillness. Until then, they had heard unsettling distant calls, and they suspected a band of warriors. Quickly, they made their way to the shore and concealed themselves behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured down to the river to hunt seals; however, as they were approaching, a thick fog rolled in, accompanied by a heavy stillness. Until then, they had heard unsettling distant cries, and they suspected a band of warriors. Promptly, they made their way to the shore and concealed themselves behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt for seals, but as they were approaching, a thick fog rolled in, accompanied by a heavy stillness. Until then, they had heard unsettling distant calls, and they suspected a band of warriors. Quickly, they made their way to the shore and concealed themselves behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured to the river to hunt seals, but as they approached, a sudden fog rolled in, shrouded in silence. Until then, they had been unnerved by eerie distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals; however, as they were approaching, a thick fog rolled in, accompanied by a heavy stillness. Until then, they had heard unsettling distant cries, and they suspected a band of warriors. Promptly, they made their way to the shore and concealed themselves behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured to the river to hunt seals, but as they approached, a sudden fog rolled in, shrouded in silence. Until then, they had been unnerved by eerie distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals; however, as they were approaching, a thick fog rolled in, accompanied by a heavy stillness. Until then, they had heard unsettling distant cries, and they suspected a band of warriors. Promptly, they made their way to the shore and concealed themselves behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured to the river to hunt seals, but as they approached, a sudden fog rolled in, shrouded in silence. Until then, they had been unnerved by eerie distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals; however, as they were approaching, a thick fog rolled in, accompanied by a heavy stillness. Until then, they had heard unsettling distant cries, and they suspected a band of warriors. Promptly, they made their way to the shore and concealed themselves behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured to the river to hunt seals, but as they approached, a sudden fog rolled in, shrouded in silence. Until then, they had been unnerved by eerie distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals; however, as they approached, a sudden fog rolled in, shrouded in silence. Until then, they had been unnerved by eerie distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured to the river to hunt seals, but as they approached, a sudden fog rolled in, shrouded in silence. Until then, they had been unnerved by eerie distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals, but as they approached, a sudden fog rolled in, shrouded in silence. Until then, they had been unnerved by eerie distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured to the river to hunt for seals, but as they got closer, a sudden fog rolled in, enveloped in quiet. Until then, they had been startled by strange distant murmurings, which they believed originated from a group of warriors. Without delay, they hurried to the shore and concealed themselves behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt seals but as they approached, a sudden fog rolled in, shrouded in silence. Until then, they had been unnerved by eerie distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured to the river to hunt for seals, but as they approached, a sudden fog rolled in, shrouded in silence. Until then, they had been unnerved by eerie distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log.",
+            "One evening, two young men from Egulac ventured down to the river to hunt for seals but as they approached, a sudden fog rolled in, shrouded in silence. Until then, they had been unnerved by eerie distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured to the river to hunt for seals, but as they approached, a sudden fog rolled in, obscuring everything in silence. Until then, they had been unsettled by unsettling, distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log.",
+            "Here is the rephrased text:\n\nOne evening, two young men from Egulac descended to the river to hunt seals but as they arrived, a sudden fog enveloped them in silence. Previously, they had been unsettled by distant, unsettling murmurs which they believed emanated from a group of warriors. Promptly, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured to the river to hunt for seals, but as they approached, a sudden fog rolled in, obscuring everything in silence. Until then, they had been unsettled by unsettling, distant whispers, which they suspected came from a group of warriors. Swiftly, they hastened to the shore and took cover behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. Previously, they had been unsettled by distant, unsettling murmurs which they believed emanated from a group of warriors. Promptly, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured to the river to hunt for seals, but as they arrived, a sudden fog enveloped them in silence. Previously, they had been unsettled by distant, unsettling murmurs which they believed emanated from a group of warriors. Promptly, they hastened to the shore and took cover behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. Previously, they had been unsettled by distant, unsettling murmurs which they believed emanated from a group of warriors. Promptly, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. Previously, they had been unsettled by distant, unsettling murmurs which they believed emanated from a group of warriors. Promptly, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. Previously, they had been unsettled by distant, unsettling murmurs which they believed emanated from a group of warriors. Promptly, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. Previously, they had been unsettled by distant, unsettling murmurs which they believed emanated from a group of warriors. Promptly, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ],
+        [
+            "One evening, two young men from Egulac ventured out to the river to hunt seals, but upon their arrival, a sudden fog concealed everything in silence. They had been unnerved by eerily distant murmurs that they attributed to a group of warriors. Without delay, they made their way to the shore and took shelter behind a log.",
+            "One evening, two young men from Egulac descended to the river to hunt seals, but as they arrived, a sudden fog enveloped them in silence. They had been unsettled by distant murmurs which they believed emanated from a group of warriors. Without delay, they hastened to the shore and took cover behind a log."
+        ]
+    ]
+}

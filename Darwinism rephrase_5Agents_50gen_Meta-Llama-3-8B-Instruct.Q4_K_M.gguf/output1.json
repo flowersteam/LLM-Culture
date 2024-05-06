@@ -1,0 +1,407 @@
+{
+    "adjacency_matrix": [
+        [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ]
+    ],
+    "prompt_init": [
+        "You will receive a text. Your task is to rephrase this text without modifying its meaning. Juste output your new text, nothing else.  Here is the text: One objection to the views of those who, like Mr. Gulick, believe isolation itself to be a cause of modification of species deserves attention, namely, the entire absence of change where, if this were a _vera causa_, we should expect to find it. In Ireland we have an excellent test case, for we know that it has been separated from Britain since the end of the glacial epoch, certainly many thousand years. Yet hardly one of its mammals, reptiles, or land molluscs has undergone the slightest change, even although there is certainly a distinct difference in the environment both inorganic and organic. That changes have not occurred through natural selection, is perhaps due to the less severe struggle for existence owing to the smaller number of competing species; but, if isolation itself were an efficient cause, acting continuously and c.u.mulatively, it is incredible that a decided change should not have been produced in thousands of years. That no such change has occurred in this, and many other cases of isolation, seems to prove that it is not in itself a cause of modification."
+    ],
+    "prompt_update": [
+        "You will receive several texts. Your task is to pick one of those texts and rephrase it without modifying its meaning. Juste output your new text, nothing else. Here is the text:"
+    ],
+    "personality_list": [
+        " ",
+        " ",
+        " ",
+        " ",
+        " "
+    ],
+    "format_prompt": [
+        ""
+    ],
+    "stories": [
+        [
+            "One criticism of those who, like Mr. Gulick, attribute the modification of species to isolation itself is worthy of consideration, namely, the complete absence of change in instances where, if isolation were a genuine cause, we would expect to observe it.",
+            "One critique of the notion that isolation is the sole cause of species modification, as advocated by Mr. Gulick, warrants consideration, specifically the striking lack of change in Ireland, which has been distinct from Britain since the end of the ice age, with countless years of separation. Nevertheless, despite notable differences in environment, both inorganic and organic, none of its mammals, reptiles, or land molluscs have undergone any noticeable change. This lack of transformation cannot be attributed to natural selection, as the reduced competition for resources due to the smaller number of species might have allowed for less intense versions of the struggle for existence. Alternatively, if isolation were indeed a continuous and cumulative force, one would expect significant changes to have occurred over thousands of years. Instead, the fact that no such change has transpired in Ireland and numerous other instances of isolation suggests that it does not, in and of itself, drive modification.",
+            "One argument against the notion that isolation itself is responsible for the modification of species, as advocated by those like Mr. Gulick, is that there is total lack of change in areas where we would otherwise expect to see it.",
+            "One critique of the notion that mere isolation is the reason for species modification, as held by Mr. Gulick, warrants consideration, namely, the complete lack of change in areas where, if this were truly a decisive factor, significant alterations would be expected. A pertinent example is Ireland, which has been separated from Britain since the end of the ice age, thousands of years ago. Despite the noticeable environmental disparities between the two regions, hardly any of Ireland's mammals, reptiles, or land snails have undergone any evolutionary changes. This lack of change is possibly attributed to the relatively mild struggle for survival due to the smaller number of competing species; however, if isolation alone were a continuous and cumulative cause, it is astonishing that no noticeable transformation would not have occurred over thousands of years. The absence of such change in Ireland and other instances of isolation suggests that isolation is not a fundamental driver of evolutionary modification.",
+            "One concern with the idea that isolation itself is the reason species modify their characteristics, as argued by Mr. Gulick, is that it's contradicted by the complete lack of change over time in certain areas, where we would expect such change to occur."
+        ],
+        [
+            "One argument against the notion that isolation itself is responsible for the modification of species, as advocated by those like Mr. Gulick, is that there is total lack of change in areas where we would otherwise expect to see it.",
+            "One argument against the notion that isolation itself is responsible for the modification of species, as advocated by those like Mr. Gulick, is that there is total lack of change in areas where we would otherwise expect to see it.",
+            "Here is the rephrased text:\n\nOne critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One critique of the notion that isolation is the sole cause of species modification, as advocated by Mr. Gulick, warrants consideration, specifically the striking lack of change in Ireland, which has been distinct from Britain since the end of the ice age, with countless years of separation. Nevertheless, despite notable differences in environment, both inorganic and organic, none of its mammals, reptiles, or land molluscs have undergone any noticeable change. This lack of transformation cannot be attributed to natural selection, as the reduced competition for resources due to the smaller number of species might have allowed for less intense versions of the struggle for existence. Alternatively, if isolation were indeed a continuous and cumulative force, one would expect significant changes to have occurred over thousands of years. Instead, the fact that no such change has transpired in Ireland and numerous other instances of isolation suggests that it does not, in and of itself, drive modification.",
+            "\"One critique of the notion that isolation is the sole cause of species modification, as advocated by Mr. Gulick, warrants consideration, specifically the striking lack of change in Ireland, which has been distinct from Britain since the end of the ice age, with countless years of separation. Nevertheless, despite notable differences in environment, both inorganic and organic, none of its mammals, reptiles, or land molluscs have undergone any noticeable change. This lack of transformation cannot be attributed to natural selection, as the reduced competition for resources due to the smaller number of species might have allowed for less intense versions of the struggle for existence. Alternatively, if isolation were indeed a continuous and cumulative force, one would expect significant changes to have occurred over thousands of years. Instead, the fact that no such change has transpired in Ireland and numerous other instances of isolation suggests that it does not, in and of itself, drive modification.\""
+        ],
+        [
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One argument against the notion that isolation itself is responsible for the modification of species, as advocated by those like Mr. Gulick, is that there is total lack of change in areas where we would otherwise expect to see it.",
+            "One argument against the notion that isolation itself is responsible for the modification of species, as advocated by those like Mr. Gulick, is that there is a total lack of change in areas where we would otherwise expect to see it.",
+            "One argument against the notion that isolation itself is responsible for the modification of species, as advocated by those like Mr. Gulick, is that there is total lack of change in areas where we would otherwise expect to see it."
+        ],
+        [
+            "One argument against the notion that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see it.",
+            "One argument against the notion that isolation itself is responsible for the modification of species, as advocated by those like Mr. Gulick, is that there is a total lack of change in areas where we would otherwise expect to see it.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For example, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes."
+        ],
+        [
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One argument against the notion that isolation itself is responsible for the modification of species as advocated by those like Mr. Gulick, is that there is a total lack of change in areas where we would otherwise expect to see it.",
+            "One argument against the notion that isolation itself is responsible for the modification of species, as advocated by those like Mr. Gulick, is that there is a total lack of change in areas where we would otherwise expect to see it.",
+            "One argument against the notion that isolation itself is responsible for the modification of species, as advocated by those like Mr. Gulick, is that there is a total lack of change in areas where we would otherwise expect to see it."
+        ],
+        [
+            "One argument against the notion that isolation itself is responsible for the modification of species as advocated by those like Mr. Gulick is that there is a total lack of change in areas where we would otherwise expect to see it.",
+            "One argument against the notion that isolation itself is responsible for the modification of species as advocated by those like Mr. Gulick, is that there is a total lack of change in areas where we would otherwise expect to see it.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes."
+        ],
+        [
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One argument against the notion that isolation itself is responsible for the modification of species as advocated by those who hold a similar view, including Mr. Gulick, is that there is a total lack of change in areas where we would otherwise expect to see such modifications.",
+            "One argument against the notion that isolation itself is responsible for the modification of species as advocated by those like Mr. Gulick, is that there is a total lack of change in areas where we would otherwise expect to see it.",
+            "One argument against the notion that isolation itself is responsible for the modification of species, as advocated by those like Mr. Gulick, is that there is a total lack of change in areas where we would otherwise expect to see it."
+        ],
+        [
+            "One argument against the notion that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see such modifications.",
+            "One argument against the notion that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see such modifications.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs has undergone noticeable changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes."
+        ],
+        [
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One argument against the notion that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see such modifications.",
+            "One argument against the notion that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see such modifications.",
+            "One argument against the notion that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see such modifications."
+        ],
+        [
+            "One argument against the notion that isolation is responsible for the modification of species is the total lack of change in areas where one would otherwise expect to see modifications. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, but none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One argument against the idea that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see such modifications.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For example, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone noticeable changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone noticeable changes."
+        ],
+        [
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One argument against the idea that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see such modifications.",
+            "One argument against the idea that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see such modifications.",
+            "One argument against the idea that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see such modifications."
+        ],
+        [
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One argument against the idea that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see such modifications.",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "\"One criticism of the notion that isolation is the sole driving force behind species adaptation is its inconsistency with empirical evidence. For instance, Ireland has been geographically distinct from Britain for thousands of years, with dissimilar environments, yet none of its mammals, reptiles, or land mollusks have undergone significant changes.\"",
+            "One critique of the idea that isolation is the sole cause of species modification is its inconsistency with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes."
+        ],
+        [
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscia have undergone substantial changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One argument against the idea that isolation is responsible for the modification of species is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts.",
+            "\"One argument against the idea that isolation itself is responsible for the modification of species is that there is a total lack of change in areas where we would otherwise expect to see such modifications.\"",
+            "One argument against the idea that isolation is responsible for the modification of species is that there is no observed change in areas where such modifications would be expected."
+        ],
+        [
+            "One argument against the idea that isolation is responsible for the modification of species is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts.",
+            "One argument against the idea that isolation is responsible for the modification of species is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts.",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes."
+        ],
+        [
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One argument against the idea that isolation is responsible for the modification of species is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts.",
+            "One argument against the idea that isolation is responsible for the modification of species is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts.",
+            "One argument against the idea that isolation is responsible for the modification of species is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts."
+        ],
+        [
+            "One argument against the idea that isolation is responsible for the modification of species is that despite distinct environments and prolonged separation, Ireland's mammals, reptiles, and land molluscs have not undergone substantial changes, challenging the notion that isolation alone causes species modification.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts.\"",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts, as seen in the case of Ireland, which has been separate from Britain for thousands of years and has distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been distinct from Britain for thousands of years, with different environments, yet none of its mammals, reptiles, or land molluscs have undergone significant changes."
+        ],
+        [
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts.\"",
+            "One argument against the idea that isolation is the sole cause of species modification is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts.",
+            "One argument against the idea that isolation is the sole cause of species modification is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. For instance, Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes.",
+            "One critique of the idea that isolation is the sole cause of species modification is that it is inconsistent with observed facts. Ireland has been separate from Britain for thousands of years, with distinct environments, yet none of its mammals, reptiles, or land molluscs have undergone substantial changes."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that there's a lack of change in areas where modifications would be expected, which contradicts the observed facts.",
+            "One argument against the idea that isolation is the sole cause of species modification is that there is a lack of change in areas where modifications would be expected, lending evidence to the inconsistency of this notion with observed facts.",
+            "One argument against the idea that isolation is the sole cause of species modification is that there is a lack of change in areas where modifications would be expected, which lends evidence to the inconsistency of this notion with observed facts."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that there's a lack of change in areas where modifications would be expected, which contradicts the observed facts.",
+            "One argument against the idea that isolation is the sole cause of species modification is that there's a lack of change in areas where modifications would be expected, which contradicts the observed facts.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. Despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\""
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.\"",
+            "One argument against the idea that isolation is the sole cause of species modification is that there's a lack of change in areas where modifications would be expected, which contradicts the observed facts.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that there's a lack of change in areas where modifications would be expected, which contradicts the observed facts.\""
+        ],
+        [
+            "\"One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.\"",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, even though they have been apart from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, even though they have been apart from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, even though they have been apart from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected transformations.\""
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, even though they have been apart from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "Here is the rephrased text:\n\nOne argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. Even though Ireland's mammals, reptiles, and land molluscs have been apart from Britain for thousands of years, with distinct environments, they have not undergone significant changes."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals reptiles and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals reptiles and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is solely responsible for species modification is that despite being separated from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes."
+        ],
+        [
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.\"",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes."
+        ],
+        [
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation from Britain with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contrary to expected changes.\"",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contradicting the expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite being separate from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, therefore contradicting the expected changes."
+        ],
+        [
+            "\"One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation from Britain with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contrary to expected changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation from Britain with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contrary to expected changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept; for instance, despite Ireland being separate from Britain for thousands of years with distinct environments, its mammals, reptiles, and land molluscs have not undergone significant changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite its separation from Britain for thousands of years, with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes."
+        ],
+        [
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation from Britain with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contrary to expected changes.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation from Britain with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contrary to expected changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation from Britain with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, which contradicts expected changes.\""
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation from Britain with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contrary to expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation from Britain with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contrary to expected changes.",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\""
+        ],
+        [
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "\"One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes.\"",
+            "Here is the rephrased text:\n\nOne argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have not undergone significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation from Britain with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contrary to expected changes.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation from Britain with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes, contrary to expected changes."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have not undergone significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have not undergone significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have not undergone significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have not undergone significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that observed facts contradict this concept. For example, despite being separate from Britain for thousands of years with distinct environments, Ireland's mammals, reptiles, and land molluscs have not undergone significant changes."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have not undergone significant changes as expected from what would be expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is the observed fact that, despite thousands of years of separation with distinct environments from Britain, species in Ireland have not undergone significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that species in Ireland, despite thousands of years of separation with distinct environments from Britain, have not undergone significant changes as expected, contrary to what would be expected."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have not undergone the significant changes that would be expected."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the observed species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the observed species in Ireland have shown no significant changes as one would expect."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit significant changes as expected."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit the significant changes that were expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit significant changes as expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit significant changes as expected."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit the significant changes that were expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that the species in Ireland, despite thousands of years of separation with distinct environments from Britain, have failed to exhibit the significant changes that were expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have shown no significant changes as one would expect."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit the significant changes that were expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit the changes that were expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit the significant changes that were expected."
+        ],
+        [
+            "One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit the significant changes that were expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit the significant changes that were expected.",
+            "One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to exhibit significant changes as one would expect.",
+            "One argument against the idea that isolation is the sole cause of species modification is that, despite thousands of years of separation with distinct environments from Britain, the species in Ireland have failed to show the expected degree of change."
+        ]
+    ]
+}

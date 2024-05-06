@@ -1,0 +1,407 @@
+{
+    "adjacency_matrix": [
+        [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ]
+    ],
+    "prompt_init": [
+        "You will receive a text. Your task is to rephrase this text without modifying its meaning. Juste output your new text, nothing else.  Here is the text: One objection to the views of those who, like Mr. Gulick, believe isolation itself to be a cause of modification of species deserves attention, namely, the entire absence of change where, if this were a _vera causa_, we should expect to find it. In Ireland we have an excellent test case, for we know that it has been separated from Britain since the end of the glacial epoch, certainly many thousand years. Yet hardly one of its mammals, reptiles, or land molluscs has undergone the slightest change, even although there is certainly a distinct difference in the environment both inorganic and organic. That changes have not occurred through natural selection, is perhaps due to the less severe struggle for existence owing to the smaller number of competing species; but, if isolation itself were an efficient cause, acting continuously and c.u.mulatively, it is incredible that a decided change should not have been produced in thousands of years. That no such change has occurred in this, and many other cases of isolation, seems to prove that it is not in itself a cause of modification."
+    ],
+    "prompt_update": [
+        "You will receive several texts. Your task is to pick one of those texts and rephrase it without modifying its meaning. Juste output your new text, nothing else. Here is the text:"
+    ],
+    "personality_list": [
+        " ",
+        " ",
+        " ",
+        " ",
+        " "
+    ],
+    "format_prompt": [
+        ""
+    ],
+    "stories": [
+        [
+            "One criticism of the views of those, such as Mr. Gulick, who consider isolation a driving force behind the modification of species warrants consideration, namely, the complete lack of changes in those isolated environments where, according to this theory, we should expect to observe significant modifications.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it. A prime example of such a case is Ireland, which has been separated from Britain since the end of the last ice age, a time span of thousands of years. Despite this, the country's mammals, reptiles, and land snails show no signs of modification, despite evident differences in their environment. It is possible that the absence of change through natural selection is due to the more relaxed struggle for existence resulting from the smaller number of competing species. However, if isolation were a continuously and cumulatively effective cause of change, it is hard to understand why no significant change would have occurred over thousands of years. The fact that no such change has taken place in Ireland and many other instances of isolation suggests that isolation alone is not a driver of modification.",
+            "One criticism of the notion that isolation is sufficient to cause modifications to species, a view shared by Mr. Gulick, is worthy of consideration. It points out that there is no instance of change in Ireland, despite its separation from Britain since the end of the ice age, thousands of years ago. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions. If natural selection were not at play, the reduced competition due to fewer competing species might be a plausible explanation. However, if isolation were a continuous and cumulative cause of change, it is hard to accept that no distinct changes have occurred over thousands of years. The lack of change in Ireland and similar cases of isolation suggests that isolation alone is not a sufficient cause of modification.",
+            "One challenge to the views of those who, like Mr. Gulick, think isolation is responsible for the modification of species is the complete lack of change in certain parts of the world where we would expect to find it, given the duration of their isolation. For example, Ireland has been separated from Britain for thousands of years, yet its mammals, reptiles, and land molluscs have remained largely unchanged, despite noticeable environmental differences. It's possible that this is due to the relatively mild struggle for existence due to the smaller number of competing species. However, if isolation were a continuous and cumulative force, we would expect to see significant changes over thousands of years. Since this is not the case, it appears that isolation is not in itself a cause of modification.",
+            "The notion that geographical isolation alone is responsible for the modification of species should be reevaluated, as it is evident in Ireland's case that no significant change has occurred in its flora and fauna despite being separated from Britain for thousands of years, despite the distinct differences in environment."
+        ],
+        [
+            "One criticism of the notion that isolation is sufficient to cause modifications to species, a view shared by Mr. Gulick, is worthy of consideration. It points out that there is no instance of change in Ireland, despite its separation from Britain since the end of the ice age, thousands of years ago.",
+            "Here is the rephrased text:\n\n\"One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that there is no instance of change in Ireland, despite its separation from Britain since the end of the ice age, thousands of years ago. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions. If natural selection were not at play, the reduced competition due to fewer competing species might be a plausible explanation. However, if isolation were a continuous and cumulative cause of change, it is hard to accept that no distinct changes have occurred over thousands of years. The lack of change in Ireland and similar cases of isolation suggests that isolation alone is not a sufficient cause of modification.\"",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "Here is the rephrased text:\n\nOne criticism of the idea that isolation alone leads to the modification of species is: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it."
+        ],
+        [
+            "\"One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.\"",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that there is no instance of change in Ireland, despite its separation from Britain since the end of the ice age, thousands of years ago. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions. If natural selection were not at play, the reduced competition due to fewer competing species might be a plausible explanation. However, if isolation were a continuous and cumulative cause of change, it is hard to accept that no distinct changes have occurred over thousands of years. The lack of change in Ireland and similar cases of isolation suggests that isolation alone is not a sufficient cause of modification.",
+            "\"One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that there is no instance of change in Ireland, despite its separation from Britain since the end of the ice age, thousands of years ago. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions.\"",
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that there is no instance of change in Ireland, despite its separation from Britain since the end of the ice age, thousands of years ago. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions. If natural selection were not at play, the reduced competition due to fewer competing species might be a plausible explanation. However, if isolation were a continuous and cumulative cause of change, it is hard to accept that no distinct changes have occurred over thousands of years. The lack of change in Ireland and similar cases of isolation suggests that isolation alone is not a sufficient cause of modification."
+        ],
+        [
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that there is no instance of change in Ireland, despite its separation from Britain since the end of the ice age, thousands of years ago. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions. If natural selection were not at play, the reduced competition due to fewer competing species might be a plausible explanation. However, if isolation were a continuous and cumulative cause of change, it is hard to accept that no distinct changes have occurred over thousands of years. The lack of change in Ireland and similar cases of isolation suggests that isolation alone is not a sufficient cause of modification.",
+            "Here is the rephrased text:\n\nOne criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that there is no instance of change in Ireland, despite its separation from Britain since the end of the ice age, thousands of years ago. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it."
+        ],
+        [
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that despite its separation from Britain since the end of the ice age, thousands of years ago, Ireland has no instance of change. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions.",
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that there is no instance of change in Ireland, despite its separation from Britain since the end of the ice age, thousands of years ago. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions, whereas reduced competition due to fewer competing species does not provide a plausible explanation in the absence of natural selection.",
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that there is no instance of change in Ireland, despite its separation from Britain since the end of the ice age, thousands of years ago. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions. If natural selection were not at play, the reduced competition due to fewer competing species might be a plausible explanation. However, if isolation were a continuous and cumulative cause of change, it is hard to accept that no distinct changes have occurred over thousands of years. The lack of change in Ireland and similar cases of isolation suggests that isolation alone is not a sufficient cause of modification."
+        ],
+        [
+            "Here is the rephrased text:\n\nOne criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It highlights that despite Ireland's separation from Britain since the end of the ice age, thousands of years ago, there is no instance of change in its species. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions.",
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that despite its separation from Britain since the end of the ice age, thousands of years ago, Ireland has no instance of change. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it."
+        ],
+        [
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: despite its separation from Britain since the end of the ice age, thousands of years ago, Ireland has no instance of change, with most of its mammals, reptiles, and land molluscs remaining unchanged, despite clear differences in both inorganic and organic environmental conditions.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that despite its separation from Britain since the end of the ice age, thousands of years ago, Ireland has no instance of change. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions.",
+            "\"One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that despite its separation from Britain since the end of the ice age, thousands of years ago, Ireland has no instance of change. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions.\"",
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that despite its separation from Britain since the end of the ice age, thousands of years ago, Ireland has no instance of change. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions."
+        ],
+        [
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that despite its separation from Britain since the end of the ice age, thousands of years ago, Ireland has no instance of change. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions.",
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is worthy of consideration. It points out that despite its separation from Britain since the end of the ice age, thousands of years ago, Ireland has no instance of change. In fact, most of its mammals, reptiles, and land molluscs remain unchanged, despite clear differences in both inorganic and organic environmental conditions.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it."
+        ],
+        [
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of change in areas where, if this were a true cause, we would indeed expect to see it.",
+            "Despite Ireland's isolation from Britain for thousands of years, the country has not undergone any significant changes in its mammal, reptile, and land mollusc populations.",
+            "Despite its separation from Britain due to the end of the ice age thousands of years ago, Ireland has failed to exhibit any species modification. In fact, a significant number of its mammals, reptiles, and land molluscs remain unchanged, even in the face of distinct differences in both inorganic and organic environmental conditions.",
+            "One criticism of the notion that isolation is sufficient to cause modifications to species is indeed notable. It highlights that despite Ireland's separation from Britain since the end of the ice age, thousands of years ago, there has been no instance of evolution. In fact, most of Ireland's mammals, reptiles, and land molluscs remain in their original form, despite notable differences in both inorganic and organic environmental conditions."
+        ],
+        [
+            "Despite Ireland's isolation from Britain for thousands of years, the country's mammal, reptile, and land mollusc populations have not undergone any significant changes.",
+            "Despite the country's isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Here is the rephrased text:\n\nOne criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the lack of change in areas where we would expect to see it if this were the primary cause.",
+            "One criticism of the idea that isolation alone leads to the modification of species, as advocated by Mr. Gulick, warrants consideration: the complete lack of evolution in areas where, if this hypothesis were a true cause, we would anticipate observing some sort of change.",
+            "Here is the rephrased text:\n\n\"One criticism of the theory that geographical isolation alone leads to speciation, as proposed by Mr. Gulick, merits consideration: the astonishing lack of change in regions where, if this were a genuine factor, we would reasonably expect to observe it.\""
+        ],
+        [
+            "Despite isolation from the outside world for thousands of years, no significant changes have been observed in the country's mammal, reptile, and land mollusc populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, its mammal, reptile, and land mollusc populations have undergone no significant changes.",
+            "Despite the country's isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "\"Despite Ireland's isolation from Britain for thousands of years, the country's mammal, reptile, and land mollusc populations have not undergone any significant changes.\"",
+            "\"Despite Ireland's isolation from Britain for thousands of years, the country's mammal, reptile, and land mollusc populations have not undergone any significant changes.\""
+        ],
+        [
+            "Despite the country's isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite the country's isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, its mammal, reptile, and land mollusc populations have undergone no significant changes.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations."
+        ],
+        [
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite the country's isolation for thousands of years, its mammal, reptile, and land mollusc populations have remained largely unchanged.",
+            "Despite the country's isolation for thousands of years, the mammal, reptile, and land mollusc populations have not undergone significant changes."
+        ],
+        [
+            "Despite the isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "\"Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.\"",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, there has been no notable variation in its mammal, reptile, and terrestrial mollusk populations."
+        ],
+        [
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and terrestrial populations.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations."
+        ],
+        [
+            "Despite the isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and terrestrial populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and terrestrial species."
+        ],
+        [
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and land mollusc populations.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in its populations of mammals, reptiles, and land molluscs.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the mammal, reptile, and land mollusc populations.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in its mammal, reptile, and terrestrial species."
+        ],
+        [
+            "Despite the isolation for thousands of years, no significant changes have been observed in its populations of mammals, reptiles, and land molluscs.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in its populations of mammals, reptiles, and land molluscs.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, there has been no notable alteration in its mammal, reptile, and land mollusk populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant alterations have been detected in its mammal, reptile, and land mollusk populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in its mammal, reptile, and terrestrial populations."
+        ],
+        [
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no notable alteration in its mammal, reptile, and land mollusk populations has been observed.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, there has been no notable alteration in its mammal, reptile, and land mollusk populations.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite the isolation for thousands of years, there has been no significant change observed in its populations of mammals, reptiles, and land molluscs.",
+            "Despite the isolation for thousands of years, no significant changes have been noticed in its populations of mammals, reptiles, and terrestrial animals."
+        ],
+        [
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "\"Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.\"",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, there has been no notable alteration in its mammal, reptile, and land mollusk populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, there has been no notable alteration in its mammal, reptile, and land mollusk populations.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, there has been no notable alteration in its mammal, reptile, and land mollusk populations."
+        ],
+        [
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "\"Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.\"",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks."
+        ],
+        [
+            "\"Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.\"",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "\"Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.\""
+        ],
+        [
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks."
+        ],
+        [
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no substantial changes have been noticed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial mollusks."
+        ],
+        [
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of terrestrial animals and land mollusks."
+        ],
+        [
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "\"Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.\"",
+            "\"Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.\"",
+            "\"Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.\""
+        ],
+        [
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms."
+        ],
+        [
+            "\"Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.\"",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.",
+            "\"Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land mollusks.\""
+        ],
+        [
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms."
+        ],
+        [
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "\"Despite Ireland's geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.\""
+        ],
+        [
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the geographical isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms and species.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms."
+        ],
+        [
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms and species.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms and species.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the geographical isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms."
+        ],
+        [
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms and species.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial species.",
+            "Despite the isolation for thousands of years, there has been little observable evolutionary change in mammal, reptile, and terrestrial species' populations."
+        ],
+        [
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms and species.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms and species.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms."
+        ],
+        [
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial species, with no notable alterations to their composition or characteristics.",
+            "Despite the isolation for thousands of years, no significant changes have been noticed in the populations of mammals, reptiles, and terrestrial species.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and species of terrestrial organisms."
+        ],
+        [
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial species, with no notable alterations to their composition or characteristics.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial species, with no notable alterations to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms."
+        ],
+        [
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms, with no notable alterations to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms, with no notable alterations to their composition or characteristics.",
+            "Despite the isolation for thousands of years, significant changes have not been observed in the populations of mammals, reptiles, and terrestrial species, with no notable alterations to their composition or characteristics.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial species, without any notable alterations to their composition or characteristics.",
+            "Despite the isolation for thousands of years, no significant changes have occurred in the populations of mammals, reptiles, and land-dwelling species, with no notable changes to their composition or characteristics."
+        ],
+        [
+            "Despite the isolation for thousands of years, significant changes have not been observed in the populations of mammals, reptiles, and terrestrial species, with no notable alterations to their composition or characteristics.",
+            "Despite the isolation for thousands of years, significant changes have not been observed in the populations of mammals, reptiles, and terrestrial species, with no notable alterations to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been seen in the populations of mammals, reptiles, and land-based organisms, with no notable changes to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms, with no notable alterations to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial organisms, with no notable alterations to their composition or characteristics."
+        ],
+        [
+            "Despite geographical isolation from Britain for thousands of years, no significant changes have been seen in the populations of mammals, reptiles, and land-based organisms, with no notable changes to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been seen in the populations of mammals, reptiles, and land-based organisms, with no notable changes to their composition or characteristics.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the isolation for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and terrestrial species, with no notable alterations to their composition or characteristics.",
+            "Despite the isolation for thousands of years, significant changes have not been observed in the populations of mammals, reptiles, and terrestrial species, with no notable alterations to their composition or characteristics."
+        ],
+        [
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been seen in the populations of mammals, reptiles, and land-based organisms, with no notable changes to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been seen in the populations of mammals, reptiles, and land-based organisms, with no notable changes to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been seen in the populations of mammals, reptiles, and land-based organisms, with no notable changes to their composition or characteristics."
+        ],
+        [
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been seen in the populations of mammals, reptiles, and land-based organisms, with no notable changes to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been seen in the populations of mammals, reptiles, and land-based organisms, with no notable changes to their composition or characteristics.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, revealing no noticeable modifications to their composition or characteristics."
+        ],
+        [
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no substantial variation witnessed in the populations of mammals, reptiles, and land-based organisms, with their composition and characteristics remaining largely unchanged.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been observed in the populations of mammals, reptiles, and land-based organisms, with no notable changes to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes have been seen in the populations of mammals, reptiles, and land-based organisms, with no notable changes to their composition or characteristics."
+        ],
+        [
+            "Despite the geographical isolation from Britain for thousands of years, there has been no substantial variation witnessed in the populations of mammals, reptiles, and land-based organisms, with their composition and characteristics remaining largely unchanged.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no substantial variation witnessed in the populations of mammals, reptiles, and land-based organisms, with their composition and characteristics remaining largely unchanged.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite isolation for thousands of years, there has been no significant change in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition and characteristics.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics."
+        ],
+        [
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no notable variation in the populations of mammals, reptiles, and land-based organisms, with their composition and characteristics remaining largely unchanged.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation witnessed in the populations of mammals, reptiles, and land-based organisms, with their composition and characteristics remaining largely unchanged."
+        ],
+        [
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite isolation for thousands of years, there are no significant changes observed in the populations of mammals, reptiles, and land-based organisms, with their composition or characteristics showing no noticeable modifications.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics."
+        ],
+        [
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged."
+        ],
+        [
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged.",
+            "Despite the isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the isolation of these populations for thousands of years, there has been no noticeable change in the composition or characteristics of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged."
+        ],
+        [
+            "Despite the isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged.",
+            "Despite the geographical isolation from Britain for thousands of years, there has been no significant variation in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unchanged."
+        ],
+        [
+            "Despite the geographical isolation from Britain for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes are found in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unaltered.",
+            "Despite the geographical isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the isolation for thousands of years, there has been no noticeable change in the characteristics and composition of mammal, reptile, and land-based organism populations, with significant changes absent.",
+            "Despite the isolation for thousands of years, the populations of mammals, reptiles, and land-based organisms have undergone little change, with few noticeable alterations to their composition or characteristics."
+        ],
+        [
+            "Despite the geographical isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the geographical isolation for thousands of years, significant changes are absent in the populations of mammals, reptiles, and land-based organisms, with no noticeable modifications to their composition or characteristics.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes are found in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unaltered.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes are found in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unaltered.",
+            "Despite the geographical isolation from Britain for thousands of years, no significant changes are found in the populations of mammals, reptiles, and land-based organisms, with their characteristics remaining largely unaltered."
+        ]
+    ]
+}

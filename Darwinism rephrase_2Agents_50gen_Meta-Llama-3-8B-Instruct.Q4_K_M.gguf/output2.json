@@ -1,0 +1,227 @@
+{
+    "adjacency_matrix": [
+        [
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0
+        ]
+    ],
+    "prompt_init": [
+        "You will receive a text. Your task is to rephrase this text without modifying its meaning. Juste output your new text, nothing else.  Here is the text: One objection to the views of those who, like Mr. Gulick, believe isolation itself to be a cause of modification of species deserves attention, namely, the entire absence of change where, if this were a _vera causa_, we should expect to find it. In Ireland we have an excellent test case, for we know that it has been separated from Britain since the end of the glacial epoch, certainly many thousand years. Yet hardly one of its mammals, reptiles, or land molluscs has undergone the slightest change, even although there is certainly a distinct difference in the environment both inorganic and organic. That changes have not occurred through natural selection, is perhaps due to the less severe struggle for existence owing to the smaller number of competing species; but, if isolation itself were an efficient cause, acting continuously and c.u.mulatively, it is incredible that a decided change should not have been produced in thousands of years. That no such change has occurred in this, and many other cases of isolation, seems to prove that it is not in itself a cause of modification."
+    ],
+    "prompt_update": [
+        "You will receive several texts. Your task is to pick one of those texts and rephrase it without modifying its meaning. Juste output your new text, nothing else. Here is the text:"
+    ],
+    "personality_list": [
+        " ",
+        " "
+    ],
+    "format_prompt": [
+        ""
+    ],
+    "stories": [
+        [
+            "A criticism of the idea that isolation is the cause of species modification, common among scientists, deserves consideration, particularly the complete lack of change in areas where such modification would be expected. The separation of Ireland from Britain since the end of the Ice Age, thousands of years ago, provides a relevant example, as the species that inhabit both areas have exhibited little to no change, despite distinct environmental differences. The fact that natural selection seems to be absent in this case may be attributed to the less intense competition for resources due to the lower number of species. However, if isolation were indeed a primary cause of change, it would be astonishing that no noticeable transformation would have occurred over thousands of years. The absence of change in this and other similar instances of isolation appears to suggest that isolation is not, in itself, a driving force behind the modification of species.",
+            "One argument against the view that isolation alone leads to modification in species, as proposed by Mr. Gulick, is notable for its irrelevance, being the complete lack of change in Ireland despite its isolation from Britain since the end of the last ice age, thousands of years ago."
+        ],
+        [
+            "A prevailing criticism of the notion that isolation alone drives species modification is notable for its irrelevance, as exemplified by the lack of change in Ireland's species despite its geological isolation from Britain since the end of the last ice age, thousands of years ago, despite the expectation that such isolation would lead to significant transformations.",
+            "One notable argument against the view that isolation alone leads to modification in species is the lack of change in species that inhabit Ireland, despite its isolation from Britain for thousands of years, due to distinct environmental differences, which contradicts the expectation of significant transformation."
+        ],
+        [
+            "A prevailing criticism of the notion that isolation alone drives species modification is notable for its irrelevance, as exemplified by the lack of change in Ireland's species despite its geological isolation from Britain since the end of the last ice age, thousands of years ago, despite the expectation that such isolation would lead to significant transformations.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is the fact that Ireland's species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes."
+        ],
+        [
+            "A prevailing criticism of the notion that isolation alone drives species modification is notable for its irrelevance, as exemplified by the case of Ireland, where species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is the fact that Ireland's species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes."
+        ],
+        [
+            "A prevailing criticism of the notion that isolation alone drives species modification is notable for its irrelevance, as exemplified by the case of Ireland, where species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is the fact that Ireland's species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes."
+        ],
+        [
+            "A prevailing criticism of the notion that isolation alone drives species modification is notable for its irrelevance, as exemplified by the case of Ireland, where species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is the fact that Ireland's species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes."
+        ],
+        [
+            "A prevailing criticism of the notion that isolation alone drives species modification is the fact that Ireland's species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is the fact that Ireland's species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes."
+        ],
+        [
+            "A prevailing criticism of the notion that isolation alone drives species modification is the fact that Ireland's species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that isolation alone drives species modification is the fact that Ireland's species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that isolation alone drives species modification is the fact that Ireland's species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes.",
+            "\"One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.\""
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation alone leads to species modification is the fact that Ireland's species have remained largely unchanged despite being isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes having occurred.",
+            "\"One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.\""
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation alone leads to species modification is the fact that Ireland's species have remained largely unchanged despite being isolated from Britain for thousands of years, a situation that contradicts the expectation of significant changes having occurred.",
+            "\"One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.\""
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation alone leads to species modification is that Ireland's species have remained largely unchanged despite being geographically isolated from Britain for thousands of years, a fact that contradicts the expectation of significant changes having occurred.",
+            "\"One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland\u2019s species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.\""
+        ],
+        [
+            "A prevailing criticism of the idea that geographical isolation alone drives species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "\"One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland\u2019s species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.\""
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "\"A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.\"",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "\"One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.\""
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the idea that isolation is sufficient to drive species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "\"A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.\"",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "\"A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.\"",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "\"A prevailing criticism of the notion that geographical isolation suffices to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, a fact that contradicts the expectation of significant changes having occurred.\"",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of its geographical isolation from Britain, which contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "A prevailing criticism of the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that despite being geographically isolated from Britain for thousands of years, Ireland's species have remained largely unchanged, contradicting the expectation of significant changes having occurred."
+        ],
+        [
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred.",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that despite being geographically isolated from Britain for thousands of years, Ireland's species have remained largely unchanged, contradicting the expectation of significant changes having occurred."
+        ],
+        [
+            "\"One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred.\"",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have not undergone significant modifications despite being geographically isolated from Britain for thousands of years, which does not support the expectation that isolation would lead to species modification."
+        ],
+        [
+            "\"One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred.\"",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unmodified despite being geographically isolated from Britain for thousands of years, which contradicts the expectation of significant changes having taken place."
+        ],
+        [
+            "\"One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred.\"",
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained unchanged for thousands of years, despite being isolated from Britain, which contradicts the expectation of significant changes having occurred."
+        ],
+        [
+            "\"One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred.\"",
+            "One notable counterargument against the idea that geographical isolation is enough to lead to species modification is that Ireland's species have remained the same for thousands of years, even though Ireland is isolated from Britain, which goes against the expectation that significant changes would have happened."
+        ],
+        [
+            "\"One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred.\"",
+            "One notable counterargument against the idea that geographical isolation is enough to lead to species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being physically separated from Britain, which goes against the expectation of significant changes having occurred."
+        ],
+        [
+            "\"One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred.\"",
+            "One notable counterargument against the idea that geographical isolation is enough to lead to significant species changes is that Ireland's species have remained largely unchanged for thousands of years, despite being physically separated from Britain, which contradicts the expectation of major evolutionary adaptations having occurred."
+        ],
+        [
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of significant changes having occurred.",
+            "\"One notable counterargument against the idea that geographical isolation is enough to lead to significant species changes is that Ireland's species have remained largely unchanged for thousands of years, despite being physically separated from Britain, which contradicts the expectation of major evolutionary adaptations having occurred.\""
+        ],
+        [
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce significant species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically isolated from Britain, which contradicts the expectation of major evolutionary adaptations having occurred.",
+            "\"One notable counterargument against the idea that geographical isolation is enough to lead to significant species changes is that Ireland's species have remained largely unchanged for thousands of years, despite being physically separated from Britain, which contradicts the expectation of major evolutionary adaptations having occurred.\""
+        ],
+        [
+            "One notable counterargument against the notion that geographical isolation is sufficient to induce significant species modification is that Ireland's species have remained largely unchanged for thousands of years, in spite of being geographically separated from Britain, which contradicts the expectation of major evolutionary adaptations having occurred.",
+            "\"One notable counterargument against the idea that geographical isolation is enough to lead to significant species changes is that Ireland's species have remained largely unchanged for thousands of years, despite being physically separated from Britain, which contradicts the expectation of major evolutionary adaptations having occurred.\""
+        ],
+        [
+            "One notable counterargument against the idea that geographical isolation is sufficient to induce significant species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically separated from Britain, which contradicts the expectation of major evolutionary adaptations having occurred.",
+            "\"One notable counterargument against the idea that geographical isolation is enough to lead to significant species changes is that Ireland's species have remained largely unchanged for thousands of years, despite being physically separated from Britain, which contradicts the expectation of major evolutionary adaptations having occurred.\""
+        ],
+        [
+            "\"One notable counterargument against the idea that geographical isolation is sufficient to induce significant species modification is that Ireland's species have remained largely unchanged for thousands of years, despite being geographically separated from Britain, which contradicts the expectation of major evolutionary adaptations having occurred.\"",
+            "\"One notable counterargument against the idea that geographical isolation is enough to lead to significant species changes is that Ireland's species have remained largely unchanged for thousands of years, despite being physically separated from Britain, which contradicts the expectation of major evolutionary adaptations having occurred.\""
+        ]
+    ]
+}

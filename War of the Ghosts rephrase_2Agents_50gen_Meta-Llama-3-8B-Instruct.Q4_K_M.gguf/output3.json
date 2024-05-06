@@ -1,0 +1,227 @@
+{
+    "adjacency_matrix": [
+        [
+            1.0,
+            1.0
+        ],
+        [
+            1.0,
+            1.0
+        ]
+    ],
+    "prompt_init": [
+        "You will receive a text. Your task is to rephrase this text without modifying its meaning. Juste output your new text, nothing else. Here is the text: One night two young men from Egulac went down to the river to hunt seals and while they were there it became foggy and calm. Then they heard war-cries, and they thought: 'Maybe this is a war-party'. They escaped to the shore, and hid behind a log. Now canoes came up, and they heard the noise of paddles, and saw one canoe coming up to them. There were five men in the canoe, and they said: 'What do you think? We wish to take you along. We are going up the river to make war on the people.' One of the young men said,'I have no arrows.' 'Arrows are in the canoe,' they said. 'I will not go along. I might be killed. My relatives do not know where I have gone. But you,' he said, turning to the other, 'may go with them.' So one of the young men went, but the other returned home. And the warriors went on up the river to a town on the other side of Kalama. The people came down to the water and they began to fight, and many were killed. But presently the young man heard one of the warriors say, 'Quick, let us go home: that Indian has been hit.' Now he thought: 'Oh, they are ghosts.' He did not feel sick, but they said he had been shot. So the canoes went back to Egulac and the young man went ashore to his house and made a fire. And he told everybody and said: 'Behold I accompanied the ghosts, and we went to fight. Many of our fellows were killed, and many of those who attacked us were killed. They said I was hit, and I did not feel sick.' He told it all, and then he became quiet. When the sun rose he fell down. Something black came out of his mouth. His face became contorted. The people jumped up and cried.He was dead."
+    ],
+    "prompt_update": [
+        "You will receive several texts. Your task is to pick one of those texts and rephrase it without modifying its meaning. Juste output your new text, nothing else. Here is the text:"
+    ],
+    "personality_list": [
+        " ",
+        " "
+    ],
+    "format_prompt": [
+        ""
+    ],
+    "stories": [
+        [
+            "One night, two young men from Egulac went to hunt seals by the river, but a sudden fog and calm made them think twice. They heard war cries, and with trepidation, hid behind a log, observing the arrival of five men in a canoe. The men invited them to join their war party, offering to provide arrows, but one of the young men declined, fearing for his safety and the anonymity of his travel. The other, feeling more adventurous, agreed to join the war party. They attacked a town on the opposite side of Kalama, resulting in many casualties on both sides. The young man, claiming he had been shot by the 'ghosts', joined the others when they retreated. Returning to Egulac, he shared his story, but upon sunrise, he died, with something black emerging from his mouth, leaving the people in shock and grief.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but it grew foggy and calm. Suddenly, they heard cries and thought it might be a war party, so they escaped to the shore and hid behind a log. As canoes approached, they spotted five warriors who offered to take them along to wage war on a town across the river. One of the young men declined, citing concerns about his relatives discovering his whereabouts, but his companion agreed to join the warriors. While the warriors went on to fight and many were killed, the companion began to experience strange symptoms after one of the warriors mentioned that someone had been hit. Despite not feeling sick, the companion was led to believe he had been shot. Upon returning to Egulac and recounting the tale, he reported seeing ghosts and many comrades killed. However, upon rising the next morning, he suddenly fell ill, and a dark substance emerged from his mouth, followed by death."
+        ],
+        [
+            "One night, two young men from Egulac went to hunt seals by the river, but a sudden fog and calm made them hesitant. They heard cries and war preparations, and, with trepidation, hid behind a log, observing the arrival of five warriors in a canoe. The men invited them to join their war party, offering to provide arrows, but one of the young men declined, fearing for his safety and anonymity. The other, feeling more adventurous, agreed to join the warriors.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but it grew foggy and calm. Suddenly, they heard cries and thought it might be a war party, so they hid behind a log."
+        ],
+        [
+            "One night, two young men from Egulac ventured to the river to hunt seals, but it grew foggy and calm. Suddenly, they heard cries and thought it might be a war party, so they hid behind a log.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but the fog and calm grew thick, causing them to feel trepidation. They heard cries and war preparations, and, with caution, hid behind a log, observing the arrival of five warriors in a canoe."
+        ],
+        [
+            "One night, two young men from Egulac ventured to the river to hunt seals, but the calm and fog grew thick, causing them to feel unease. They heard cries and sounds of war preparations, and, with caution, hid behind a log, observing the arrival of five warriors in a canoe.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but the fog turned eerie and quiet. Suddenly, they heard cries and, thinking it might be a war party, they discreetly hid behind a log, their senses on high alert."
+        ],
+        [
+            "One night, two young men from Egulac ventured to the river to hunt seals, but the thick mist fell quiet. Suddenly, they noticed a faint outcry and, believing it might be a war party, crept stealthily behind a log, their senses in high alert.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but the calm and thick fog grew quickly, causing them to feel unease. They heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe."
+        ],
+        [
+            "One night, two young men from Egulac ventured to the river to hunt seals, but the calm and thick fog grew quickly, causing them to feel unease. They heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac ventured to the river to hunt seals, but the calm and thick fog grew quickly, causing them to feel unease. They heard cries and sounds of war preparations, and with caution, hid behind a log, their senses in high alert."
+        ],
+        [
+            "Here is the rephrased text:\n\nOne night, two young men from Egulac ventured to the river to hunt seals, but the calm and thick fog grew quickly, causing them to feel unease. They heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "They heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe,"
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac set out to hunt seals by the river, but the sudden and impenetrable fog looming over them quickly instilled a sense of unease. As they listened to the cries and sounds of warriors preparing for battle, they exercised prudence by hiding behind a log, watching as five warriors began to paddle a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac set out to hunt seals by the river, but the sudden and impenetrable fog looming over them quickly instilled a sense of unease. As they listened to the cries and sounds of warriors preparing for battle, they exercised prudence by hiding behind a log, watching as five warriors began to paddle a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac set out to hunt seals by the river, but the sudden and impenetrable fog looming over them quickly instilled a sense of unease. As they listened to the cries and sounds of warriors preparing for battle, they exercised prudence by hiding behind a log, watching as five warriors began to paddle a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac set out to hunt seals by the river, but the sudden and impenetrable fog looming over them quickly instilled a sense of unease. As they listened to the cries and sounds of warriors preparing for battle, they exercised prudence by hiding behind a log, watching as five warriors began to paddle a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac set out to hunt seals by the river, but the sudden and impenetrable fog looming over them quickly instilled a sense of unease. As they listened to the cries and sounds of warriors preparing for battle, they exercised prudence by hiding behind a log, watching as five warriors began to paddle a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac set out to hunt seals by the river, but the sudden and impenetrable fog looming over them quickly instilled a sense of unease. As they listened to the cries and sounds of warriors preparing for battle, they exercised prudence by hiding behind a log, watching as five warriors began to paddle a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac set out to hunt seals by the river, but the sudden and impenetrable fog looming over them quickly instilled a sense of unease. As they listened to cries and sounds of war preparations, they exercised prudence by hiding behind a log, watching as five warriors began to paddle a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac set out to hunt seals by the river, but the sudden and impenetrable fog looming over them quickly instilled a sense of unease. As they listened to cries and sounds of war preparations, they exercised prudence by hiding behind a log, watching as five warriors began to paddle a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac set out to hunt seals by the river, but the sudden and impenetrable fog looming over them quickly instilled a sense of unease. As they listened to cries and sounds of war preparations, they exercised prudence by hiding behind a log, watching as five warriors began to paddle a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but the sudden and thick fog looming over them quickly filled them with a sense of foreboding. As they listened to cries and the sounds of war preparations, they showed caution by hiding behind a log, watching as five warriors paddled a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but the sudden and thick fog looming over them quickly filled them with a sense of foreboding. As they listened to the cries and sounds of war preparations, they hid behind a log, watching as five warriors paddled a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but the sudden and thick fog looming over them quickly filled them with a sense of foreboding. As they listened to the cries and sounds of war preparations, they hid behind a log, watching as five warriors paddled a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but a sudden and thick fog looming over them quickly filled them with a sense of foreboding. As they listened to the cries and sounds of war preparations, they hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but a sudden and thick fog looming over them quickly filled them with a sense of foreboding. As they listened to the cries and sounds of war preparations, they hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but a sudden and thick fog looming over them quickly filled them with a sense of foreboding. As they listened to the sounds of war preparations, they hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but a sudden and thick fog looming over them quickly filled them with a sense of foreboding. As they listened to the sounds of war preparations, they hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but a sudden and thick fog looming over them quickly filled them with a sense of foreboding. As they listened to the cries and sounds of war preparations, with caution, they hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but a sudden and thick fog looming over them quickly filled them with a sense of foreboding. They then listened to the cries and sounds of war preparations, with caution, hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but a sudden and thick fog looming over them quickly filled them with a sense of foreboding.ensing the fear and alarm, they hid behind a log and watched with bated breath as five warriors paddled a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hid behind a log, observing the arrival of five warriors paddling a canoe onto the shore.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but a sudden and thick fog looming over them quickly filled them with a sense of foreboding. Sensing the fear and alarm, they hid behind a log and watched with bated breath as five warriors paddled a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, and with caution, hiding behind a log, they observed the arrival of five warriors paddling a canoe onto the shore.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but a sudden and thick fog looming over them quickly filled them with a sense of foreboding. Sensing the fear and alarm, they hid behind a log and watched with bated breath as five warriors paddled a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, hiding with caution behind a log, they watched with bated breath as five warriors paddled a canoe onto the shore.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but a sudden and thick fog looming over them quickly filled them with a sense of foreboding. Sensing the fear and alarm, they hid behind a log and watched with bated breath as five warriors paddled a canoe onto the shore."
+        ],
+        [
+            "One night, they heard cries and sounds of war preparations, hiding with caution behind a log, they watched with bated breath as five warriors paddled a canoe onto the shore.",
+            "One night, two young men from Egulac went out to hunt seals by the river, but a sudden and thick fog looming over them quickly filled them with a sense of foreboding. Sensing the fear and alarm, they hid behind a log and watched with bated breath as five warriors paddled a canoe onto the shore."
+        ],
+        [
+            "One night, two young men from Egulac hid with caution behind a log, watching with bated breath as five warriors paddled a canoe onto the shore, and sensing the fear and alarm, had heard cries and sounds of war preparations earlier.",
+            "One night, two young men from Egulac went out to hunt seals by the river but a sudden and thick fog looming over them quickly filled them with a sense of foreboding. Sensing the fear and alarm, they hid behind a log and watched with bated breath as five warriors paddled a canoe onto the shore."
+        ],
+        [
+            "One night, two young men from Egulac hid with caution behind a log, watching with bated breath as five warriors paddled a canoe onto the shore, sensing the fear and alarm that had filled them earlier.",
+            "One night, two young men from Egulac went out to hunt but, as a thick fog suddenly enveloped them in uncertainty, they felt a sense of foreboding and had heard cries of war preparations earlier."
+        ],
+        [
+            "One night, two young men from Egulac hid behind a log in caution, watching with suspense as five warriors paddled a canoe onto the shore, feeling a sense of fear and alarm that had been sensed earlier.",
+            "One night, two young men from Egulac went out to hunt, but as a sudden fog enveloped them in uncertainty, they felt a sense of foreboding and recalled the sounds of war preparations they had heard earlier."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy, observing with rapt attention as five warriors guided a canoe onto the shore, apprehension and trepidation washing over them, echoes of earlier omens still resonating.",
+            "One night, two young men from Egulac went out to hunt, but as a sudden fog cloaked them in uncertainty, they felt a sense of foreboding and recalled the ominous sounds of war preparations they had heard earlier."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy, yet despite the sudden fog surrounding them, they felt a sense of foreboding and recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden fog surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden fog surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden fog surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden fog surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt, but sudden mist enveloped them in uncertainty, as a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, their apprehension growing."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension."
+        ],
+        [
+            "One night, two young men from Egulac hid in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension.",
+            "One night, two young men from Egulac went out to hunt in secrecy. Despite the sudden mist surrounding them, a sense of foreboding washed over them and they recalled the ominous sounds of war preparations they had heard earlier, which still echoed in their minds and intensified their apprehension."
+        ]
+    ]
+}
