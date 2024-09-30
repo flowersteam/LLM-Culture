@@ -51,9 +51,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     analyzed_dir = f"results/{args.dir}"
-    font_sizes = {'ticks': args.ticks_font_size,
-                  'labels': args.labels_font_size,
-                  'title': args.title_font_size}
+    
+    font_sizes = {
+        'ticks': args.ticks_font_size,
+        'labels': args.labels_font_size,
+        'title': args.title_font_size
+    }
     
     print(f"\nLaunching analysis on the {analyzed_dir} results")
     print(f"plot = {args.plot}")

@@ -42,7 +42,6 @@ def get_stories(folder):
     
     return all_stories
     
-
 def get_plotting_infos(stories):  
     n_gen, n_agents = len(stories), len(stories[0])
     x_ticks_space = n_gen // 10 if n_gen >= 20 else 1
@@ -80,8 +79,6 @@ def get_similarity_matrix(all_seed_flat_stories):
     return all_seeds_similarity_matrix
 
 
-
-
 def extract_keywords(text, num_keywords=30):
     tokens = word_tokenize(text)
     
@@ -94,11 +91,9 @@ def extract_keywords(text, num_keywords=30):
     
     return keywords
 
-
 def lemmatize_stemming(text):
     stemmer = PorterStemmer()
     return stemmer.stem(WordNetLemmatizer().lemmatize(text, pos='v'))
-
 
 # Tokenize and lemmatize
 def preprocess(text):
@@ -109,29 +104,21 @@ def preprocess(text):
             
     return result
 
-
 def word_to_vector(word, model=nlp):
     return model(word).vector
-
 
 def get_similarity(vec1, vec2):
     norm1 = np.linalg.norm(vec1)
     norm2 = np.linalg.norm(vec2)
-    
     if norm1 == 0 or norm2 == 0:
         return 0.0  
-    
     similarity = np.dot(vec1, vec2) / (norm1 * norm2)
-    
     similarity = max(-1, min(1, similarity))
-    
     return similarity
-
 
 ## Compute similarity between generations 
 def compute_between_gen_similarities_single_seed(similarity_matrix, n_gen, n_agents):
     between_gen_similarity_matrix = np.zeros((n_gen, n_gen))
-
     for i in range(n_gen):
         for j in range(n_gen):
             sim = []
@@ -148,7 +135,6 @@ def compute_between_gen_similarities(all_seeds_similarity_matrix, n_gen, n_agent
         between_gen_similarity_matrix = compute_between_gen_similarities_single_seed(similarity_matrix, n_gen, n_agents)
         all_seeds_between_gen_similarity_matrix.append(between_gen_similarity_matrix)
     return all_seeds_between_gen_similarity_matrix
-
 
 def get_polarities_subjectivities_single_seed(stories):
     polarities = []
@@ -175,10 +161,7 @@ def get_polarities_subjectivities(all_seed_stories):
         all_seeds_subjectivities.append(subjectivities)
     return all_seeds_polarities, all_seeds_subjectivities
 
-
-
 # Pretty long to compute 
-
 def get_creativity_indexes_single_seed(stories, folder, seed = 0):
     def story_creativity_index(story_input):
         words_story = story_input.lower().split()
@@ -196,7 +179,6 @@ def get_creativity_indexes_single_seed(stories, folder, seed = 0):
             return np.mean(similarity_scores)
         else:
             return 0.0
-    
     try:
         # Load existing data 
         file = open(f"{folder}/creativities"+str(seed)+".obj",'rb')
@@ -216,12 +198,9 @@ def get_creativity_indexes_single_seed(stories, folder, seed = 0):
         filehandler = open(f"{folder}/creativities"+str(seed)+".obj","wb")
         pickle.dump(creativities, filehandler)
         filehandler.close()
-        
-    return  creativities
-
+    return creativities
 
 def get_creativity_indexes(all_seed_stories, folder):
-
     creativities = []
     for seed, stories in enumerate(all_seed_stories):
         creativities.append(get_creativity_indexes_single_seed(stories, folder, seed))

@@ -70,11 +70,13 @@ if __name__ == "__main__":
     dirs_list = [f"{RESULTS_DIR}/{dir_name}" for dir_name in analyzed_dirs]
 
     labels = args.labels.split('+')
-    sizes = {'ticks': args.ticks_font_size,
-                  'labels': args.labels_font_size,
-                  'legend': args.legend_font_size,
-                  'title': args.title_font_size,
-                  'matrix': args.matrix_size}
+    sizes = {
+        'ticks': args.ticks_font_size,
+        'labels': args.labels_font_size,
+        'legend': args.legend_font_size,
+        'title': args.title_font_size,
+        'matrix': args.matrix_size
+    }
 
     print(f"\nLaunching analysis on the {args.dirs} results")
     print(f"plot = {args.plot}")

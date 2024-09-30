@@ -1,6 +1,3 @@
-# TODO : Refactor the file to decompose huge functions into smaller ones
-# TODO : Combine this file with run_simulation 
-
 import os
 import json
 from pathlib import Path
@@ -12,7 +9,11 @@ from llm_culture.simulation.utils import run_simul
 RESULTS_DIR = 'results/experiments'
 
 
-def _create_network_structure(network_structure_name, n_agents, n_cliques):
+def _create_network_structure(
+        network_structure_name, 
+        n_agents, 
+        n_cliques
+    ):
     if network_structure_name == 'sequence':
         network_structure = nx.DiGraph()
         for i in range(n_agents - 1):
@@ -37,7 +38,7 @@ def run_simulation(
         update_prompt,
         output_dir,
         server_url
-        ):
+    ):
     
     json_prompt_init = 'data/parameters/prompt_init.json'
     json_prompt_update = 'data/parameters/prompt_update.json'
@@ -50,7 +51,6 @@ def run_simulation(
     output_dict["adjacency_matrix"] = nx.to_numpy_array(network_structure).tolist()
 
     # Write the prompts and their description in the output dictionary
-
     with open(json_prompt_init, 'r') as file:
         data = json.load(file)
         for d in data:
@@ -92,7 +92,7 @@ def run_simulation(
             sequence=sequence,
             output_folder=output_dir,
             debug=True
-            )
+        )
         
         output_dict["stories"] = stories
 

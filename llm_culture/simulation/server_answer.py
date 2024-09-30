@@ -1,7 +1,4 @@
-# This file is used to get the answer from the server. 
-#It is called by the agent.py file.
 import requests
-
 
 def get_answer(access_url, prompt, debug=False):
     url = access_url + "/v1/chat/completions"
@@ -29,14 +26,4 @@ def get_answer(access_url, prompt, debug=False):
         except:
             print('No answer from server, trying again...')
 
-    #history.append({"role": "assistant", "content": assistant_message})
-    #stories.append("Story" +str(i)+": " + assistant_message)
-    #print("Answer: " +assistant_message)
-
     return assistant_message
-
-
-
-  
-# if __name__ == "__main__":
-#     print(get_answer('https://sides-create-born-institute.trycloudflare.com', "Tell me a joke"))

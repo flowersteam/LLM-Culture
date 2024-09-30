@@ -1,17 +1,32 @@
-# This file contains the main functions to run the simulation. 
-#It is called by the run_simulation.py file.
 from llm_culture.simulation.agent import Agent
 
 
-def init_agents(n_agents, network_structure, prompt_init, prompt_update, personality_list, access_url,
-                sequence=False, debug=False):
+def init_agents(
+        n_agents, 
+        network_structure, 
+        prompt_init, 
+        prompt_update, 
+        personality_list, 
+        access_url,
+        sequence=False, 
+        debug=False
+    ):
     agent_list = []
     wait = 0
 
-    for a in range(n_agents):
-        perso = personality_list[a]
-        agent = Agent(a, network_structure, prompt_init, prompt_update, perso, access_url= access_url, wait=wait,
-                      debug=debug, sequence = sequence)
+    for agent_id in range(n_agents):
+        personality = personality_list[agent_id]
+        agent = Agent(
+            agent_id, 
+            network_structure, 
+            prompt_init, 
+            prompt_update, 
+            personality, 
+            access_url=access_url, 
+            wait=wait,
+            debug=debug, 
+            sequence=sequence
+        )
         agent_list.append(agent)
         if sequence:
             wait += 1
@@ -19,23 +34,39 @@ def init_agents(n_agents, network_structure, prompt_init, prompt_update, persona
     return agent_list
 
 
-def run_simul(access_url, n_timesteps=5, network_structure=None, prompt_init=None, prompt_update=None, personality_list=None,
-              n_agents=5, sequence=False, output_folder=None, debug=False):
+def run_simul(
+        access_url, 
+        n_timesteps=5, 
+        network_structure=None, 
+        prompt_init=None, 
+        prompt_update=None, 
+        personality_list=None,
+        n_agents=5, 
+        sequence=False, 
+        output_folder=None, 
+        debug=False
+    ):
     #STRORAGE
     stories_history = []
 
     #INTIALIZE AGENTS
-    agent_list = init_agents(n_agents, network_structure, prompt_init, prompt_update, personality_list, access_url,
-                             sequence=sequence, debug=debug)
-    
-
+    agent_list = init_agents(
+        n_agents, 
+        network_structure, 
+        prompt_init, 
+        prompt_update, 
+        personality_list, 
+        access_url,
+        sequence=sequence, 
+        debug=debug
+    )
 
     for agent in agent_list:
         agent.update_neighbours(network_structure, agent_list )
 
     #MAIN LOOP
     if output_folder is None:
-        state_history_path = 'Results/state_history.json'
+        state_history_path = 'results/state_history.json'
     else:
         state_history_path = f'{output_folder}/state_history.json'
     for t in range(n_timesteps):
@@ -46,7 +77,12 @@ def run_simul(access_url, n_timesteps=5, network_structure=None, prompt_init=Non
 
     return stories_history
 
-def update_step(agent_list, timestep, state_history_path):
+
+def update_step(
+        agent_list, 
+        timestep, 
+        state_history_path
+    ):
     #UPDATE LOOP
     new_stories = []
 
