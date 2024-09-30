@@ -9,7 +9,7 @@ import networkx as nx
 
 from llm_culture.simulation.utils import run_simul
 
-RESULTS_DIR = 'Results/experiments'
+RESULTS_DIR = 'results/experiments'
 
 
 def _create_network_structure(network_structure_name, n_agents, n_cliques):

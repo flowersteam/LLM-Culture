@@ -10,6 +10,6 @@ test.ipynb
 .DS_Store
 
 # Only include the paper results 
-Results/*
-!Results/experiments/
-!Results/experiments_comparisons/
+results/*
+!results/experiments/
+!results/experiments_comparisons/

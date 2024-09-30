@@ -29,7 +29,7 @@ def parse_arguments():
     parser.add_argument('-pl', '--personality_list', type=str, default= ["Empty", "Empty"],
                         help='Personality list.')
     # add an option output folder to save the results
-    parser.add_argument('-o', '--output', type=str, default='Results/default_folder', help='Output folder.')
+    parser.add_argument('-o', '--output', type=str, default='results/default_folder', help='Output folder.')
     # create optional argument for the output file name to save in the output folder
     parser.add_argument('-of', '--output_file', type=str, default='output.json', help='Output file name.')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode.')
@@ -130,7 +130,7 @@ def main(args=None):
             with open(Path(args.output, 'output'+str(i)+'.json'), "w") as f:
                 json.dump(output_dict, f, indent=4)
         else:
-            with open(Path("Results/", 'output'+str(i)+'.json'), "w") as f:
+            with open(Path("results/", 'output'+str(i)+'.json'), "w") as f:
                 json.dump(output_dict, f, indent=4)
             return output_dict
         

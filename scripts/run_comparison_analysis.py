@@ -5,8 +5,8 @@ from llm_culture.analysis.utils import compute_between_gen_similarities, get_pol
 from llm_culture.analysis.plots import plot_similarity_matrix
 from llm_culture.analysis.comparison_plots import *
 
-RESULTS_DIR = 'Results/experiments'
-COMPARISON_DIR = 'Results/experiments_comparisons'
+RESULTS_DIR = 'results/experiments'
+COMPARISON_DIR = 'results/experiments_comparisons'
 
 def run_comparison_analysis(folders, plot, scale_y_axis, labels, sizes):
     saving_folder = '-'.join(os.path.basename(folder) for folder in folders)
