@@ -95,10 +95,7 @@ def plot_within_gen_similarities(all_seeds_between_gen_similarity_matrix, folder
     plt.xticks(range(0, all_seeds_between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.ylim(0 , 1.1)
-
     plt.grid()
-
-
 
     mean_line, = plt.plot( np.diag(np.mean(all_seeds_between_gen_similarity_matrix, axis = 0)))
     
@@ -111,12 +108,9 @@ def plot_within_gen_similarities(all_seeds_between_gen_similarity_matrix, folder
     for i in range(len(all_seeds_between_gen_similarity_matrix)):
         plt.plot(np.diag(all_seeds_between_gen_similarity_matrix[i]), alpha=0.2, color = color)
 
-    # plt.plot(np.diag(between_gen_similarity_matrix))
-
     if save:
         plt.savefig(folder + '/within_gen_similarity.png')
         print("Saved within_gen_similarity.png")
-
     if plot:
         plt.show()
 
@@ -144,14 +138,11 @@ def plot_successive_generations_similarities(all_seeds_between_gen_similarity_ma
     color = mean_line.get_color()
     for i in range(n_seeds):
         plt.plot(all_seeds_successive_sim[i], alpha=0.2, color = color)
-
     if save:
         plt.savefig(folder + '/successive_similarity.png')
         print("Saved successive_similarity.png")
-
     if plot:
         plt.show()
-
 
 
 def plot_positivity_evolution(all_seeds_positivities, folder, plot, x_ticks_space, sizes, save=True, scale_y_axis = False):

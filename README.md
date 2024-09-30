@@ -1,6 +1,6 @@
 # LLM-Culture
 
-This repository provides a comprehensive framework for studying the cultural evolution of linguistic content in populations of Large Language Models. 
+Code for the [Cultural evolution in populations of Large Language Models](https://arxiv.org/abs/2403.08882) paper. This repository provides a comprehensive framework for studying the cultural evolution of linguistic content in populations of Large Language Models (LLM).
 
 It allows organizing LLM agents into networks wherein each agent interacts with neighboring agents by exchanging stories. Each agent can be assigned specific personalities and transmission instructions, serving as prompts for generating new stories from their neighbors’ narratives. Once the network structure and agent characteristics are defined, you can simulate the cultural evolution of texts across generations of agents. We also provide built-in metrics and vizualizations to analyze the results.
 
@@ -10,15 +10,15 @@ It allows organizing LLM agents into networks wherein each agent interacts with 
 
 ## Installation 
 
-1- Clone the repository
+1 - Clone the repository
 
 
 ```bash
-git clone https://github.com/jeremyperez2/LLM-Culture.git
+git clone git@github.com:flowersteam/LLM-Culture.git
 cd LLM-Culture/
 ```
 
-2- Install the dependencies 
+2 - Install the dependencies 
 
 ```bash
 python -m venv myvenv
@@ -26,44 +26,11 @@ source myvenv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Usage of the web interface
+3 - Install a local LLM (Optional)
 
-Launch the web user interface with the following command:
-
-```bash
-python3 web_interface.py
-```
-
-This will create a link the website (e.g *http://127.0.0.1:5000* in your terminal), just click on it to open the interface on a web browser. You can then run a simulation, analyze it and visualize the results from previous simulations ! You can find below the details of the different simulation parameters, as well as how to use an LLM in our framework.
-
-
-![GUI](/static/web_interface.png)
+If you want to run experiments with a LLM running on your own computer, follow the instructions below. Otherwise, you can use the framework with any LLM hosted on a remote API.
 
 <details>
-  
-  <summary>Display parameters details</summary>
-  
-  - Simulation name: Give a name to your simulation. This will be the name of the folder when the simulation results are stored.
-  
-  - Number of agents: use this to specify how many agents you wish to simulate
-    
-  - Number of timesteps: use this to specify for how many timesteps the simulation should run
-
-  - Number of seeds: use this to specify how many times the whole simulation should be repeated. 
-    
-  - Network structure: use this to specify the stucture of the social network. You can view the selected structure by clicking on "Display Graph"
-
-  - Initialization prompts: use this to set the prompt given each agent at the first timestep. You can choose among already registered prompt using the drop-down menu, or add a new prompt to this list by clicking on "Add Prompt...". This will open a window where you can enter the name and content of your new prompt.
-    
-  - Transmission prompts: use this to set the prompt that will be concatenated with the stories of each agent's neighbors after the first timestep. As for the Initialization prompt, you may select an existing prompt or create a new one.
-    
-  - Personalities: use this to assign a personality to each agent. The personality will be concatenated with the rest of the prompt. If you want all agents to have the same personality, tick the "Same for all agents" box. You can then select a personality from the drop-down menu or create a new one. If you want agents to have different personalities, untick the "Same for all agents" box and select a personality for each agent.  
-    
-  - Server access URL: URL to which the requests will be sent to get answers from the LLM. In our case, we generated such an URL using oogabooga (https://github.com/oobabooga/text-generation-webui) and we provide a step-by-step guide below.
-</details>
-
-<details>
-    
   <summary> Step-by-step guide to using oogabooga to generate an public URL to request an LLM </summary>
     
   - Manually install oogabooga Text generation web UI by following the steps described here: https://github.com/oobabooga/text-generation-webui (section "Setup details and information about installing manually")
@@ -87,7 +54,11 @@ This will create a link the website (e.g *http://127.0.0.1:5000* in your termina
 </details>
     
 
-## Usage (command line)
+## Usage 
+
+You can use the framework both from command-line interface or from a web interface :
+
+### 1 - Command Line 
 
 Run a simulation with your desired parameters (see parameters details above): 
 
@@ -119,7 +90,7 @@ python3 scripts/run_simulation.py --output_file simulation_test
 
 </details>
 
-The results of the experiment will be stored in a directory called ```Results/simulation_test/``` in this case. You can then analyze the texts produced with this command : 
+The results of the experiment will be stored in a directory called ```results/simulation_test/``` in this case. You can then analyze the texts produced with this command : 
 
 ```bash
 python3 scripts/run_analysis.py --dir simulation_test
@@ -131,19 +102,74 @@ To compare the results of several experiments, you can can run this command (wit
 python3 scripts/run_comparison_analysis --dirs experiment_1+experiment_2+experiment_3
 ```
 
-It will store the analysis figures in a directory called ```Results/Comparisons/experiment_1-experiment_2-experiment_3/```
+It will store the analysis figures in a directory called ```results/Comparisons/experiment_1-experiment_2-experiment_3/```
 
 
-## Currently implemented analysis : 
+### 2 - Web Interface
+
+Launch the web user interface with the following command:
+
+```bash
+python3 web_interface.py
+```
+
+This will create a link the website (e.g *http://127.0.0.1:5000* in your terminal), just click on it to open the interface on a web browser. You can then run a simulation, analyze it and visualize the results from previous simulations ! You can find below the details of the different simulation parameters, as well as how to use an LLM in our framework.
 
 
-For each experiment analysis, we present several plots (generated by ```run_analysis.py```) : 
+<!-- ![GUI](/static/web_interface.png) -->
 
-![analysis_plots](/static/experiment_analysis_figures.png)
+<details>
+  
+  <summary>Display parameters details</summary>
+  
+  - Simulation name: Give a name to your simulation. This will be the name of the folder when the simulation results are stored.
+  
+  - Number of agents: use this to specify how many agents you wish to simulate
+    
+  - Number of timesteps: use this to specify for how many timesteps the simulation should run
 
-They include a **similarity matrix** (**a**) that enables comparing the similarity between all the stories generated during an experiment. We also provide a **similarity graph** (**b**), where the nodes represent stories and are also arranged based on their similarities. We also provide a **word chains plot** (**c**) to visualize the evolution of key words in texts through generations. We also provide quantitative insights from the generations of stories by tracking the evolution of **similarity between new generations of stories and the the initial one**, as well as the evolution of **similarity within generations** and **with successive ones**. We also analyze the evolution of measures such as **positivity**, **subjectivity** and **creativity** across generations.
+  - Number of seeds: use this to specify how many times the whole simulation should be repeated. 
+    
+  - Network structure: use this to specify the stucture of the social network. You can view the selected structure by clicking on "Display Graph"
+
+  - Initialization prompts: use this to set the prompt given each agent at the first timestep. You can choose among already registered prompt using the drop-down menu, or add a new prompt to this list by clicking on "Add Prompt...". This will open a window where you can enter the name and content of your new prompt.
+    
+  - Transmission prompts: use this to set the prompt that will be concatenated with the stories of each agent's neighbors after the first timestep. As for the Initialization prompt, you may select an existing prompt or create a new one.
+    
+  - Personalities: use this to assign a personality to each agent. The personality will be concatenated with the rest of the prompt. If you want all agents to have the same personality, tick the "Same for all agents" box. You can then select a personality from the drop-down menu or create a new one. If you want agents to have different personalities, untick the "Same for all agents" box and select a personality for each agent.  
+    
+  - Server access URL: URL to which the requests will be sent to get answers from the LLM. In our case, we generated such an URL using oogabooga (https://github.com/oobabooga/text-generation-webui) and we provide a step-by-step guide below.
+</details>
 
 
-We show in the following plot how we can compare the evolution of these metrics for several experiments (generated by ```run_comparison_analysis.py```): 
+## Implemented Analysis
 
-![comparison_analysis_plots](/static/experiment_analysis_comparison_figures.png)
+- Our framework generates several plots for each experiment analysis using `run_analysis.py`.
+- In addition to these plots, we track the evolution of several metrics. We also provide a comparison of these metrics across several experiments using `run_comparison_analysis.py`.  
+
+<details>
+  <summary> Plots details </summary>
+
+  | Plot Type | Description |
+  | --- | --- |
+  | **Similarity Matrix (a)** | Compares the similarity between all the stories generated during an experiment. |
+  | **Similarity Graph (b)** | Nodes represent stories and are arranged based on their similarities. |
+  | **Word Chains Plot (c)** | Visualizes the evolution of key words in texts through generations. |
+
+  ![analysis_plots](/static/experiment_analysis_figures.png)
+   
+</details>
+
+<details>
+  <summary> Metrics details </summary>
+  
+  - Similarity between new generations of stories and the initial one
+  - Similarity within generations and with successive ones
+  - Positivity across generations
+  - Subjectivity across generations
+  - Creativity across generations
+
+  ![comparison_analysis_plots](/static/experiment_analysis_comparison_figures.png)
+   
+</details>
+

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 PAD = 20
 LABEL_PAD = 10
 MATRIX_SIZE = 10
-COMPARISON_DIR = 'Results/experiments_comparisons'
+COMPARISON_DIR = 'results/experiments_comparisons'
 
 
 def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):

@@ -13,8 +13,8 @@ from scripts.run_comparison_analysis import run_comparison_analysis
 from scripts.run_simulation_interface import run_simulation
 
 app = Flask(__name__)
-RESULTS_DIR = 'Results/experiments'
-COMPARISON_DIR = 'Results/experiments_comparisons'
+RESULTS_DIR = 'results/experiments'
+COMPARISON_DIR = 'results/experiments_comparisons'
 
 
 # Home Page
@@ -60,6 +60,9 @@ def simulation():
             # TODO : Change this mechanism so that you only have to provide experiment name
             output_dir = f"{RESULTS_DIR}/{experiment_name}"
             server_url = request.form.get('server_url')
+
+            if network_structure == 'sequence':
+                assert n_agents == n_timesteps, "Number of agents must be equal to the number of timesteps for the sequence network structure"
 
             print("\nLaunching the analysis")
             run_simulation(
@@ -179,7 +182,6 @@ def plots(dir_name):
 
 
 # Helper functions
-
 def _matrix_sort_key(name, comparison):
     # Sort the matrix at the start of the array if not comparison else at the end 
     matrix_prio, other_figs_prio = (1, 0) if comparison else(0, 1)
@@ -226,5 +228,4 @@ def _write_prompt_option(prompt_type, name, prompt):
 
 
 if __name__ == "__main__":
-    # app.run(debug=True, host="10.17.5.125", port="5050")
     app.run(debug=True, port=5002)
