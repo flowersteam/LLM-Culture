@@ -23,7 +23,9 @@ cd LLM-Culture/
 ```bash
 python -m venv myvenv
 source myvenv/bin/activate
+
 pip install -r requirements.txt
+pip install -e .
 ```
 
 3 - Install a local LLM (Optional)
