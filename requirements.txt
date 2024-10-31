@@ -1,6 +1,6 @@
-scikit-learn==1.4.0
+scikit-learn>=1.5.0 # od version: 1.4.0
 scipy==1.12.0
-nltk==3.8.1
+nltk>=3.9 # old version: 3.8.1
 gensim==4.3.2
 spacy==3.7.4
 textblob==0.17.1
