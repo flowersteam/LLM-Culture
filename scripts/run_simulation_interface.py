@@ -1,5 +1,6 @@
 import os
 import json
+
 from pathlib import Path
 
 import networkx as nx
@@ -14,6 +15,13 @@ def _create_network_structure(
         n_agents, 
         n_cliques
     ):
+    """Create a network structure based on the given parameters
+
+    :param network_structure_name: name
+    :param n_agents: n_agents
+    :param n_cliques: n_cliques
+    :return: network_structure
+    """
     if network_structure_name == 'sequence':
         network_structure = nx.DiGraph()
         for i in range(n_agents - 1):
@@ -39,6 +47,8 @@ def run_simulation(
         output_dir,
         server_url
     ):
+    """Run the simulation with the given parameters
+    """
     
     json_prompt_init = 'data/parameters/prompt_init.json'
     json_prompt_update = 'data/parameters/prompt_update.json'

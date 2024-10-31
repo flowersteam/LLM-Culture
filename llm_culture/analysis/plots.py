@@ -3,7 +3,6 @@ import networkx as nx
 import matplotlib.pyplot as plt 
 
 
-
 def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, sizes, save=True, seed = 0):
     plt.figure(figsize=(8, 8))
     plt.imshow(similarity_matrix, vmin=0, vmax=1, cmap='viridis')
@@ -224,9 +223,7 @@ def plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_
     
 
 def plot_creativity_evolution(all_seeds_creativity_indices, folder, plot, x_ticks_space, sizes, save=True, scale_y_axis = False):
-    """!!! Warning here 1 = low creativity and 0 = high creativity !!!"""
-    """^-not anymore-^, now 1 = high creativity and 0 = low creativity"""
-    
+    """1 = high creativity and 0 = low creativity"""
     plt.figure(figsize=(10, 6))
     all_seeds_gen_creativities = []
     for creativity_indices in all_seeds_creativity_indices:
@@ -259,8 +256,6 @@ def plot_creativity_evolution(all_seeds_creativity_indices, folder, plot, x_tick
 
     if plot:
         plt.show()
-
-
 
 
 def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, sizes, save=True, seed = 0):
@@ -308,10 +303,7 @@ def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, sizes, sa
     return G
 
 
-# TODO : See how to do for word chains ticks_sizes
 def plot_word_chains(word_lists, folder, plot, ticks_space, sizes, save=True, seed = 0):
-
-
     flatten_list_of_lists = [item for sublist in word_lists for item in sublist]
     known_words = {}
 
@@ -361,7 +353,6 @@ def plot_word_chains(word_lists, folder, plot, ticks_space, sizes, save=True, se
     plt.yticks(range(0, len(word_lists), ticks_space))
     plt.tight_layout()
 
-    
     # See if we wanna keep the grids
     ax.grid()
     ax2.grid()
@@ -378,10 +369,13 @@ def display_graph(network_structure):
     pos = nx.spring_layout(network_structure)  # positions for all nodes
 
     nx.draw_networkx_nodes(network_structure, pos, node_size=700)
-    nx.draw_networkx_edges(network_structure, pos,
-                           arrowstyle='->',
-                           arrowsize=30)  # Increase the arrowsize value
-
+    nx.draw_networkx_edges(
+        network_structure, 
+        pos,
+        arrowstyle='->',
+        arrowsize=30  # Increase the arrowsize value
+    )
+    
     nx.draw_networkx_labels(network_structure, pos, font_size=20, font_family='sans-serif')
 
     plt.axis('off')

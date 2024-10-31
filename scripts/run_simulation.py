@@ -1,8 +1,7 @@
-# TODO : Combine this file with run_simulation 
-
 import os
 import json
 import argparse
+
 from pathlib import Path
 
 import networkx as nx
@@ -38,27 +37,29 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def prepare_simu(args):
-    pass
-
 def main(args=None):
+    """Run the simulation with the given parameters
+
+    :param args: simulation parameters, defaults to None
+    :return: dictionary containing the simulation results
+    """
     json_prompt_init = 'llm_culture/data/parameters/prompt_init.json'
     json_prompt_update = 'llm_culture/data/parameters/prompt_update.json'
-    # json_structure = 'llm_culture/data/parameters/network_structure.json'
     json_personnalities = 'llm_culture/data/parameters/personnalities.json'
 
     if args is None:
         args = parse_arguments()
 
+    # initialize the output dictionary for results
     output_dict = {}
     debug = args.debug
     sequence = False
-    # If we use a preset, we can use the parameters_sets in data
 
     # Use the arguments
     n_agents = args.n_agents
     n_timesteps = args.n_timesteps
 
+    # handle the network structure
     network_structure = None
     if args.network_structure == 'sequence':
         network_structure = nx.DiGraph()
@@ -69,7 +70,6 @@ def main(args=None):
         network_structure = nx.cycle_graph(n_agents)
     elif args.network_structure == 'caveman':
         network_structure = nx.connected_caveman_graph(int(args.n_cliques), n_agents // int(args.n_cliques))
-
     elif args.network_structure == 'fully_connected':
                 network_structure = nx.complete_graph(n_agents)
 
@@ -103,9 +103,11 @@ def main(args=None):
         output_dict["prompt_update"] = [prompt_update]
         output_dict["personality_list"] = personality_list
 
+    # Create the output folder if it does not exist
     os.makedirs(os.path.dirname(str(args.output) + '/'), exist_ok=True)
     t = input(args.output)
 
+    # Run the simulation for each seed
     for i in range(args.n_seeds):
         print(f"Seed {i}")
         stories = run_simul(

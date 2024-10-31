@@ -30,6 +30,11 @@ class Agent:
         self.sequence = sequence
 
     def update_neighbours(self, graph, agentList):
+        """Update the neighbours of the agent
+
+        :param graph: networkx graph
+        :param agentList: list of agents
+        """
         # get the neighbours of the agent from the graph (networkx graph)
         if graph.is_directed():
             # if graph is a DiGraph, the neighbours are the predecessors
@@ -38,9 +43,15 @@ class Agent:
             self.neighbours = [agentList[i] for i in list(graph.neighbors(self.agent_id))]
 
     def get_neighbours_stories(self):
+        """Get the stories of the neighbours
+
+        :return: list of stories
+        """
         return [neighbour.get_story() for neighbour in self.neighbours if neighbour.get_story() is not None]
 
     def update_prompt(self):
+        """Update the prompt of the agent based on the stories of the neighbours
+        """
         if (self.wait == 0 and self.sequence) or (self.wait <= 0 and not(self.sequence)):
             neighbours_stories = self.get_neighbours_stories()
             if len(neighbours_stories) != 0:
@@ -53,6 +64,8 @@ class Agent:
         self.prompt = prompt
 
     def update_story(self):
+        """Update the story of the agent based on the prompt
+        """
         if (self.wait == 0 and self.sequence) or (self.wait <= 0 and not(self.sequence)):
             self.story = get_answer(self.access_url, self.prompt, debug=self.debug)
         else:
@@ -60,17 +73,29 @@ class Agent:
         self.decrease_wait()
 
     def get_story(self):
+        """Get the story of the agent
+        """
         return self.story
 
     def decrease_wait(self):
+        """Decrease the wait time
+        """
         self.wait -= 1
 
     def get_updated_story(self):
+        """Get the updated story of the agent
+
+        :return: story
+        """
         self.update_story()
         story = self.get_story()
         return story
 
     def get_current_state(self):
+        """Get the current state of the agent
+
+        :return: state_dict
+        """
         state_dict = {
             "agent_id": self.agent_id,
             "is_new": self.is_new,

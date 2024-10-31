@@ -20,12 +20,19 @@ COMPARISON_DIR = 'results/experiments_comparisons'
 # Home Page
 @app.route('/')
 def index():
-    return render_template('index.html')
+    """Index page
 
+    :return: index.html
+    """
+    return render_template('index.html')
 
 # Run simulation
 @app.route('/simulation', methods=['GET', 'POST'])
 def simulation():
+    """Run the simulation
+
+    :return: simulation.html
+    """
     if request.method == 'POST':
         # You can either add a new prompt 
         if request.form.get('add_prompt'):
@@ -86,10 +93,13 @@ def simulation():
 
     return render_template('simulation.html', prompt_options=prompt_options)
 
-
 # Run analysis
 @app.route('/analyze', methods=['GET', 'POST'])
 def analyze():
+    """Analyze the results
+
+    :return: analysis.html
+    """
     result_dirs = _get_results_dir()
     if request.method == 'POST':
         directory = request.form.get('result_dir')
@@ -110,10 +120,13 @@ def analyze():
 
     return render_template('analysis.html', result_dirs=result_dirs)
 
-
 # Run analysis
 @app.route('/comparison_analysis', methods=['GET', 'POST'])
 def comparison_analysis():
+    """Analyze the results
+
+    :return: comparison_analysis.html
+    """
     result_dirs = _get_results_dir()
     if request.method == 'POST':
         selected_dirs = request.form.getlist('result_dir[]')
@@ -139,10 +152,13 @@ def comparison_analysis():
 
     return render_template('comparison_analysis.html', result_dirs=result_dirs)
 
-
 # Select analyzed dir
 @app.route('/results')
 def results():
+    """Select the results directory
+
+    :return: results.html
+    """
     result_dirs =  _get_results_dir()
     results_comparison_dirs =  _get_results_comparisons_dirs()
     all_results_dirs = result_dirs + results_comparison_dirs
@@ -150,21 +166,34 @@ def results():
 
 @app.route('/results/<path:filename>')
 def send_result_file_from_directory(filename):
+    """Send the file from the results directory
+
+    :param filename: file name
+    :return: file
+    """
     if os.path.exists(os.path.join(COMPARISON_DIR, filename)):
         results_dir = COMPARISON_DIR
     else:
         results_dir = RESULTS_DIR
     return send_from_directory(results_dir, filename)
 
-
 # Observe analyzed dir plots
 @app.route('/show_plots', methods=['POST'])
 def show_plots():
+    """Show the plots of the selected directory
+
+    :return: plots.html
+    """
     result_dir = request.form.get('result_dir')
     return redirect(url_for('plots', dir_name=result_dir))
 
 @app.route('/plots/<dir_name>')
 def plots(dir_name):
+    """Show the plots of the selected directory
+
+    :param dir_name: directory name
+    :return: plots.html
+    """
     if os.path.exists(os.path.join(COMPARISON_DIR, dir_name)):
         comparison = True
         results_dir = COMPARISON_DIR
@@ -183,23 +212,48 @@ def plots(dir_name):
 
 # Helper functions
 def _matrix_sort_key(name, comparison):
+    """Sort the matrix at the start of the array if not comparison else at the end
+
+    :param name: name of the plot
+    :param comparison: wether it is a comparison or not
+    :return: tuple with the priority and the name
+    """
     # Sort the matrix at the start of the array if not comparison else at the end 
     matrix_prio, other_figs_prio = (1, 0) if comparison else(0, 1)
     return (matrix_prio, name) if "matrix" in name else (other_figs_prio, name)
         
 def _get_plot_paths_dict(dir_name, plot_names, comparison):
+    """Get the plot paths dictionary
+
+    :param dir_name: directory name
+    :param plot_names: plot names
+    :param comparison: wether it is a comparison or not
+    :return: plot paths dictionary
+    """
     plot_paths = {plot_name: f"{dir_name}/{plot_name}.png" for plot_name in plot_names}
     return plot_paths
 
 def _get_results_dir():
+    """Get the results directories
+
+    :return: results directories
+    """
     results_dirs = [d for d in os.listdir(RESULTS_DIR) if os.path.isdir(os.path.join(RESULTS_DIR, d))]
     return results_dirs 
 
 def _get_results_comparisons_dirs():
+    """Get the comparison results directories
+
+    :return: comparison results directories
+    """
     comparison_dirs = [d for d in os.listdir(COMPARISON_DIR) if os.path.isdir(os.path.join(COMPARISON_DIR, d))]
     return comparison_dirs
 
 def _get_prompt_options():
+    """Get the prompt options
+
+    :return: prompt options
+    """
     option_files = {
         'initial_prompts': 'data/parameters/prompt_init.json',
         'update_prompts': 'data/parameters/prompt_update.json',
@@ -215,6 +269,12 @@ def _get_prompt_options():
     return options
 
 def _write_prompt_option(prompt_type, name, prompt):
+    """Write the prompt option
+
+    :param prompt_type: prompt type
+    :param name: prompt name
+    :param prompt: prompt content
+    """
     file_path = f"data/parameters/{prompt_type}.json"
     with open(file_path, 'r') as f:
         prompts = json.load(f)

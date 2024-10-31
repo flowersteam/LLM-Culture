@@ -1,3 +1,4 @@
+import os
 import json
 import pickle
 
@@ -7,14 +8,13 @@ import spacy
 import numpy as np
 import ssl
 
-from nltk.stem import *
-from nltk.stem.porter import *
+from nltk.stem import WordNetLemmatizer
+from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
 from sklearn.feature_extraction.text import TfidfVectorizer
 from textblob import TextBlob
-import os
 
 try:
     _create_unverified_https_context = ssl._create_unverified_context
@@ -24,13 +24,20 @@ else:
     ssl._create_default_https_context = _create_unverified_https_context
 
 
+# Download an NLP model to preprocess the text
 nltk.download('punkt')
+nltk.download('punkt_tab')
 nltk.download('wordnet')
 nltk.download('stopwords')
 nlp = spacy.load('en_core_web_sm')
 
 
 def get_stories(folder):
+    """Retrieve the stories from the json files in the folder
+
+    :param folder: folder containing the json files
+    :return: list of stories
+    """
     json_files = [file for file in os.listdir(folder) if file.endswith('.json')]
     all_stories = []
     # json_file  = folder + '/output.json'
@@ -43,17 +50,32 @@ def get_stories(folder):
     return all_stories
     
 def get_plotting_infos(stories):  
+    """Retrieve the number of generations, the number of agents and the space between x-ticks
+
+    :param stories: list of stories
+    :return: number of generations, number of agents, space between x-ticks
+    """
     n_gen, n_agents = len(stories), len(stories[0])
     x_ticks_space = n_gen // 10 if n_gen >= 20 else 1
     return n_gen, n_agents, x_ticks_space
 
 def preprocess_single_seed(stories):
+    """Preprocess the stories of a single seed
+
+    :param stories: list of stories
+    :return: flat_stories, keywords, stem_words
+    """
     flat_stories = [stories[i][j] for i in range(len(stories)) for j in range(len(stories[0]))]
     keywords = [list(map(extract_keywords, s)) for s in stories]
     stem_words = [[list(map(lemmatize_stemming, keyword)) for keyword in keyword_list] for keyword_list in keywords]
     return flat_stories, keywords, stem_words
 
 def preprocess_stories(all_seeds_stories):
+    """Preprocess the stories of all seeds
+
+    :param all_seeds_stories: list of stories for each seed
+    :return: all_seeds_flat_stories, all_seeds_keywords, all_seeds_stem_words
+    """
     all_seeds_flat_stories = []
     all_seeds_keywords = []
     all_seeds_stem_words = []
@@ -66,25 +88,38 @@ def preprocess_stories(all_seeds_stories):
     return all_seeds_flat_stories, all_seeds_keywords, all_seeds_stem_words
 
 def get_similarity_matrix_single_seed(flat_stories):
+    """Compute the similarity matrix of the stories
+
+    :param flat_stories: list of stories
+    :return: similarity matrix
+    """
     vect = TfidfVectorizer(min_df=1, stop_words="english")     
     tfidf = vect.fit_transform(flat_stories)                                                                                                                                                                                                                       
     similarity_matrix = tfidf * tfidf.T 
     return similarity_matrix.toarray()
 
 def get_similarity_matrix(all_seed_flat_stories):
+    """Compute the similarity matrix of the stories for all seeds
+
+    :param all_seed_flat_stories: list of flat stories for each seed
+    :return: list of similarity matrices
+    """
     all_seeds_similarity_matrix = []
     for flat_stories in all_seed_flat_stories:
         similarity_matrix = get_similarity_matrix_single_seed(flat_stories)
         all_seeds_similarity_matrix.append(similarity_matrix)
     return all_seeds_similarity_matrix
 
-
 def extract_keywords(text, num_keywords=30):
+    """Extract the keywords from the text
+
+    :param text: _description_
+    :param num_keywords: _description_, defaults to 30
+    :return: _description_
+    """
     tokens = word_tokenize(text)
-    
     stop_words = set(stopwords.words('english'))
     filtered_tokens = [word for word in tokens if word.lower() not in stop_words and word.isalnum()]
-    
     fdist = FreqDist(filtered_tokens)
     
     keywords = [word for word, _ in fdist.most_common(num_keywords)]
@@ -92,11 +127,21 @@ def extract_keywords(text, num_keywords=30):
     return keywords
 
 def lemmatize_stemming(text):
+    """Lemmatize and stem the text
+
+    :param text: text to modify
+    :return: lemmatized and stemmed text
+    """
     stemmer = PorterStemmer()
     return stemmer.stem(WordNetLemmatizer().lemmatize(text, pos='v'))
 
 # Tokenize and lemmatize
 def preprocess(text):
+    """Preprocess the text with tokenization, stop words removal and lemmatization
+
+    :param text: text to preprocess
+    :return: preprocessed text
+    """
     result=[]
     for token in gensim.utils.simple_preprocess(text) :
         if token not in gensim.parsing.preprocessing.STOPWORDS and len(token) > 3:
@@ -105,9 +150,21 @@ def preprocess(text):
     return result
 
 def word_to_vector(word, model=nlp):
+    """Convert a word to a vector
+
+    :param word: word to convert
+    :param model: nlp model, defaults to nlp
+    :return: vector of the word
+    """
     return model(word).vector
 
 def get_similarity(vec1, vec2):
+    """Compute the similarity between two vectors
+
+    :param vec1: vector 1
+    :param vec2: vector 2
+    :return: similarity between the two vectors
+    """
     norm1 = np.linalg.norm(vec1)
     norm2 = np.linalg.norm(vec2)
     if norm1 == 0 or norm2 == 0:
@@ -118,6 +175,13 @@ def get_similarity(vec1, vec2):
 
 ## Compute similarity between generations 
 def compute_between_gen_similarities_single_seed(similarity_matrix, n_gen, n_agents):
+    """Compute the similarity between generations for a single seed
+
+    :param similarity_matrix: similarity matrix
+    :param n_gen: n_gen
+    :param n_agents: n_agents
+    :return: between_gen_similarity_matrix
+    """
     between_gen_similarity_matrix = np.zeros((n_gen, n_gen))
     for i in range(n_gen):
         for j in range(n_gen):
@@ -130,6 +194,13 @@ def compute_between_gen_similarities_single_seed(similarity_matrix, n_gen, n_age
     return between_gen_similarity_matrix
 
 def compute_between_gen_similarities(all_seeds_similarity_matrix, n_gen, n_agents):
+    """Compute the similarity between generations for all seeds
+
+    :param all_seeds_similarity_matrix: list of similarity matrices
+    :param n_gen: n_gen
+    :param n_agents: n_agents
+    :return: list of between_gen_similarity_matrix
+    """
     all_seeds_between_gen_similarity_matrix = []
     for similarity_matrix in all_seeds_similarity_matrix:
         between_gen_similarity_matrix = compute_between_gen_similarities_single_seed(similarity_matrix, n_gen, n_agents)
@@ -137,6 +208,11 @@ def compute_between_gen_similarities(all_seeds_similarity_matrix, n_gen, n_agent
     return all_seeds_between_gen_similarity_matrix
 
 def get_polarities_subjectivities_single_seed(stories):
+    """Compute the polarities and subjectivities of stories for a single seed.
+
+    :param stories: list of stories for a single seed
+    :return: tuple containing lists of polarities and subjectivities for each generation
+    """
     polarities = []
     subjectivities = []
 
@@ -153,6 +229,11 @@ def get_polarities_subjectivities_single_seed(stories):
     return polarities, subjectivities
 
 def get_polarities_subjectivities(all_seed_stories):
+    """Compute the polarities and subjectivities of stories for all seeds.
+
+    :param all_seed_stories: list of stories for each seed
+    :return: tuple containing lists of polarities and subjectivities for each seed
+    """
     all_seeds_polarities = []
     all_seeds_subjectivities = []
     for stories in all_seed_stories:
@@ -162,7 +243,14 @@ def get_polarities_subjectivities(all_seed_stories):
     return all_seeds_polarities, all_seeds_subjectivities
 
 # Pretty long to compute 
-def get_creativity_indexes_single_seed(stories, folder, seed = 0):
+def get_creativity_indexes_single_seed(stories, folder, seed=0):
+    """Compute the creativity indexes of stories for a single seed.
+
+    :param stories: list of stories for a single seed
+    :param folder: folder to save or load the creativity indexes
+    :param seed: seed number, defaults to 0
+    :return: list of creativity indexes for each generation
+    """
     def story_creativity_index(story_input):
         words_story = story_input.lower().split()
         word_vectors = [word_to_vector(word) for word in words_story]
@@ -201,6 +289,12 @@ def get_creativity_indexes_single_seed(stories, folder, seed = 0):
     return creativities
 
 def get_creativity_indexes(all_seed_stories, folder):
+    """Compute the creativity indexes of stories for all seeds.
+
+    :param all_seed_stories: list of stories for each seed
+    :param folder: folder to save or load the creativity indexes
+    :return: list of creativity indexes for each seed
+    """
     creativities = []
     for seed, stories in enumerate(all_seed_stories):
         creativities.append(get_creativity_indexes_single_seed(stories, folder, seed))
