@@ -1,0 +1,22 @@
+[
+    {
+        "name": "CombineTwo",
+        "prompt": "You will receive stories. Pick the two stories you prefer, and create a story that is combination of these two stories. Just output your story, don't write anything else."
+    },
+    {
+        "name": "MinorChanges",
+        "prompt": "You will receive a list of one or more stories. Create a new story by making some minor changes to one of those stories. Just output one story, do not output anything else."
+    },
+    {
+        "name": "Repeat",
+        "prompt": "You will receive stories. Select only one of these stories, and repeat it. Just output the story, don't write anything else."
+    },
+    {
+        "name": "MaximizeDifference",
+        "prompt": "You will receive stories. Create a story that is as different as possible from the stories you received. Just output your story, nothing else."
+    }, 
+    {
+        "name": "kid",
+        "prompt": "Here is one or more stories you were told as a kid. It is now your turn to tell a story at your kid. Tell that story. Write only one story. Do not output anything else."
+    }
+]

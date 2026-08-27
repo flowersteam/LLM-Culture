@@ -15,6 +15,71 @@ function toggleCliques() {
     }
 }
 
+function toggleModelFields() {
+    const modelMode = document.getElementById("model_mode");
+    const serverUrlContainer = document.getElementById("server_url_container");
+    const localModelContainer = document.getElementById("local_model_container");
+
+    if (modelMode.value === "local") {
+        serverUrlContainer.style.display = "none";
+        localModelContainer.style.display = "block";
+    } else {
+        serverUrlContainer.style.display = "block";
+        localModelContainer.style.display = "none";
+    }
+}
+
+function showProgressModal() {
+    document.getElementById("progress-modal").style.display = "flex";
+}
+
+function hideProgressModal() {
+    document.getElementById("progress-modal").style.display = "none";
+}
+
+function updateProgressModal(job) {
+    const statusLabel = document.getElementById("progress-status");
+    const progressLabel = document.getElementById("progress-count");
+    const progressFill = document.getElementById("progress-fill");
+
+    const completed = job.completed_generations || 0;
+    const total = job.total_generations || 0;
+    const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+    statusLabel.textContent = job.message || "Experiment in progress";
+    progressLabel.textContent = total > 0
+        ? `${completed} / ${total} generations completed`
+        : "Preparing experiment...";
+    progressFill.style.width = `${percent}%`;
+}
+
+function pollJobStatus(jobId) {
+    const intervalId = window.setInterval(async function() {
+        try {
+            const response = await fetch(`/simulation/status/${jobId}`);
+            const job = await response.json();
+
+            updateProgressModal(job);
+
+            if (job.status === "completed") {
+                window.clearInterval(intervalId);
+                hideProgressModal();
+                window.location.href = "{{ url_for('analyze') }}";
+            } else if (job.status === "error") {
+                window.clearInterval(intervalId);
+                document.getElementById("progress-status").textContent = `Error: ${job.message}`;
+                document.getElementById("progress-count").textContent = "";
+                document.getElementById("progress-close").disabled = false;
+            }
+        } catch (error) {
+            window.clearInterval(intervalId);
+            document.getElementById("progress-status").textContent = `Error: ${error}`;
+            document.getElementById("progress-count").textContent = "";
+            document.getElementById("progress-close").disabled = false;
+        }
+    }, 1000);
+}
+
 function generateAgentsInput() {
     const nAgents = parseInt(document.getElementById("n_agents").value)
     const formAgents = document.getElementById("form-agents")
@@ -120,8 +185,49 @@ function generateAgentsInput() {
 
 window.onload = function() {
     generateAgentsInput();
+    toggleCliques();
+    toggleModelFields();
 
     document.getElementById('simulation-form').addEventListener('submit', function(event) {
+        const submitter = event.submitter;
+        if (submitter && submitter.name === 'run_simulation') {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            showProgressModal();
+
+            fetch('/simulation/run', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(async function(response) {
+                if (!response.ok) {
+                    const errorPayload = await response.json();
+                    throw new Error(errorPayload.message || 'Failed to start simulation');
+                }
+                return response.json();
+            })
+            .then(function(payload) {
+                updateProgressModal({
+                    status: 'running',
+                    message: 'Experiment in progress',
+                    completed_generations: 0,
+                    total_generations: 0,
+                });
+                pollJobStatus(payload.job_id);
+            })
+            .catch(function(error) {
+                document.getElementById("progress-status").textContent = `Error: ${error.message}`;
+                document.getElementById("progress-count").textContent = "";
+                document.getElementById("progress-close").disabled = false;
+            });
+            return;
+        }
+
+        if (submitter && submitter.name === 'add_prompt') {
+            return;
+        }
+
         // Show the loading message
         document.getElementById('loading-message').style.display = 'block';
 
@@ -133,6 +239,64 @@ window.onload = function() {
 };
     
 </script>
+
+<style>
+.progress-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 12, 18, 0.72);
+    z-index: 2000;
+}
+
+.progress-card {
+    width: min(92vw, 480px);
+    background: #f7f4ef;
+    color: #1d1d1f;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 18px;
+    padding: 28px 30px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.progress-title {
+    margin: 0 0 10px 0;
+    font-size: 1.35rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin: 18px 0 10px 0;
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #224bd6 0%, #4aa3ff 100%);
+    transition: width 0.35s ease;
+}
+
+.progress-status {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.progress-count {
+    margin: 8px 0 0 0;
+    font-size: 0.95rem;
+    opacity: 0.8;
+}
+
+.progress-close {
+    margin-top: 18px;
+}
+</style>
 {% endblock %}
 
 
@@ -201,9 +365,25 @@ window.onload = function() {
         </div> 
     </div>      
     
-    <div style="display: flex; flex-direction: column;">
+    <div style="display: flex; flex-direction: column; margin-top: 30px;">
+        <label for="model_mode" style="margin-top: 10px;">LLM mode:</label>
+        <select id="model_mode" name="model_mode" onchange="toggleModelFields()">
+            <option value="server">Remote server</option>
+            <option value="local">Local model or Hugging Face download</option>
+        </select>
+    </div>
+
+    <div id="server_url_container" style="display: flex; flex-direction: column;">
         <label for="server_url" style="margin-top: 10px;">LLM server url:</label>
         <input type="text" id="server_url" name="server_url">
+    </div>
+
+    <div id="local_model_container" style="display: none; flex-direction: column;">
+        <label for="model_source" style="margin-top: 10px;">Local model path or Hugging Face repo id:</label>
+        <input type="text" id="model_source" name="model_source" placeholder="models/mistral-7b-instruct-v0.2.Q4_K_M.gguf or mistralai/Mistral-7B-Instruct-v0.2">
+
+        <label for="hf_cache_dir" style="margin-top: 10px;">Hugging Face cache directory:</label>
+        <input type="text" id="hf_cache_dir" name="hf_cache_dir" value="~/.cache/huggingface">
     </div> 
 
     <div class="form-button">
@@ -211,5 +391,17 @@ window.onload = function() {
     </div> 
     <div id="loading-message" style="display: none;">Simulation running ... you will be redirected to the analysis page when it finishes</div>
 </form>
+
+<div id="progress-modal" class="progress-modal" role="dialog" aria-modal="true" aria-labelledby="progress-title">
+    <div class="progress-card">
+        <h2 id="progress-title" class="progress-title">Experiment in progress</h2>
+        <p id="progress-status" class="progress-status">Experiment in progress</p>
+        <div class="progress-bar" aria-hidden="true">
+            <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <p id="progress-count" class="progress-count">Preparing experiment...</p>
+        <button id="progress-close" type="button" class="progress-close" onclick="hideProgressModal()" disabled>Close</button>
+    </div>
+</div>
 {% endblock %}
 

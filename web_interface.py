@@ -1,7 +1,10 @@
 import os
 import json
+import threading
+import uuid
 
 from flask import Flask
+from flask import jsonify
 from flask import request
 from flask import render_template
 from flask import redirect
@@ -15,6 +18,8 @@ from scripts.run_simulation_interface import run_simulation
 app = Flask(__name__)
 RESULTS_DIR = 'results/experiments'
 COMPARISON_DIR = 'results/experiments_comparisons'
+SIMULATION_JOBS = {}
+SIMULATION_JOBS_LOCK = threading.Lock()
 
 
 # Home Page
@@ -67,6 +72,10 @@ def simulation():
             # TODO : Change this mechanism so that you only have to provide experiment name
             output_dir = f"{RESULTS_DIR}/{experiment_name}"
             server_url = request.form.get('server_url')
+            model_mode = request.form.get('model_mode', 'server')
+            model_source = request.form.get('model_source')
+            hf_cache_dir = request.form.get('hf_cache_dir')
+            use_local_model = model_mode == 'local'
 
             if network_structure == 'sequence':
                 assert n_agents == n_timesteps, "Number of agents must be equal to the number of timesteps for the sequence network structure"
@@ -82,7 +91,10 @@ def simulation():
                 init_prompt=init_prompt,
                 update_prompt=update_prompt,
                 output_dir=output_dir,
-                server_url=server_url
+                server_url=server_url,
+                use_local_model=use_local_model,
+                model_source=model_source,
+                hf_cache_dir=hf_cache_dir,
             )
 
             # Update the results dir with the new experiment and redirect to comparison
@@ -92,6 +104,28 @@ def simulation():
     prompt_options = _get_prompt_options()
 
     return render_template('simulation.html', prompt_options=prompt_options)
+
+
+@app.route('/simulation/run', methods=['POST'])
+def simulation_run():
+    """Start a simulation in the background and return a job id."""
+    job_id, error_response = _launch_simulation_job(request.form)
+    if error_response is not None:
+        return error_response
+
+    return jsonify({"job_id": job_id})
+
+
+@app.route('/simulation/status/<job_id>', methods=['GET'])
+def simulation_status(job_id):
+    """Return the current status of a simulation job."""
+    with SIMULATION_JOBS_LOCK:
+        job = SIMULATION_JOBS.get(job_id)
+
+    if job is None:
+        return jsonify({"status": "missing", "message": "Unknown job id"}), 404
+
+    return jsonify(job)
 
 # Run analysis
 @app.route('/analyze', methods=['GET', 'POST'])
@@ -267,6 +301,123 @@ def _get_prompt_options():
         options[option_name] = [o['name'] for o in option_data]
 
     return options
+
+
+def _launch_simulation_job(form_data):
+    """Create a background simulation job from submitted form data."""
+    try:
+        job_id = uuid.uuid4().hex
+        job_state = {
+            "status": "queued",
+            "message": "Experiment in progress",
+            "completed_generations": 0,
+            "total_generations": 0,
+            "current_seed": 0,
+            "total_seeds": 0,
+            "current_generation": 0,
+            "total_generations_per_seed": 0,
+        }
+
+        with SIMULATION_JOBS_LOCK:
+            SIMULATION_JOBS[job_id] = job_state
+
+        simulation_args = _parse_simulation_form(form_data)
+
+        total_generations = simulation_args["n_timesteps"] * simulation_args["n_seeds"]
+        _update_simulation_job(
+            job_id,
+            status="running",
+            message="Experiment in progress",
+            total_generations=total_generations,
+            total_seeds=simulation_args["n_seeds"],
+            total_generations_per_seed=simulation_args["n_timesteps"],
+        )
+
+        def progress_callback(completed_generations, total_generations, current_seed, total_seeds, current_generation, total_generations_per_seed):
+            _update_simulation_job(
+                job_id,
+                status="running",
+                message="Experiment in progress",
+                completed_generations=completed_generations,
+                total_generations=total_generations,
+                current_seed=current_seed,
+                total_seeds=total_seeds,
+                current_generation=current_generation,
+                total_generations_per_seed=total_generations_per_seed,
+            )
+
+        def worker():
+            try:
+                _update_simulation_job(job_id, status="running", message="Preparing experiment")
+                run_simulation(progress_callback=progress_callback, **simulation_args)
+                _update_simulation_job(
+                    job_id,
+                    status="completed",
+                    message="Experiment completed",
+                    completed_generations=total_generations,
+                )
+            except Exception as exc:
+                _update_simulation_job(job_id, status="error", message=str(exc))
+
+        thread = threading.Thread(target=worker, daemon=True)
+        thread.start()
+        return job_id, None
+    except Exception as exc:
+        return None, (jsonify({"status": "error", "message": str(exc)}), 400)
+
+
+def _parse_simulation_form(form_data):
+    """Parse the simulation form into arguments for run_simulation."""
+    experiment_name = form_data.get('name')
+    n_agents = int(form_data.get('n_agents'))
+    n_timesteps = int(form_data.get('n_timesteps'))
+    n_seeds = int(form_data.get('n_seeds'))
+    network_structure = form_data.get('network_structure')
+    n_cliques = int(form_data.get('n_cliques'))
+
+    personalities = []
+    init_prompts = []
+    update_prompts = []
+    for i in range(n_agents):
+        personalities.append(form_data.get(f'personality_{i}'))
+        init_prompts.append(form_data.get(f'prompt_init_{i}'))
+        update_prompts.append(form_data.get(f'prompt_update_{i}'))
+
+    init_prompt = init_prompts[0]
+    update_prompt = update_prompts[0]
+    output_dir = f"{RESULTS_DIR}/{experiment_name}"
+    server_url = form_data.get('server_url')
+    model_mode = form_data.get('model_mode', 'server')
+    model_source = form_data.get('model_source')
+    hf_cache_dir = form_data.get('hf_cache_dir')
+    use_local_model = model_mode == 'local'
+
+    if network_structure == 'sequence':
+        assert n_agents == n_timesteps, "Number of agents must be equal to the number of timesteps for the sequence network structure"
+
+    return {
+        "n_agents": n_agents,
+        "n_timesteps": n_timesteps,
+        "n_seeds": n_seeds,
+        "network_structure_name": network_structure,
+        "n_cliques": n_cliques,
+        "personalities": personalities,
+        "init_prompt": init_prompt,
+        "update_prompt": update_prompt,
+        "output_dir": output_dir,
+        "server_url": server_url,
+        "use_local_model": use_local_model,
+        "model_source": model_source,
+        "hf_cache_dir": hf_cache_dir,
+    }
+
+
+def _update_simulation_job(job_id, **updates):
+    with SIMULATION_JOBS_LOCK:
+        job = SIMULATION_JOBS.get(job_id)
+        if job is None:
+            return
+        job.update(updates)
 
 def _write_prompt_option(prompt_type, name, prompt):
     """Write the prompt option

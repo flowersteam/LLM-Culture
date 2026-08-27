@@ -12,7 +12,12 @@ class Agent:
             wait=0, 
             string_sep='\n', 
             debug=False, 
-            sequence = False
+            sequence=False,
+            instruct=True,
+            llm_backend=False,
+            model=None,
+            sampling_params=None,
+            temperature=0.8
         ):
         self.agent_id = agent_id
         self.is_new = True
@@ -28,6 +33,11 @@ class Agent:
         self.go = True
         self.access_url = access_url
         self.sequence = sequence
+        self.instruct = instruct
+        self.llm_backend = llm_backend
+        self.model = model
+        self.sampling_params = sampling_params
+        self.temperature = temperature
 
     def update_neighbours(self, graph, agentList):
         """Update the neighbours of the agent
@@ -67,7 +77,16 @@ class Agent:
         """Update the story of the agent based on the prompt
         """
         if (self.wait == 0 and self.sequence) or (self.wait <= 0 and not(self.sequence)):
-            self.story = get_answer(self.access_url, self.prompt, debug=self.debug)
+            self.story = get_answer(
+                self.access_url,
+                self.prompt,
+                debug=self.debug,
+                instruct=self.instruct,
+                llm_backend=self.llm_backend,
+                model=self.model,
+                sampling_params=self.sampling_params,
+                temperature=self.temperature,
+            )
         else:
             self.story = None
         self.decrease_wait()

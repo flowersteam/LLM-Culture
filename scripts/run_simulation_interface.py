@@ -5,7 +5,7 @@ from pathlib import Path
 
 import networkx as nx
 
-from llm_culture.simulation.utils import run_simul
+from llm_culture.simulation.utils import resolve_model_path, run_simul
 
 RESULTS_DIR = 'results/experiments'
 
@@ -45,7 +45,13 @@ def run_simulation(
         init_prompt,
         update_prompt,
         output_dir,
-        server_url
+        server_url,
+        use_local_model=False,
+        model_source=None,
+        hf_cache_dir=None,
+        instruct=True,
+        temperature=0.8,
+        progress_callback=None
     ):
     """Run the simulation with the given parameters
     """
@@ -88,9 +94,66 @@ def run_simulation(
     output_dict["personality_list"] = personality_list
 
     os.makedirs(os.path.dirname(output_dir + '/'), exist_ok=True)
+
+    llm_backend = False
+    model = None
+    if use_local_model:
+        if not model_source:
+            raise ValueError("Please provide a local model path or Hugging Face repo id")
+
+        resolved_model_path = resolve_model_path(
+            model_source,
+            hf_cache_dir or os.path.expanduser("~/.cache/huggingface"),
+        )
+
+        resolved_model_path = Path(resolved_model_path)
+        if resolved_model_path.is_dir():
+            gguf_files = sorted(resolved_model_path.rglob("*.gguf"))
+            if len(gguf_files) == 0:
+                raise FileNotFoundError(
+                    f"No .gguf model file found in downloaded snapshot: {resolved_model_path}"
+                )
+
+            selected_gguf = next(
+                (model_file for model_file in gguf_files if "q4_k_m" in model_file.name.lower()),
+                gguf_files[0],
+            )
+
+            if len(gguf_files) > 1:
+                print(
+                    f"Multiple .gguf model files found in {resolved_model_path}; using {selected_gguf.name}",
+                    flush=True,
+                )
+
+            resolved_model_path = selected_gguf
+
+        from llama_cpp import Llama
+
+        model = Llama(
+            model_path=str(resolved_model_path),
+            n_ctx=4096,
+            n_gpu_layers=-1,
+            verbose=False,
+        )
+        llm_backend = "llama.cpp"
     
     for seed in range(n_seeds):
         print(f"\nSeed {seed}")
+
+        def _seed_progress(current_generation, total_generations):
+            if progress_callback is None:
+                return
+
+            completed_generations = (seed * n_timesteps) + current_generation
+            progress_callback(
+                completed_generations,
+                n_seeds * n_timesteps,
+                seed + 1,
+                n_seeds,
+                current_generation,
+                total_generations,
+            )
+
         stories = run_simul(
             server_url,
             n_timesteps,
@@ -101,7 +164,12 @@ def run_simulation(
             n_agents,
             sequence=sequence,
             output_folder=output_dir,
-            debug=True
+            debug=True,
+            instruct=instruct,
+            llm_backend=llm_backend,
+            model=model,
+            temperature=temperature,
+            progress_callback=_seed_progress,
         )
         
         output_dict["stories"] = stories

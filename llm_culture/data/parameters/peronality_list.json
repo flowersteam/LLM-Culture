@@ -1,0 +1,12 @@
+[
+    {
+        "name": "all_scholar_5",
+        "n_agents": 5,
+        "list": ["scholar", "scholar", "scholar", "scholar", "scholar"]
+    },
+    {
+        "name": "all_scholar_10",
+        "n_agents": 10,
+        "list": ["scholar", "scholar", "scholar", "scholar", "scholar", "scholar", "scholar", "scholar", "scholar", "scholar"]
+    }
+]

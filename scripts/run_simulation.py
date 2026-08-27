@@ -15,7 +15,7 @@ def parse_arguments():
     parser.add_argument('-nt', '--n_timesteps', type=int, default=2, help='Number of timesteps.')
     # argument to select the network structure
     parser.add_argument('-ns', '--network_structure', type=str, default='sequence',
-                        choices=['sequence','fully_connected' 'circle', 'caveman'], help='Network structure.')
+                        choices=['sequence', 'fully_connected', 'circle', 'caveman'], help='Network structure.')
     parser.add_argument('-nc', '--n_cliques', type=int, default=2, help='Number of cliques for the Caveman graph')
     # argument to select the prompt_init from the list of prompts
     parser.add_argument('-pi', '--prompt_init', type=str, default='kid',
@@ -24,8 +24,8 @@ def parse_arguments():
     parser.add_argument('-pu', '--prompt_update', type=str, default='kid',
                         help='Update prompt.')    
     # select a personality from the list of personalities (no choices)
-    parser.add_argument('-pl', '--personality_list', type=str, default= ["Empty", "Empty"],
-                        help='Personality list.')
+    parser.add_argument('-pl', '--personality_list', type=str, nargs='+', default=["Empty", "Empty"],
+                        help='Personality list (one value per agent, e.g. -pl Empty Empty Empty).')
     # add an option output folder to save the results
     parser.add_argument('-o', '--output', type=str, default='results/default_folder', help='Output folder.')
     # create optional argument for the output file name to save in the output folder
@@ -33,6 +33,11 @@ def parse_arguments():
     parser.add_argument('--debug', action='store_true', help='Enable debug mode.')
     parser.add_argument('-url', '--access_url', type=str, default='', help='URL to send the prompt to.')
     parser.add_argument('-s', '--n_seeds', type=int, default=2, help='Number of seeds')
+    parser.add_argument('--seed_offset', type=int, default=0, help='Start index for output{i}.json naming when running seeds in parallel.')
+    parser.add_argument('--use_vllm', action='store_true', help='Use vllm for local inference instead of a server URL.')
+    parser.add_argument('--model', type=str, default=None, help='Model name or path to load with vllm.')
+    parser.add_argument('--no_instruct', action='store_true', help='Disable instruct mode (use raw completion).')
+    parser.add_argument('--temperature', type=float, default=0.8, help='Sampling temperature.')
 
     return parser.parse_args()
 
@@ -45,7 +50,15 @@ def main(args=None):
     """
     json_prompt_init = 'llm_culture/data/parameters/prompt_init.json'
     json_prompt_update = 'llm_culture/data/parameters/prompt_update.json'
-    json_personnalities = 'llm_culture/data/parameters/personnalities.json'
+    json_personnalities = 'llm_culture/data/parameters/personalities.json'
+
+    #import Path
+    from pathlib import Path
+    repo_root = Path(__file__).parent.parent
+    json_prompt_init = repo_root / json_prompt_init
+    json_prompt_update = repo_root / json_prompt_update
+    json_personnalities = repo_root / json_personnalities
+    
 
     if args is None:
         args = parse_arguments()
@@ -54,6 +67,13 @@ def main(args=None):
     output_dict = {}
     debug = args.debug
     sequence = False
+
+    # Load vllm model if requested
+    vllm_model = None
+    if args.use_vllm:
+        from vllm import LLM
+        assert args.model is not None, "--model must be provided when using --use_vllm"
+        vllm_model = LLM(model=args.model)
 
     # Use the arguments
     n_agents = args.n_agents
@@ -105,11 +125,12 @@ def main(args=None):
 
     # Create the output folder if it does not exist
     os.makedirs(os.path.dirname(str(args.output) + '/'), exist_ok=True)
-    t = input(args.output)
+    print(args.output)
 
     # Run the simulation for each seed
     for i in range(args.n_seeds):
-        print(f"Seed {i}")
+        seed_idx = args.seed_offset + i
+        print(f"Seed {seed_idx}")
         stories = run_simul(
              args.access_url, 
              n_timesteps, 
@@ -120,16 +141,20 @@ def main(args=None):
             n_agents,
             sequence=sequence, 
             output_folder=args.output,
-            debug=debug
+            debug=debug,
+            instruct=not args.no_instruct,
+            use_vllm=args.use_vllm,
+            model=vllm_model,
+            temperature=args.temperature,
         )
         output_dict["stories"] = stories
 
         # Save the output to a file
         if args.output:
-            with open(Path(args.output, 'output'+str(i)+'.json'), "w") as f:
+            with open(Path(args.output, 'output'+str(seed_idx)+'.json'), "w") as f:
                 json.dump(output_dict, f, indent=4)
         else:
-            with open(Path("results/", 'output'+str(i)+'.json'), "w") as f:
+            with open(Path("results/", 'output'+str(seed_idx)+'.json'), "w") as f:
                 json.dump(output_dict, f, indent=4)
             return output_dict
         

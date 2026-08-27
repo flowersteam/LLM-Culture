@@ -1,5 +1,14 @@
+import importlib
+import json
+import os
+import re
+from glob import glob
+
 import numpy as np
 import networkx as nx
+import matplotlib
+matplotlib.use("Agg")
+
 import matplotlib.pyplot as plt 
 
 
@@ -20,7 +29,7 @@ def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, siz
     plt.title('Stories similarity Matrix', fontsize=sizes['title'])
     
     # Add black lines to delimit generations
-    for i in range(n_gen):      
+    for i in range(int(n_gen)):      
         plt.axvline(x = i * n_agents - 0.5, color = 'black')
         plt.axhline(y = i * n_agents - 0.5, color = 'black')
 
@@ -30,6 +39,9 @@ def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, siz
     cbar = plt.colorbar(pad=0.02, shrink=0.83)
 
     if save:
+        #check if folder exists
+        if not os.path.exists(folder):
+            os.makedirs(folder)
         plt.savefig(folder + '/stories_similarity_matrix'+str(seed)+'.png')
         print("Saved stories_similarity_matrix"+str(seed)+".png")
 
@@ -222,40 +234,40 @@ def plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_
 
     
 
-def plot_creativity_evolution(all_seeds_creativity_indices, folder, plot, x_ticks_space, sizes, save=True, scale_y_axis = False):
-    """1 = high creativity and 0 = low creativity"""
-    plt.figure(figsize=(10, 6))
-    all_seeds_gen_creativities = []
-    for creativity_indices in all_seeds_creativity_indices:
-        gen_creativities = [1 - np.mean(gen_creativity) for gen_creativity in creativity_indices]
-        all_seeds_gen_creativities.append(gen_creativities)
-
-    plt.figure(figsize=(10, 6))
-    
-    plt.title("Creativity index evolution", fontsize=sizes['title'])
-    plt.xlabel("Generation", fontsize=sizes['labels'])
-    plt.ylabel("Creativity Index", fontsize=sizes['labels'])
-    plt.xticks(range(0, len(creativity_indices), x_ticks_space), fontsize=sizes['ticks'])
-    plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
-    plt.ylim(0, 1)
-
-    plt.grid()
-
-    mean_line, = plt.plot(np.mean(all_seeds_gen_creativities, axis = 0))
-    color = mean_line.get_color()
-    plt.fill_between(range(len(creativity_indices)),
-                    np.mean(all_seeds_gen_creativities, axis = 0) - np.std(all_seeds_gen_creativities, axis = 0),
-                    np.mean(all_seeds_gen_creativities, axis = 0) + np.std(all_seeds_gen_creativities, axis = 0),
-                    alpha=0.2)
-    for i in range(len(all_seeds_gen_creativities)):
-        plt.plot(all_seeds_gen_creativities[i], alpha=0.2, color = color)
-
-    if save:
-        plt.savefig(folder + '/creativity_evolution.png')
-        print("Saved creativity_evolution.png")
-
-    if plot:
-        plt.show()
+# def plot_creativity_evolution(all_seeds_creativity_indices, folder, plot, x_ticks_space, sizes, save=True, scale_y_axis = False):
+#     """1 = high creativity and 0 = low creativity"""
+#     plt.figure(figsize=(10, 6))
+#     all_seeds_gen_creativities = []
+#     for creativity_indices in all_seeds_creativity_indices:
+#         gen_creativities = [1 - np.mean(gen_creativity) for gen_creativity in creativity_indices]
+#         all_seeds_gen_creativities.append(gen_creativities)
+#
+#     plt.figure(figsize=(10, 6))
+#     
+#     plt.title("Creativity index evolution", fontsize=sizes['title'])
+#     plt.xlabel("Generation", fontsize=sizes['labels'])
+#     plt.ylabel("Creativity Index", fontsize=sizes['labels'])
+#     plt.xticks(range(0, len(creativity_indices), x_ticks_space), fontsize=sizes['ticks'])
+#     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
+#     plt.ylim(0, 1)
+#
+#     plt.grid()
+#
+#     mean_line, = plt.plot(np.mean(all_seeds_gen_creativities, axis = 0))
+#     color = mean_line.get_color()
+#     plt.fill_between(range(len(creativity_indices)),
+#                     np.mean(all_seeds_gen_creativities, axis = 0) - np.std(all_seeds_gen_creativities, axis = 0),
+#                     np.mean(all_seeds_gen_creativities, axis = 0) + np.std(all_seeds_gen_creativities, axis = 0),
+#                     alpha=0.2)
+#     for i in range(len(all_seeds_gen_creativities)):
+#         plt.plot(all_seeds_gen_creativities[i], alpha=0.2, color = color)
+#
+#     if save:
+#         plt.savefig(folder + '/creativity_evolution.png')
+#         print("Saved creativity_evolution.png")
+#
+#     if plot:
+#         plt.show()
 
 
 def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, sizes, save=True, seed = 0):
@@ -365,6 +377,131 @@ def plot_word_chains(word_lists, folder, plot, ticks_space, sizes, save=True, se
         plt.show()
         
 
+# def plot_embedding(folder, plot, sizes, save=True, model_name='sentence-transformers/all-mpnet-base-v2', random_state=42, points=None):
+
+#     def _seed_from_filename(path):
+#         filename = os.path.basename(path)
+#         match = re.match(r'output(\d+)\.json$', filename)
+#         if match:
+#             return int(match.group(1))
+#         if filename == 'output.json':
+#             return 0
+#         return filename
+
+#     if points is None:
+#         try:
+#             sentence_transformers = importlib.import_module('sentence_transformers')
+#         except ImportError as exc:
+#             raise ImportError(
+#                 "plot_embedding requires sentence-transformers. Install it with: pip install sentence-transformers"
+#             ) from exc
+
+#         try:
+#             umap = importlib.import_module('umap')
+#         except ImportError as exc:
+#             raise ImportError(
+#                 "plot_embedding requires umap-learn. Install it with: pip install umap-learn"
+#             ) from exc
+
+#         output_files = glob(os.path.join(folder, 'output*.json'))
+#         if len(output_files) == 0:
+#             raise FileNotFoundError(f"No output*.json files found in {folder}")
+
+#         output_files = sorted(output_files, key=_seed_from_filename)
+
+#         all_texts = []
+#         points = []
+
+#         for output_file in output_files:
+#             seed = _seed_from_filename(output_file)
+#             with open(output_file, 'r') as f:
+#                 content = json.load(f)
+
+#             stories = content.get('stories', [])
+#             for gen_idx, generation_stories in enumerate(stories):
+#                 for story_idx, story in enumerate(generation_stories):
+#                     if not isinstance(story, str):
+#                         continue
+#                     all_texts.append(story)
+#                     points.append(
+#                         {
+#                             'seed': seed,
+#                             'gen': gen_idx,
+#                             'story_idx': story_idx,
+#                         }
+#                     )
+
+#         if len(all_texts) == 0:
+#             raise ValueError('No valid stories found in output files.')
+
+#         model = sentence_transformers.SentenceTransformer(model_name)
+#         embeddings = model.encode(all_texts, show_progress_bar=False)
+
+#         reducer = umap.UMAP(n_components=2, random_state=random_state)
+#         reduced = reducer.fit_transform(embeddings)
+
+#         for i in range(len(points)):
+#             points[i]['x'] = reduced[i, 0]
+#             points[i]['y'] = reduced[i, 1]
+
+#     points_by_seed_and_gen = {}
+#     seeds = sorted({point['seed'] for point in points})
+#     for point in points:
+#         points_by_seed_and_gen.setdefault(point['seed'], {}).setdefault(point['gen'], []).append(point)
+
+#     cmap = plt.cm.get_cmap('tab20', max(len(seeds), 1))
+#     seed_to_color = {seed: cmap(i) for i, seed in enumerate(seeds)}
+
+#     plt.figure(figsize=(10, 8))
+
+#     for seed in seeds:
+#         gen_map = points_by_seed_and_gen[seed]
+#         sorted_gens = sorted(gen_map.keys())
+
+#         for gen_idx in sorted_gens[:-1]:
+#             current_points = gen_map[gen_idx]
+#             next_points = gen_map.get(gen_idx + 1, [])
+#             for p1 in current_points:
+#                 for p2 in next_points:
+#                     plt.plot(
+#                         [p1['x'], p2['x']],
+#                         [p1['y'], p2['y']],
+#                         color=seed_to_color[seed],
+#                         alpha=0.15,
+#                         linewidth=0.6,
+#                     )
+
+#     for seed in seeds:
+#         seed_points = [point for point in points if point['seed'] == seed]
+#         plt.scatter(
+#             [point['x'] for point in seed_points],
+#             [point['y'] for point in seed_points],
+#             color=seed_to_color[seed],
+#             alpha=0.85,
+#             s=20,
+#             label=f'Seed {seed}',
+#         )
+
+#     plt.title('UMAP projection of stories embeddings', fontsize=sizes['title'])
+#     plt.xlabel('UMAP 1', fontsize=sizes['labels'])
+#     plt.ylabel('UMAP 2', fontsize=sizes['labels'])
+#     plt.xticks(fontsize=sizes['ticks'])
+#     plt.yticks(fontsize=sizes['ticks'])
+#     plt.legend()
+#     plt.tight_layout()
+
+#     if save:
+#         plt.savefig(folder + '/embedding_umap.png')
+#         print('Saved embedding_umap.png')
+
+#     if plot:
+#         plt.show()
+#     else:
+#         plt.close()
+
+#     return points
+
+
 def display_graph(network_structure):
     pos = nx.spring_layout(network_structure)  # positions for all nodes
 
@@ -380,3 +517,128 @@ def display_graph(network_structure):
 
     plt.axis('off')
     plt.show()
+
+
+DEFAULT_PLOT_NAMES = [
+    "plot_similarity_matrix",
+    "plot_between_gen_similarities",
+    "plot_word_chains",
+    "plot_similarity_graph",
+    "plot_init_generation_similarity_evolution",
+    "plot_within_gen_similarities",
+    "plot_successive_generations_similarities",
+]
+
+
+PLOT_REGISTRY = {
+    "plot_similarity_matrix": {
+        "function": plot_similarity_matrix,
+        "group": "seed",
+        "build_kwargs": lambda analysis_data, folder, plot, sizes, seed=None: {
+            "similarity_matrix": analysis_data["all_seeds_similarity_matrix"][seed],
+            "n_gen": analysis_data["n_gen"],
+            "n_agents": analysis_data["n_agents"],
+            "folder": folder,
+            "plot": plot,
+            "sizes": sizes,
+            "seed": seed,
+        },
+    },
+    "plot_between_gen_similarities": {
+        "function": plot_between_gen_similarities,
+        "group": "seed",
+        "build_kwargs": lambda analysis_data, folder, plot, sizes, seed=None: {
+            "between_gen_similarity_matrix": analysis_data["all_seeds_between_gen_similarity_matrix"][seed],
+            "folder": folder,
+            "plot": plot,
+            "x_ticks_space": analysis_data["x_ticks_space"],
+            "sizes": sizes,
+            "seed": seed,
+        },
+    },
+    "plot_word_chains": {
+        "function": plot_word_chains,
+        "group": "seed",
+        "build_kwargs": lambda analysis_data, folder, plot, sizes, seed=None: {
+            "word_lists": analysis_data["all_seeds_stem_words"][seed],
+            "folder": folder,
+            "plot": plot,
+            "ticks_space": analysis_data["x_ticks_space"],
+            "sizes": sizes,
+            "seed": seed,
+        },
+    },
+    "plot_similarity_graph": {
+        "function": plot_similarity_graph,
+        "group": "seed",
+        "build_kwargs": lambda analysis_data, folder, plot, sizes, seed=None: {
+            "between_gen_similarity_matrix": analysis_data["all_seeds_between_gen_similarity_matrix"][seed],
+            "folder": folder,
+            "plot": plot,
+            "sizes": sizes,
+            "seed": seed,
+        },
+    },
+    "plot_init_generation_similarity_evolution": {
+        "function": plot_init_generation_similarity_evolution,
+        "group": "summary",
+        "build_kwargs": lambda analysis_data, folder, plot, sizes, seed=None: {
+            "all_seeds_between_gen_similarity_matrix": analysis_data["all_seeds_between_gen_similarity_matrix"],
+            "folder": folder,
+            "plot": plot,
+            "x_ticks_space": analysis_data["x_ticks_space"],
+            "sizes": sizes,
+        },
+    },
+    "plot_within_gen_similarities": {
+        "function": plot_within_gen_similarities,
+        "group": "summary",
+        "build_kwargs": lambda analysis_data, folder, plot, sizes, seed=None: {
+            "all_seeds_between_gen_similarity_matrix": analysis_data["all_seeds_between_gen_similarity_matrix"],
+            "folder": folder,
+            "plot": plot,
+            "x_ticks_space": analysis_data["x_ticks_space"],
+            "sizes": sizes,
+        },
+    },
+    "plot_successive_generations_similarities": {
+        "function": plot_successive_generations_similarities,
+        "group": "summary",
+        "build_kwargs": lambda analysis_data, folder, plot, sizes, seed=None: {
+            "all_seeds_between_gen_similarity_matrix": analysis_data["all_seeds_between_gen_similarity_matrix"],
+            "folder": folder,
+            "plot": plot,
+            "x_ticks_space": analysis_data["x_ticks_space"],
+            "sizes": sizes,
+        },
+    },
+}
+
+
+def normalize_plot_names(plot_names=None):
+    if plot_names is None:
+        return list(DEFAULT_PLOT_NAMES)
+
+    normalized_names = []
+    for plot_name in plot_names:
+        if isinstance(plot_name, dict):
+            normalized_names.append(plot_name["function"])
+        else:
+            normalized_names.append(plot_name)
+    return normalized_names
+
+
+def run_configured_plots(analysis_data, folder, plot=False, sizes=None, plot_names=None):
+    sizes = sizes or {"ticks": 12, "labels": 14, "title": 16}
+    for plot_name in normalize_plot_names(plot_names):
+        plot_config = PLOT_REGISTRY.get(plot_name)
+        if plot_config is None:
+            raise KeyError(f"Unknown plot: {plot_name!r}")
+
+        if plot_config["group"] == "seed":
+            for seed in range(analysis_data["n_seeds"]):
+                kwargs = plot_config["build_kwargs"](analysis_data, folder, plot, sizes, seed=seed)
+                plot_config["function"](**kwargs)
+        else:
+            kwargs = plot_config["build_kwargs"](analysis_data, folder, plot, sizes)
+            plot_config["function"](**kwargs)

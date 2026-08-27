@@ -1,36 +1,121 @@
 import requests
 
-def get_answer(access_url, prompt, debug=False):
-    """Get the answer from the server
+def get_answer(
+    access_url,
+    prompt,
+    debug=False,
+    instruct=True,
+    start_flag=None,
+    llm_backend=False,
+    model=None,
+    temperature=0.8, 
+    sampling_params=None
+):
+    if llm_backend == "vllm":
+        from vllm import SamplingParams
 
-    :param access_url: url to access the server
-    :param prompt: prompt to send to the server
-    :param debug: wether to debug or not, defaults to False
-    :return: the answer from the server
-    """
-    url = access_url + "/v1/chat/completions"
+        if instruct:
+            tokenizer = model.get_tokenizer()
 
-    headers = {
-        "Content-Type": "application/json"
-    }
+            conversations = tokenizer.apply_chat_template(
+                [{"role": "user", "content": prompt}],
+                tokenize=False,
+            )
+        else:
+            conversations = (
+                prompt +
+                "Assistant: Sure, here is the requested answer:\n\n1."
+            )
 
-    history = []
+        output = model.generate(
+            [conversations],
+            sampling_params if sampling_params is not None else SamplingParams(
+                temperature=temperature,
+                top_p=0.95,
+                max_tokens=512,
+                stop_token_ids=[tokenizer.eos_token_id],
+            )
+        )
 
-    #prompt = '<|im_start|>user' + prompt + '<|im_end|> <|im_start|>assistant'
-    history.append({"role": "user", "content": prompt})
-    
-    data = {
-        "mode": "chat",
-        "role": "assistant",
-        "messages": history
-    }
+        return output[0].outputs[0].text
+    if llm_backend == "llama.cpp":
+        if instruct:
+            conversations = [
+                {"role": "user", "content": prompt}
+            ]
+
+            output = model.create_chat_completion(
+                messages=conversations,
+                temperature=temperature,
+                top_p=0.95,
+                max_tokens=512,
+            )
+        else:
+            conversations = (
+                prompt +
+                "Assistant: Sure, here is the requested answer:\n\n1."
+            )
+
+            output = model(
+                conversations,
+                temperature=temperature,
+                top_p=0.95,
+                max_tokens=512,
+            )
+
+        return output["choices"][0]["text"] if not instruct else \
+            output["choices"][0]["message"]["content"]
+    # llama.cpp server
+    if instruct:
+        url = access_url.rstrip("/") + "/v1/chat/completions"
+
+        data = {
+            "messages": [
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            "temperature": temperature,
+            "max_tokens": 512,
+        }
+
+    else:
+        url = access_url.rstrip("/") + "/v1/completions"
+
+        prompt = prompt + "Assistant: Sure, here is the requested answer:\n\n1."
+
+        if start_flag is not None:
+            prompt += start_flag
+
+        data = {
+            "prompt": prompt,
+            "max_tokens": 512,
+            "temperature": temperature,
+        }
+
+    if debug:
+        print("POST:", url)
+        print("DATA:", data)
 
     while True:
-        response = requests.post(url, headers=headers, json=data, verify=False)
-        try:
-            assistant_message = response.json()['choices'][0]['message']['content'].replace('</s>', '')
-            break
-        except:
-            print('No answer from server, trying again...')
+        response = requests.post(
+            url,
+            headers={"Content-Type": "application/json"},
+            json=data,
+            verify=False,
+        )
 
-    return assistant_message
+        if debug:
+            print("Status:", response.status_code)
+            print("Response:", response.text)
+
+        if response.ok:
+            result = response.json()
+
+            if instruct:
+                return result["choices"][0]["message"]["content"].replace("</s>", "")
+            else:
+                return result["choices"][0]["text"]
+
+        print("Server error, trying again...")
