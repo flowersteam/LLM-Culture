@@ -114,7 +114,7 @@ How to use the GUI:
 ### Notebook 
 
 
-We provide a notebook allowing to run experiments on Google Colab: URL
+We provide a notebook allowing to run experiments on Google Colab: [URL](https://colab.research.google.com/drive/1bD9x4KGus6s0ifRiC1rbaZUMCtAxJywf?usp=sharing)
 
 Note: Make sure to select a GPU-based runtime (e.g. GPU T4). 
 
