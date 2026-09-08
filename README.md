@@ -1,6 +1,6 @@
-# LLM-Culture
+# LLM-Culture: A flexible and general-purpose framework for conducting cultural evolution experiments with Large Language Models
 
-Code for the [Cultural evolution in populations of Large Language Models](https://arxiv.org/abs/2403.08882) paper. This repository provides a comprehensive framework for studying the cultural evolution of linguistic content in populations of Large Language Models (LLM).
+This repository provides a comprehensive framework for studying the cultural evolution of linguistic content in populations of Large Language Models (LLM).
 
 It allows organizing LLM agents into networks wherein each agent interacts with neighboring agents by exchanging stories. Each agent can be assigned specific personalities and transmission instructions, serving as prompts for generating new stories from their neighbors’ narratives. Once the network structure and agent characteristics are defined, you can simulate the cultural evolution of texts across generations of agents. We also provide built-in metrics and visualizations to analyze the results.
 
@@ -168,13 +168,7 @@ python3 persona_prompt.py
 
 
 
-# Implemented Analysis
-
-The analysis pipeline is split into two layers:
-
-
-<details>
-  <summary> Plots details </summary>
+## Implemented Analysis
 
   The default single-experiment plots are registered in `llm_culture/analysis/plots.py` and include:
 
@@ -189,8 +183,6 @@ The analysis pipeline is split into two layers:
   | **Successive-Generation Similarity** | Tracks similarity between consecutive generations. |
 
   ![analysis_plots](/static/experiment_analysis_figures.png)
-   
-
 
 ## Building on the framework
 
