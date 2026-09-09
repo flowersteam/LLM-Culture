@@ -23,11 +23,11 @@ dependencies = [
     "textblob==0.17.1",
 ]
 
-# Optional local-serving backend (GPU / Linux / Colab only).
-# Install with:  uv sync --extra serving   (or  pip install ".[serving]")
+# Optional local-serving backends (GPU / local inference).
+# `vllm` can only be installed on linux machines
 [project.optional-dependencies]
 serving = [
-    "vllm==0.28.0",
+    "vllm==0.28.0; sys_platform == 'linux'",
     "llama-cpp-python",
 ]
 

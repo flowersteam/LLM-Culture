@@ -37,11 +37,16 @@ uv sync
 Run any command with the `uv run` prefix (e.g. `uv run python scripts/run_simulation.py ...`),
 or activate the environment with `source .venv/bin/activate`.
 
-To use the local serving backend (vLLM / llama.cpp — GPU/Linux only), install the optional `serving` extra:
+To use a local serving backend, install the optional `serving` extra:
 
 ```bash
 uv sync --extra serving
 ```
+
+This exposes two local backends:
+
+- **llama.cpp** (`llama-cpp-python`) — runs on CPU / Apple Metal, works on **macOS and Linux**. Use this for local runs on a Mac.
+- **vLLM** — **Linux/GPU only**. It has no macOS wheels, so it is skipped automatically on macOS (a platform marker keeps `uv sync --extra serving` working there — you simply get the llama.cpp backend). To use vLLM, run on a Linux/GPU machine or Colab.
 
 3 - Choose an LLM backend
 
