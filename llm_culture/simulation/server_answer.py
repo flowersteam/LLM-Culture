@@ -1,3 +1,5 @@
+import time
+
 import requests
 
 def get_answer(
@@ -9,7 +11,10 @@ def get_answer(
     llm_backend=False,
     model=None,
     temperature=0.8, 
-    sampling_params=None
+    sampling_params=None,
+    verify=True,
+    timeout=120,
+    max_retries=5,
 ):
     if llm_backend == "vllm":
         from vllm import SamplingParams
@@ -98,24 +103,46 @@ def get_answer(
         print("POST:", url)
         print("DATA:", data)
 
-    while True:
-        response = requests.post(
-            url,
-            headers={"Content-Type": "application/json"},
-            json=data,
-            verify=False,
-        )
+    last_error = None
+    delay = 1
+    for attempt in range(1, max_retries + 1):
+        try:
+            response = requests.post(
+                url,
+                headers={"Content-Type": "application/json"},
+                json=data,
+                verify=verify,
+                timeout=timeout,
+            )
+        except requests.exceptions.RequestException as exc:
+            # connection error / timeout / etc.
+            last_error = exc
+            if debug:
+                print(f"Request failed (attempt {attempt}/{max_retries}): {exc}")
+        else:
+            if debug:
+                print("Status:", response.status_code)
+                print("Response:", response.text)
 
-        if debug:
-            print("Status:", response.status_code)
-            print("Response:", response.text)
+            if response.ok:
+                result = response.json()
 
-        if response.ok:
-            result = response.json()
+                if instruct:
+                    return result["choices"][0]["message"]["content"].replace("</s>", "")
+                else:
+                    return result["choices"][0]["text"]
 
-            if instruct:
-                return result["choices"][0]["message"]["content"].replace("</s>", "")
-            else:
-                return result["choices"][0]["text"]
+            last_error = RuntimeError(
+                f"server returned HTTP {response.status_code}: {response.text[:200]}"
+            )
+            if debug:
+                print(f"Server error {response.status_code} (attempt {attempt}/{max_retries}), trying again...")
 
-        print("Server error, trying again...")
+        # exponential backoff between attempts (1s, 2s, 4s, 8s, capped at 16s)
+        if attempt < max_retries:
+            time.sleep(delay)
+            delay = min(delay * 2, 16)
+
+    raise RuntimeError(
+        f"LLM request to {url} failed after {max_retries} attempts"
+    ) from last_error

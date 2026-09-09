@@ -156,8 +156,10 @@ def main(args=None):
         else:
             with open(Path("results/", 'output'+str(seed_idx)+'.json'), "w") as f:
                 json.dump(output_dict, f, indent=4)
-            return output_dict
-        
+
+    # return the results after all seeds have run
+    return output_dict
+
 
 if __name__ == "__main__":
     main()
