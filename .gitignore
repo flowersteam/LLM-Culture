@@ -1,4 +1,18 @@
 venv/
+.venv/
+
+# uv
+# (uv.lock is committed; the environment is not)
+
+# packaging build artifacts
+*.egg-info/
+
+# local working notes (private, never committed)
+.dev/
+
+# TODO: update this later when merge w main
+# local Kiro agent config (kept local, not pushed)
+.kiro/
 
 **pyc**
 __pycache__

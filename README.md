@@ -18,14 +18,29 @@ git clone git@github.com:flowersteam/LLM-Culture.git
 cd LLM-Culture/
 ```
 
+# TODO: simplify this
 2 - Install the dependencies 
 
-```bash
-python -m venv myvenv
-source myvenv/bin/activate
+This project uses [uv](https://docs.astral.sh/uv/). Install `uv` if you don't have it:
 
-pip install -r requirements.txt
-pip install -e .
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Then create the environment (uv reads `pyproject.toml` and the pinned `uv.lock`,
+and provisions a compatible Python automatically):
+
+```bash
+uv sync
+```
+
+Run any command with the `uv run` prefix (e.g. `uv run python scripts/run_simulation.py ...`),
+or activate the environment with `source .venv/bin/activate`.
+
+To use the local serving backend (vLLM / llama.cpp — GPU/Linux only), install the optional `serving` extra:
+
+```bash
+uv sync --extra serving
 ```
 
 3 - Choose an LLM backend
@@ -49,7 +64,7 @@ You can use the framework both from command-line interface or from a web interfa
 Run a simulation with your desired parameters (see parameters details above): 
 
 ```bash
-python3 scripts/run_simulation.py --output_file simulation_test
+uv run python3 scripts/run_simulation.py --output_file simulation_test
 ```
 
 <details>
@@ -79,13 +94,13 @@ python3 scripts/run_simulation.py --output_file simulation_test
 The results of the experiment will be stored in a directory called `results/simulation_test/` in this case. You can then analyze the texts produced with this command:
 
 ```bash
-python3 scripts/run_analysis.py --dir simulation_test
+uv run python3 scripts/run_analysis.py --dir simulation_test
 ```
 
 To compare the results of several experiments, run:
 
 ```bash
-python3 scripts/run_comparison_analysis.py --dirs experiment_1+experiment_2+experiment_3
+uv run python3 scripts/run_comparison_analysis.py --dirs experiment_1+experiment_2+experiment_3
 ```
 
 It will store the analysis figures in a directory called `results/experiments_comparisons/experiment_1-experiment_2-experiment_3/`.
@@ -96,7 +111,7 @@ It will store the analysis figures in a directory called `results/experiments_co
 Launch the web user interface with the following command:
 
 ```bash
-python3 web_interface.py
+uv run python3 web_interface.py
 ```
 
 This starts a local Flask app, typically at `http://127.0.0.1:5000`. From there you can launch a simulation, add prompts, analyze results, and browse previous experiment outputs.
@@ -128,14 +143,14 @@ The data presented in the paper is provided in the experiments/ folder.
 To reproduce the figures corresponding to a single experiment, run:
 
 ```bash
-python3 scripts/run_analysis.py --folder "results/experiments/Network Structure/[experiment_name, e.g. CAVEMAN_10_10_combine5seeds]"
+uv run python3 scripts/run_analysis.py --folder "results/experiments/Network Structure/[experiment_name, e.g. CAVEMAN_10_10_combine5seeds]"
 ```
 
 To reproduce the figures comparing several variants:
 
 ```bash
 # Pass experiment names relative to `results/experiments/`, separated by '+'
-python3 scripts/run_comparison_analysis.py --dirs "Network Structure/CAVEMAN_10_10_combine5seeds+Network Structure/CIRCLE_10_10_combine5seeds+Network Structure/FC_10_10_combine5seeds
+uv run python3 scripts/run_comparison_analysis.py --dirs "Network Structure/CAVEMAN_10_10_combine5seeds+Network Structure/CIRCLE_10_10_combine5seeds+Network Structure/FC_10_10_combine5seeds
 ```
 
 The comparison figures are saved under `results/experiments_comparisons/` in a folder named after the joined experiment basenames (see existing folders in `results/experiments_comparisons/`).
@@ -151,19 +166,19 @@ To run them:
 
 
 ```bash
-python3 transmission_chain.py
+uv run python3 transmission_chain.py
 ```
 
 ```bash
-python3 network.py
+uv run python3 network.py
 ```
 
 ```bash
-python3 transformation_prompt.py
+uv run python3 transformation_prompt.py
 ```
 
 ```bash
-python3 persona_prompt.py
+uv run python3 persona_prompt.py
 ```
 
 
