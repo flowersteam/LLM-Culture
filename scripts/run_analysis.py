@@ -81,6 +81,7 @@ def main_analysis(
     )
 
     run_configured_plots(analysis_data, folder, plot=plot, sizes=font_sizes, plot_names=plot_configs)
+    print(f"\nAnalysis complete — plots + cache saved to {Path(folder).resolve()}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

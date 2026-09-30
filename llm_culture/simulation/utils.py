@@ -86,7 +86,8 @@ def run_simul(
         model=None,
         sampling_params=None,
         temperature=0.8,
-        progress_callback=None
+        progress_callback=None,
+        verbose=False
     ):
     """Run the simulation
 
@@ -105,6 +106,7 @@ def run_simul(
     :param model: LLM model instance, defaults to None
     :param sampling_params: LLM sampling params, defaults to None
     :param temperature: sampling temperature, defaults to 0.8
+    :param verbose: if True, print each agent's generated story text, defaults to False
     :return: stories_history
     """
     # storage for the stories
@@ -138,7 +140,7 @@ def run_simul(
 
     # run the simulation
     for t in range(n_timesteps):
-        new_stories = update_step(agent_list, t, state_history_path)
+        new_stories = update_step(agent_list, t, state_history_path, verbose=verbose)
         print(f'\nTimestep: {t}')
         print(f'Number of new_stories: {len(new_stories)}')
         stories_history.append(new_stories)
@@ -151,13 +153,15 @@ def run_simul(
 def update_step(
         agent_list, 
         timestep, 
-        state_history_path
+        state_history_path,
+        verbose=False
     ):
     """Update the agents
 
     :param agent_list: list of agents
     :param timestep: timestep
     :param state_history_path: path to store the state history
+    :param verbose: if True, print each agent's generated story text, defaults to False
     :return: new_stories
     """
     # update the prompt of the agents
@@ -171,6 +175,10 @@ def update_step(
         story = agent.get_updated_story()
         if story is not None:
             new_stories.append(story)
+            if verbose:
+                indented = "\n".join("    " + line for line in str(story).splitlines())
+                print(f'  [agent {agent.agent_id}] story:')
+                print(indented)
 
     return new_stories
 

@@ -9,7 +9,13 @@ import networkx as nx
 from llm_culture.simulation.utils import run_simul, resolve_model_path
 
 
-def parse_arguments():
+def build_parser():
+    """Build and return the simulation argument parser.
+
+    Exposed separately from parse_arguments() so other entrypoints (e.g. the
+    combined run_experiment.py) can reuse the *exact* same flags instead of
+    duplicating them.
+    """
     parser = argparse.ArgumentParser(description='Run a simulation.')
     parser.add_argument('-na', '--n_agents', type=int, default=2, help='Number of agents.')
     parser.add_argument('-nt', '--n_timesteps', type=int, default=2, help='Number of timesteps.')
@@ -40,8 +46,13 @@ def parse_arguments():
     parser.add_argument('--hf_cache_dir', type=str, default=None, help='Hugging Face cache dir for downloading local models (default: ~/.cache/huggingface).')
     parser.add_argument('--no_instruct', action='store_true', help='Disable instruct mode (use raw completion).')
     parser.add_argument('--temperature', type=float, default=0.8, help='Sampling temperature.')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Print each agent\'s generated story text as the simulation runs.')
 
-    return parser.parse_args()
+    return parser
+
+
+def parse_arguments():
+    return build_parser().parse_args()
 
 
 def main(args=None):
@@ -146,8 +157,16 @@ def main(args=None):
         output_dict["personality_list"] = personality_list
 
     # Create the output folder if it does not exist
-    os.makedirs(os.path.dirname(str(args.output) + '/'), exist_ok=True)
-    print(args.output)
+    output_dir = str(args.output)
+    os.makedirs(os.path.dirname(output_dir + '/'), exist_ok=True)
+
+    backend_desc = llm_backend if llm_backend else f"remote server ({args.access_url or 'no url set'})"
+    print("\n" + "=" * 64)
+    print("SIMULATION")
+    print(f"  agents={n_agents}  timesteps={n_timesteps}  seeds={args.n_seeds}  network={args.network_structure}")
+    print(f"  backend={backend_desc}" + (f"  model={args.model}" if args.model else ""))
+    print(f"  output folder: {os.path.abspath(output_dir)}")
+    print("=" * 64)
 
     # Run the simulation for each seed
     for i in range(args.n_seeds):
@@ -168,17 +187,20 @@ def main(args=None):
             llm_backend=llm_backend,
             model=model,
             temperature=args.temperature,
+            verbose=args.verbose,
         )
         output_dict["stories"] = stories
 
         # Save the output to a file
         if args.output:
-            with open(Path(args.output, 'output'+str(seed_idx)+'.json'), "w") as f:
-                json.dump(output_dict, f, indent=4)
+            out_path = Path(args.output, 'output' + str(seed_idx) + '.json')
         else:
-            with open(Path("results/", 'output'+str(seed_idx)+'.json'), "w") as f:
-                json.dump(output_dict, f, indent=4)
+            out_path = Path("results/", 'output' + str(seed_idx) + '.json')
+        with open(out_path, "w") as f:
+            json.dump(output_dict, f, indent=4)
+        print(f"  seed {seed_idx}: saved {out_path}")
 
+    print(f"Simulation complete — {args.n_seeds} seed(s) written to {os.path.abspath(str(args.output))}")
     # return the results after all seeds have run
     return output_dict
 
