@@ -6,7 +6,7 @@ from pathlib import Path
 
 import networkx as nx
 
-from llm_culture.simulation.utils import run_simul
+from llm_culture.simulation.utils import run_simul, resolve_model_path
 
 
 def parse_arguments():
@@ -34,8 +34,10 @@ def parse_arguments():
     parser.add_argument('-url', '--access_url', type=str, default='', help='URL to send the prompt to.')
     parser.add_argument('-s', '--n_seeds', type=int, default=2, help='Number of seeds')
     parser.add_argument('--seed_offset', type=int, default=0, help='Start index for output{i}.json naming when running seeds in parallel.')
-    parser.add_argument('--use_vllm', action='store_true', help='Use vllm for local inference instead of a server URL.')
-    parser.add_argument('--model', type=str, default=None, help='Model name or path to load with vllm.')
+    parser.add_argument('--use_vllm', action='store_true', help='Use vllm for local inference instead of a server URL (Linux/GPU only).')
+    parser.add_argument('--use_llama_cpp', action='store_true', help='Use llama.cpp for local inference (loads a GGUF model; works on macOS/Linux).')
+    parser.add_argument('--model', type=str, default=None, help='Model name/repo id or local path to load for local inference.')
+    parser.add_argument('--hf_cache_dir', type=str, default=None, help='Hugging Face cache dir for downloading local models (default: ~/.cache/huggingface).')
     parser.add_argument('--no_instruct', action='store_true', help='Disable instruct mode (use raw completion).')
     parser.add_argument('--temperature', type=float, default=0.8, help='Sampling temperature.')
 
@@ -68,12 +70,32 @@ def main(args=None):
     debug = args.debug
     sequence = False
 
-    # Load vllm model if requested
-    vllm_model = None
+    # Select the LLM backend and load a local model if requested.
+    # No local backend -> remote OpenAI-compatible server via --access_url.
+    if args.use_vllm and args.use_llama_cpp:
+        raise ValueError("Choose only one of --use_vllm or --use_llama_cpp.")
+
+    llm_backend = False
+    model = None
     if args.use_vllm:
-        from vllm import LLM
         assert args.model is not None, "--model must be provided when using --use_vllm"
-        vllm_model = LLM(model=args.model)
+        from vllm import LLM
+        model = LLM(model=args.model)
+        llm_backend = "vllm"
+    elif args.use_llama_cpp:
+        assert args.model is not None, "--model must be provided when using --use_llama_cpp"
+        resolved_model_path = resolve_model_path(
+            args.model,
+            args.hf_cache_dir or os.path.expanduser("~/.cache/huggingface"),
+        )
+        from llama_cpp import Llama
+        model = Llama(
+            model_path=str(resolved_model_path),
+            n_ctx=4096,
+            n_gpu_layers=-1,
+            verbose=False,
+        )
+        llm_backend = "llama.cpp"
 
     # Use the arguments
     n_agents = args.n_agents
@@ -143,8 +165,8 @@ def main(args=None):
             output_folder=args.output,
             debug=debug,
             instruct=not args.no_instruct,
-            use_vllm=args.use_vllm,
-            model=vllm_model,
+            llm_backend=llm_backend,
+            model=model,
             temperature=args.temperature,
         )
         output_dict["stories"] = stories
