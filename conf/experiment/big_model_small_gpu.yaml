@@ -2,7 +2,7 @@
 #
 # Worked example: run a LARGER model on a SMALL GPU.
 #
-#   uv run python run_experiment.py +experiment=big_model_small_gpu
+#   uv run python run_experiment.py experiment=big_model_small_gpu
 #
 # The idea is to load a 7B model quantized to ~4 bits (GGUF) and offload only
 # SOME of its layers to the GPU — the rest run on CPU. Tune `n_gpu_layers` to the

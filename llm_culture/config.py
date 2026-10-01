@@ -136,6 +136,19 @@ def validate_experiment(cfg: ExperimentConfig) -> None:
             f"backend={cfg.backend.value} requires `model` to be set "
             "(a Hugging Face repo id or a local model path)."
         )
+    if cfg.backend == Backend.none and not cfg.access_url:
+        raise ValueError(
+            "backend=none means 'send requests to a remote OpenAI-compatible "
+            "server', but `access_url` is empty — there is nothing to call. "
+            "The bare default config has no LLM wired up on purpose; pick one:\n"
+            "  • local smoke test (recommended first run):\n"
+            "      uv run python run_experiment.py experiment=base\n"
+            "  • a local model via llama.cpp:\n"
+            "      uv run python run_experiment.py backend=llama_cpp "
+            "model=unsloth/SmolLM2-135M-Instruct-GGUF\n"
+            "  • a remote OpenAI-compatible server:\n"
+            "      uv run python run_experiment.py access_url=http://localhost:8000"
+        )
     if len(cfg.personality_list) != cfg.n_agents:
         raise ValueError(
             f"personality_list has {len(cfg.personality_list)} entrie(s) but "

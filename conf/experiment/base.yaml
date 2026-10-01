@@ -1,9 +1,9 @@
 # @package _global_
 #
-# Base experiment preset. Copy this file (e.g. conf/experiment/my_run.yaml),
-# edit the fields, and run it with:
+# Base experiment preset — this is the DEFAULT (a bare `run_experiment.py` uses it).
+# Copy this file (e.g. conf/experiment/my_run.yaml), edit the fields, and run it with:
 #
-#   uv run python run_experiment.py +experiment=my_run
+#   uv run python run_experiment.py experiment=my_run
 #
 # Any field from llm_culture/config.py:ExperimentConfig can be set here.
 

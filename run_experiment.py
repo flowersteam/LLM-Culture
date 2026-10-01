@@ -5,21 +5,24 @@ Configuration is a structured config: the `ExperimentConfig` dataclass
 is validated against it and converted straight into a typed dataclass instance —
 no argparse involved on this path.
 
-Run from the default config, overriding fields as needed:
+A bare run uses the default `base` preset (a small local llama.cpp smoke test),
+overriding fields as needed:
 
+    uv run python run_experiment.py
     uv run python run_experiment.py \\
         backend=llama_cpp model=unsloth/SmolLM2-135M-Instruct-GGUF \\
         n_agents=2 n_timesteps=2 n_seeds=1 output=results/my_test verbose=true
 
-Or select a ready-made experiment preset from conf/experiment/ (copy one to make
-your own), optionally overriding fields on top:
+Select a different preset from conf/experiment/ with `experiment=<name>` (no
+leading `+` — the `experiment` group already has a default), optionally
+overriding fields on top:
 
-    uv run python run_experiment.py +experiment=base
-    uv run python run_experiment.py +experiment=base n_timesteps=10
+    uv run python run_experiment.py experiment=big_model_small_gpu
+    uv run python run_experiment.py experiment=base n_timesteps=10
 
 Sweep with -m (multirun):
 
-    uv run python run_experiment.py -m n_agents=2,5,10 +experiment=base
+    uv run python run_experiment.py -m n_agents=2,5,10
 
 The standalone scripts/run_simulation.py and scripts/run_analysis.py still work
 with their original argparse flags (used by the reproduction scripts); this

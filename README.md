@@ -68,18 +68,21 @@ Common fields:
 The config is a *structured config*: unknown fields, wrong types, or invalid enum
 values are rejected with a clear error before anything runs.
 
-**Presets.** Reusable setups live in `conf/experiment/` — copy `base.yaml` and run it
-by name. See `big_model_small_gpu.yaml` for how to tune backend memory/offload:
+**Presets.** Reusable setups live in `conf/experiment/` — the `base` preset is the
+default, so a bare run is a small local smoke test. Copy `base.yaml` to make your own
+and select it with `experiment=<name>` (no leading `+`). See `big_model_small_gpu.yaml`
+for how to tune backend memory/offload:
 
 ```bash
-uv run python run_experiment.py +experiment=base
-uv run python run_experiment.py +experiment=base n_timesteps=10   # override on top
+uv run python run_experiment.py                                   # bare run = base preset
+uv run python run_experiment.py n_timesteps=10                    # base + override on top
+uv run python run_experiment.py experiment=big_model_small_gpu    # switch preset
 ```
 
 **Sweeps** (`-m` multirun):
 
 ```bash
-uv run python run_experiment.py -m n_agents=2,5,10 +experiment=base
+uv run python run_experiment.py -m n_agents=2,5,10
 ```
 
 ### Standalone scripts
