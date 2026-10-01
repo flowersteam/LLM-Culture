@@ -18,11 +18,13 @@ personality_list: [Empty, Empty]   # one per agent (length must equal n_agents)
 
 backend: llama_cpp                 # none | vllm | llama_cpp
 model: unsloth/SmolLM2-135M-Instruct-GGUF
-temperature: 0.8
+generation:
+  temperature: 0.8
 verbose: true
 
 output: results/base_experiment
 
 # Analysis
-run_analysis: true
-plot: false
+analysis:
+  run: true
+  plot: false

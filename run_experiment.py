@@ -60,7 +60,7 @@ def main(cfg: DictConfig) -> None:
     print("#" * 64)
     run_simulation_from_config(exp)
 
-    if not exp.run_analysis:
+    if not exp.analysis.run:
         print(f"\nDone (simulation only). Outputs in {Path(exp.output).resolve()}")
         return
 
@@ -68,16 +68,11 @@ def main(cfg: DictConfig) -> None:
     print("# STEP 2/2 — ANALYSIS")
     print("#" * 64)
     initialize_nltk()
-    font_sizes = {
-        "ticks": exp.ticks_font_size,
-        "labels": exp.labels_font_size,
-        "title": exp.title_font_size,
-    }
     main_analysis(
         str(exp.output),
-        font_sizes,
-        exp.plot,
-        force_recompute_cache=exp.recompute_cache,
+        exp.analysis.font_sizes,
+        exp.analysis.plot,
+        force_recompute_cache=exp.analysis.recompute_cache,
     )
 
     folder = Path(exp.output).resolve()

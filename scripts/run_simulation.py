@@ -7,6 +7,9 @@ from pathlib import Path
 import networkx as nx
 
 from llm_culture.simulation.utils import run_simul, build_network_structure, load_named_prompt, load_personalities
+from llm_culture.simulation.backends import load_llm_backend
+from llm_culture.config import ExperimentConfig, Backend, Network, validate_experiment, GenerationConfig
+from llm_culture.paths import PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
 
 
 def build_parser():
@@ -34,8 +37,6 @@ def build_parser():
                         help='Personality list (one value per agent, e.g. -pl Empty Empty Empty).')
     # add an option output folder to save the results
     parser.add_argument('-o', '--output', type=str, default='results/default_folder', help='Output folder.')
-    # create optional argument for the output file name to save in the output folder
-    parser.add_argument('-of', '--output_file', type=str, default='output.json', help='Output file name.')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode.')
     parser.add_argument('-url', '--access_url', type=str, default='', help='URL to send the prompt to.')
     parser.add_argument('-s', '--n_seeds', type=int, default=2, help='Number of seeds')
@@ -62,8 +63,6 @@ def args_to_config(args):
     two backend booleans, the `no_instruct` double-negative, the network string)
     into the shared config type.
     """
-    from llm_culture.config import ExperimentConfig, Backend, Network
-
     if args.use_vllm and args.use_llama_cpp:
         raise ValueError("Choose only one of --use_vllm or --use_llama_cpp.")
     if args.use_vllm:
@@ -83,7 +82,7 @@ def args_to_config(args):
         prompt_init=args.prompt_init,
         prompt_update=args.prompt_update,
         personality_list=list(args.personality_list),
-        temperature=args.temperature,
+        generation=GenerationConfig(temperature=args.temperature),
         instruct=not args.no_instruct,
         verbose=args.verbose,
         backend=backend,
@@ -105,13 +104,7 @@ def run_simulation_from_config(cfg):
     :param cfg: an ExperimentConfig instance
     :return: dictionary containing the simulation results
     """
-    from llm_culture.config import validate_experiment
-    from llm_culture.simulation.backends import load_llm_backend
-
     validate_experiment(cfg)
-
-    repo_root = Path(__file__).parent.parent
-    params_dir = repo_root / 'llm_culture' / 'data' / 'parameters'
 
     output_dict = {}
     n_agents = cfg.n_agents
@@ -126,9 +119,9 @@ def run_simulation_from_config(cfg):
     output_dict["adjacency_matrix"] = nx.to_numpy_array(network_structure).tolist()
 
     # Resolve the named prompts / personalities from the parameter files
-    prompt_init = load_named_prompt(params_dir / 'prompt_init.json', cfg.prompt_init)
-    prompt_update = load_named_prompt(params_dir / 'prompt_update.json', cfg.prompt_update)
-    personality_list = load_personalities(params_dir / 'personalities.json', cfg.personality_list)
+    prompt_init = load_named_prompt(PROMPT_INIT_JSON, cfg.prompt_init)
+    prompt_update = load_named_prompt(PROMPT_UPDATE_JSON, cfg.prompt_update)
+    personality_list = load_personalities(PERSONALITIES_JSON, cfg.personality_list)
     output_dict["prompt_init"] = [prompt_init]
     output_dict["prompt_update"] = [prompt_update]
     output_dict["personality_list"] = personality_list

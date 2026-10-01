@@ -1,18 +1,29 @@
+import os
+
+import httpx
+from openai import OpenAI
+
+
 def get_answer(
     access_url,
     prompt,
+    generation,
     debug=False,
     instruct=True,
     start_flag=None,
     llm_backend=False,
     model=None,
-    temperature=0.8, 
     sampling_params=None,
     verify=True,
     timeout=120,
     max_retries=5,
 ):
+    temperature = generation.temperature
+    max_tokens = generation.max_tokens
+    top_p = generation.top_p
+
     if llm_backend == "vllm":
+        # Deferred import: vllm is an optional ("serving") extra, absent in base installs.
         from vllm import SamplingParams
 
         if instruct:
@@ -32,8 +43,8 @@ def get_answer(
             [conversations],
             sampling_params if sampling_params is not None else SamplingParams(
                 temperature=temperature,
-                top_p=0.95,
-                max_tokens=512,
+                top_p=top_p,
+                max_tokens=max_tokens,
                 stop_token_ids=[tokenizer.eos_token_id],
             )
         )
@@ -48,8 +59,8 @@ def get_answer(
             output = model.create_chat_completion(
                 messages=conversations,
                 temperature=temperature,
-                top_p=0.95,
-                max_tokens=512,
+                top_p=top_p,
+                max_tokens=max_tokens,
             )
         else:
             conversations = (
@@ -60,8 +71,8 @@ def get_answer(
             output = model(
                 conversations,
                 temperature=temperature,
-                top_p=0.95,
-                max_tokens=512,
+                top_p=top_p,
+                max_tokens=max_tokens,
             )
 
         return output["choices"][0]["text"] if not instruct else \
@@ -72,10 +83,6 @@ def get_answer(
     # so we no longer hand-roll a request loop. The request fields and the way we
     # read the response are kept identical to the previous implementation, so the
     # output contract is unchanged.
-    import os
-
-    from openai import OpenAI
-
     base_url = access_url.rstrip("/") + "/v1"
 
     client_kwargs = dict(
@@ -89,8 +96,6 @@ def get_answer(
     if not verify:
         # Mirror the previous requests(..., verify=False) behavior only when asked;
         # a custom http_client is what lets us disable TLS verification.
-        import httpx
-
         client_kwargs["http_client"] = httpx.Client(verify=False, timeout=timeout)
 
     client = OpenAI(**client_kwargs)
@@ -109,7 +114,7 @@ def get_answer(
                 model=request_model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=temperature,
-                max_tokens=512,
+                max_tokens=max_tokens,
             )
             return response.choices[0].message.content.replace("</s>", "")
 
@@ -121,7 +126,7 @@ def get_answer(
             model=request_model,
             prompt=prompt,
             temperature=temperature,
-            max_tokens=512,
+            max_tokens=max_tokens,
         )
         return response.choices[0].text
     except Exception as exc:

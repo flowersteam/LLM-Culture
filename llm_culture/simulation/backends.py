@@ -1,42 +1,60 @@
 """LLM backend selection + model loading.
 
-Shared helper so the CLI/Hydra runner (and, later, the web interface) load models
-the same way. The in-process backends (vLLM, llama.cpp) are imported lazily so
-that running against a remote server pulls in neither heavy dependency.
+Shared helper so every entrypoint (the Hydra runner, the standalone CLI, and the
+web interface) loads models the same way. The in-process backends (vLLM,
+llama.cpp) are imported lazily so that running against a remote server pulls in
+neither heavy dependency.
+
+Backend-specific tuning lives in the nested sub-configs on ExperimentConfig
+(cfg.llama_cpp / cfg.vllm): every field that is not None is forwarded as a
+keyword argument to the backend constructor, so you can tune memory/offload
+(e.g. llama_cpp.n_gpu_layers, vllm.gpu_memory_utilization) without touching code.
 """
 import os
+from dataclasses import asdict
+
+from llm_culture.config import Backend
+from llm_culture.simulation.utils import resolve_model_path
+
+
+def _forward_kwargs(sub_config, drop=()):
+    """Turn a backend sub-config dataclass into kwargs, dropping None (= use the
+    backend's own default) and any explicitly excluded keys."""
+    return {
+        key: value
+        for key, value in asdict(sub_config).items()
+        if value is not None and key not in drop
+    }
 
 
 def load_llm_backend(cfg):
     """Load the model for the backend requested in `cfg`.
 
-    :param cfg: an ExperimentConfig (uses cfg.backend, cfg.model, cfg.hf_cache_dir)
+    :param cfg: an ExperimentConfig (uses cfg.backend, cfg.model, cfg.hf_cache_dir
+        and the matching cfg.llama_cpp / cfg.vllm sub-config)
     :return: (llm_backend_tag, model) where the tag is the string "vllm" /
         "llama.cpp" that get_answer expects, or False for the remote-server path
         (in which case model is None).
     """
-    from llm_culture.config import Backend
-
     if cfg.backend == Backend.vllm:
+        # Deferred import: vllm is an optional ("serving") extra, absent in base installs.
         from vllm import LLM
 
-        return "vllm", LLM(model=cfg.model)
+        vllm_kwargs = _forward_kwargs(cfg.vllm)
+        return "vllm", LLM(model=cfg.model, **vllm_kwargs)
 
     if cfg.backend == Backend.llama_cpp:
-        # Imported here to avoid a hard dependency on utils at module import time.
-        from llm_culture.simulation.utils import resolve_model_path
+        # Deferred import: llama_cpp is an optional ("serving") extra, absent in base installs.
         from llama_cpp import Llama
 
         resolved_model_path = resolve_model_path(
             cfg.model,
             cfg.hf_cache_dir or os.path.expanduser("~/.cache/huggingface"),
+            gguf_filename=cfg.llama_cpp.gguf_filename,
         )
-        model = Llama(
-            model_path=str(resolved_model_path),
-            n_ctx=4096,
-            n_gpu_layers=-1,
-            verbose=False,
-        )
+        # gguf_filename is only used to pick the file above, not a Llama() kwarg.
+        llama_kwargs = _forward_kwargs(cfg.llama_cpp, drop=("gguf_filename",))
+        model = Llama(model_path=str(resolved_model_path), **llama_kwargs)
         return "llama.cpp", model
 
     # Backend.none -> remote OpenAI-compatible server via cfg.access_url.

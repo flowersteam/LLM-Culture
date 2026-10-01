@@ -30,7 +30,7 @@ class Agent:
         self.access_url = cfg.access_url
         self.debug = cfg.debug
         self.instruct = cfg.instruct
-        self.temperature = cfg.temperature
+        self.generation = cfg.generation
         # runtime objects (loaded model / backend tag)
         self.llm_backend = llm_backend
         self.model = model
@@ -77,12 +77,12 @@ class Agent:
             self.story = get_answer(
                 self.access_url,
                 self.prompt,
+                self.generation,
                 debug=self.debug,
                 instruct=self.instruct,
                 llm_backend=self.llm_backend,
                 model=self.model,
                 sampling_params=self.sampling_params,
-                temperature=self.temperature,
             )
         else:
             self.story = None

@@ -1,13 +1,13 @@
 import os
+import json
 from pathlib import Path
 
-from llm_culture.simulation.agent import Agent
 import networkx as nx
-import json
-PARAMS_DIR = Path("data", "parameters")
-PROMPT_INIT_JSON = PARAMS_DIR / "prompt_init.json"
-PROMPT_UPDATE_JSON = PARAMS_DIR / "prompt_update.json"
-PERSONALITIES_JSON = PARAMS_DIR / "personalities.json"
+from huggingface_hub import snapshot_download
+
+from llm_culture.simulation.agent import Agent
+from llm_culture.config import ExperimentConfig, GenerationConfig
+from llm_culture.paths import PARAMS_DIR, PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
 
 
 def init_agents(
@@ -104,15 +104,9 @@ def run_simul(
     for agent in agent_list:
         agent.update_neighbours(network_structure, agent_list)
 
-    # set the path to store the state history
-    if cfg.output is None:
-        state_history_path = 'results/state_history.json'
-    else:
-        state_history_path = f'{cfg.output}/state_history.json'
-
     # run the simulation
     for t in range(cfg.n_timesteps):
-        new_stories = update_step(agent_list, t, state_history_path, verbose=cfg.verbose)
+        new_stories = update_step(agent_list, verbose=cfg.verbose)
         print(f'\nTimestep: {t}')
         print(f'Number of new_stories: {len(new_stories)}')
         stories_history.append(new_stories)
@@ -123,16 +117,12 @@ def run_simul(
 
 
 def update_step(
-        agent_list, 
-        timestep, 
-        state_history_path,
+        agent_list,
         verbose=False
     ):
     """Update the agents
 
     :param agent_list: list of agents
-    :param timestep: timestep
-    :param state_history_path: path to store the state history
     :param verbose: if True, print each agent's generated story text, defaults to False
     :return: new_stories
     """
@@ -307,6 +297,7 @@ def run_experiment(config, repo_dir=None, hf_cache_dir=None):
 
     model = None
     if config.get("llm_backend") == "vllm":
+        # Deferred import: vllm is an optional ("serving") extra, absent in base installs.
         import vllm
         model = vllm.LLM(model=config.get("model"), n_gpus=-1)
     elif config.get("llm_backend") == "llama.cpp":
@@ -314,6 +305,7 @@ def run_experiment(config, repo_dir=None, hf_cache_dir=None):
             config.get("model"),
             hf_cache_dir or os.path.expanduser("~/.cache/huggingface"),
         )
+        # Deferred import: llama_cpp is an optional ("serving") extra, absent in base installs.
         from llama_cpp import Llama
         # Start the llama.cpp server if not already running
         model = Llama(
@@ -326,14 +318,12 @@ def run_experiment(config, repo_dir=None, hf_cache_dir=None):
     # 4. Run the simulation for each seed using the framework's own run_simul()
     for seed in range(config["n_seeds"]):
         print(f"\n=== Seed {seed} ===")
-        from llm_culture.config import ExperimentConfig
-
         cfg = ExperimentConfig(
             n_agents=config["n_agents"],
             n_timesteps=config["n_timesteps"],
             access_url=config["access_url"],
             debug=config.get("debug", False),
-            temperature=config.get("temperature", 0.8),
+            generation=GenerationConfig(temperature=config.get("temperature", 0.8)),
             output=str(output_folder),
         )
         stories = run_simul(
@@ -360,10 +350,12 @@ def run_experiment(config, repo_dir=None, hf_cache_dir=None):
     return str(output_folder)
 
 
-def resolve_model_path(model, hf_cache_dir):
+def resolve_model_path(model, hf_cache_dir, gguf_filename=None):
     """
     :param model: a local path to model weights, OR a Hugging Face repo id to download.
     :param hf_cache_dir: directory to download into / read the cache from (the HF_CACHE setting).
+    :param gguf_filename: optional substring used to pick a specific .gguf quant file
+        from a multi-file snapshot (e.g. "q3_k_m"); falls back to the q4_k_m / first file.
     :return: a local filesystem path usable as run_simul(..., model=<this>).
     """
     if os.path.exists(model):
@@ -375,7 +367,6 @@ def resolve_model_path(model, hf_cache_dir):
         print(f"Using local model at {models_dir_path}")
         return models_dir_path
  
-    from huggingface_hub import snapshot_download
     print(f"Model '{model}' not found locally — downloading into {hf_cache_dir} (cached after first run)...",
           flush=True)
     local_path = snapshot_download(repo_id=model, cache_dir=hf_cache_dir)
@@ -389,10 +380,23 @@ def resolve_model_path(model, hf_cache_dir):
                 f"No .gguf model file found in downloaded snapshot: {local_path}"
             )
 
-        selected_gguf = next(
-            (model_file for model_file in gguf_files if "q4_k_m" in model_file.name.lower()),
-            gguf_files[0],
-        )
+        selected_gguf = None
+        if gguf_filename:
+            selected_gguf = next(
+                (f for f in gguf_files if gguf_filename.lower() in f.name.lower()),
+                None,
+            )
+            if selected_gguf is None:
+                raise FileNotFoundError(
+                    f"No .gguf file matching {gguf_filename!r} in {local_path}; "
+                    f"available: {[f.name for f in gguf_files]}"
+                )
+
+        if selected_gguf is None:
+            selected_gguf = next(
+                (model_file for model_file in gguf_files if "q4_k_m" in model_file.name.lower()),
+                gguf_files[0],
+            )
 
         if len(gguf_files) > 1:
             print(
