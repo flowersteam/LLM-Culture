@@ -6,7 +6,7 @@ from pathlib import Path
 
 import networkx as nx
 
-from llm_culture.simulation.utils import run_simul, resolve_model_path
+from llm_culture.simulation.utils import run_simul, build_network_structure, load_named_prompt, load_personalities
 
 
 def build_parser():
@@ -55,154 +55,130 @@ def parse_arguments():
     return build_parser().parse_args()
 
 
-def main(args=None):
-    """Run the simulation with the given parameters
+def args_to_config(args):
+    """Map the argparse Namespace onto an ExperimentConfig dataclass.
 
-    :param args: simulation parameters, defaults to None
-    :return: dictionary containing the simulation results
+    This is the single place that translates the standalone CLI's flags (the
+    two backend booleans, the `no_instruct` double-negative, the network string)
+    into the shared config type.
     """
-    json_prompt_init = 'llm_culture/data/parameters/prompt_init.json'
-    json_prompt_update = 'llm_culture/data/parameters/prompt_update.json'
-    json_personnalities = 'llm_culture/data/parameters/personalities.json'
+    from llm_culture.config import ExperimentConfig, Backend, Network
 
-    #import Path
-    from pathlib import Path
-    repo_root = Path(__file__).parent.parent
-    json_prompt_init = repo_root / json_prompt_init
-    json_prompt_update = repo_root / json_prompt_update
-    json_personnalities = repo_root / json_personnalities
-    
-
-    if args is None:
-        args = parse_arguments()
-
-    # initialize the output dictionary for results
-    output_dict = {}
-    debug = args.debug
-    sequence = False
-
-    # Select the LLM backend and load a local model if requested.
-    # No local backend -> remote OpenAI-compatible server via --access_url.
     if args.use_vllm and args.use_llama_cpp:
         raise ValueError("Choose only one of --use_vllm or --use_llama_cpp.")
-
-    llm_backend = False
-    model = None
     if args.use_vllm:
-        assert args.model is not None, "--model must be provided when using --use_vllm"
-        from vllm import LLM
-        model = LLM(model=args.model)
-        llm_backend = "vllm"
+        backend = Backend.vllm
     elif args.use_llama_cpp:
-        assert args.model is not None, "--model must be provided when using --use_llama_cpp"
-        resolved_model_path = resolve_model_path(
-            args.model,
-            args.hf_cache_dir or os.path.expanduser("~/.cache/huggingface"),
-        )
-        from llama_cpp import Llama
-        model = Llama(
-            model_path=str(resolved_model_path),
-            n_ctx=4096,
-            n_gpu_layers=-1,
-            verbose=False,
-        )
-        llm_backend = "llama.cpp"
+        backend = Backend.llama_cpp
+    else:
+        backend = Backend.none
 
-    # Use the arguments
-    n_agents = args.n_agents
-    n_timesteps = args.n_timesteps
+    return ExperimentConfig(
+        n_agents=args.n_agents,
+        n_timesteps=args.n_timesteps,
+        n_seeds=args.n_seeds,
+        seed_offset=args.seed_offset,
+        network_structure=Network(args.network_structure),
+        n_cliques=args.n_cliques,
+        prompt_init=args.prompt_init,
+        prompt_update=args.prompt_update,
+        personality_list=list(args.personality_list),
+        temperature=args.temperature,
+        instruct=not args.no_instruct,
+        verbose=args.verbose,
+        backend=backend,
+        model=args.model,
+        access_url=args.access_url,
+        hf_cache_dir=args.hf_cache_dir,
+        output=args.output,
+        debug=args.debug,
+    )
 
-    # handle the network structure
-    network_structure = None
-    if args.network_structure == 'sequence':
-        network_structure = nx.DiGraph()
-        for i in range(n_agents - 1):
-            network_structure.add_edge(i, i + 1)
-        sequence = True
-    elif args.network_structure == 'circle':
-        network_structure = nx.cycle_graph(n_agents)
-    elif args.network_structure == 'caveman':
-        network_structure = nx.connected_caveman_graph(int(args.n_cliques), n_agents // int(args.n_cliques))
-    elif args.network_structure == 'fully_connected':
-                network_structure = nx.complete_graph(n_agents)
 
-    # save adjacency matrix to output_dict
+def run_simulation_from_config(cfg):
+    """Run the simulation from an ExperimentConfig and return the results dict.
+
+    This is the shared core used by both the standalone CLI (via main) and the
+    Hydra entrypoint (run_experiment.py), so there is no argparse Namespace on
+    the Hydra path.
+
+    :param cfg: an ExperimentConfig instance
+    :return: dictionary containing the simulation results
+    """
+    from llm_culture.config import validate_experiment
+    from llm_culture.simulation.backends import load_llm_backend
+
+    validate_experiment(cfg)
+
+    repo_root = Path(__file__).parent.parent
+    params_dir = repo_root / 'llm_culture' / 'data' / 'parameters'
+
+    output_dict = {}
+    n_agents = cfg.n_agents
+    n_timesteps = cfg.n_timesteps
+
+    # Select the backend and load a local model if requested
+    # (Backend.none -> remote OpenAI-compatible server via cfg.access_url).
+    llm_backend, model = load_llm_backend(cfg)
+
+    # Build the network graph (shared builder; also supports custom structures)
+    network_structure, _ = build_network_structure(cfg.network_structure.value, n_agents, cfg.n_cliques)
     output_dict["adjacency_matrix"] = nx.to_numpy_array(network_structure).tolist()
 
-    # prompt_init = prompts.prompt_init_dict[args.prompt_init]
-    with open(json_prompt_init, 'r') as file:
-        data = json.load(file)
-        for d in data:
-            if d['name'] == args.prompt_init:
-                prompt_init = d['prompt']
-
-    # prompt_update = prompts.prompt_update_dict[args.prompt_update]
-    with open(json_prompt_update, 'r') as file:
-        data = json.load(file)
-        for d in data:
-            if d['name'] == args.prompt_update:
-                prompt_update = d['prompt']
-
-        personality_list = []
-        with open(json_personnalities, 'r') as file:
-                    data = json.load(file)
-                    for perso in args.personality_list:
-                        print(perso)
-                        for d in data:
-                            if d['name'] == perso:
-                                personality_list.append(d['prompt'])
-
-        output_dict["prompt_init"] = [prompt_init]
-        output_dict["prompt_update"] = [prompt_update]
-        output_dict["personality_list"] = personality_list
+    # Resolve the named prompts / personalities from the parameter files
+    prompt_init = load_named_prompt(params_dir / 'prompt_init.json', cfg.prompt_init)
+    prompt_update = load_named_prompt(params_dir / 'prompt_update.json', cfg.prompt_update)
+    personality_list = load_personalities(params_dir / 'personalities.json', cfg.personality_list)
+    output_dict["prompt_init"] = [prompt_init]
+    output_dict["prompt_update"] = [prompt_update]
+    output_dict["personality_list"] = personality_list
 
     # Create the output folder if it does not exist
-    output_dir = str(args.output)
+    output_dir = str(cfg.output)
     os.makedirs(os.path.dirname(output_dir + '/'), exist_ok=True)
 
-    backend_desc = llm_backend if llm_backend else f"remote server ({args.access_url or 'no url set'})"
+    backend_desc = llm_backend if llm_backend else f"remote server ({cfg.access_url or 'no url set'})"
     print("\n" + "=" * 64)
     print("SIMULATION")
-    print(f"  agents={n_agents}  timesteps={n_timesteps}  seeds={args.n_seeds}  network={args.network_structure}")
-    print(f"  backend={backend_desc}" + (f"  model={args.model}" if args.model else ""))
+    print(f"  agents={n_agents}  timesteps={n_timesteps}  seeds={cfg.n_seeds}  network={cfg.network_structure.value}")
+    print(f"  backend={backend_desc}" + (f"  model={cfg.model}" if cfg.model else ""))
     print(f"  output folder: {os.path.abspath(output_dir)}")
     print("=" * 64)
 
     # Run the simulation for each seed
-    for i in range(args.n_seeds):
-        seed_idx = args.seed_offset + i
+    for i in range(cfg.n_seeds):
+        seed_idx = cfg.seed_offset + i
         print(f"Seed {seed_idx}")
         stories = run_simul(
-             args.access_url, 
-             n_timesteps, 
-             network_structure, 
-             prompt_init,
-            prompt_update, 
-            personality_list, 
-            n_agents,
-            sequence=sequence, 
-            output_folder=args.output,
-            debug=debug,
-            instruct=not args.no_instruct,
+            cfg,
+            network_structure,
+            prompt_init,
+            prompt_update,
+            personality_list,
             llm_backend=llm_backend,
             model=model,
-            temperature=args.temperature,
-            verbose=args.verbose,
         )
         output_dict["stories"] = stories
 
-        # Save the output to a file
-        if args.output:
-            out_path = Path(args.output, 'output' + str(seed_idx) + '.json')
-        else:
-            out_path = Path("results/", 'output' + str(seed_idx) + '.json')
+        out_path = Path(cfg.output, 'output' + str(seed_idx) + '.json')
         with open(out_path, "w") as f:
             json.dump(output_dict, f, indent=4)
         print(f"  seed {seed_idx}: saved {out_path}")
 
-    print(f"Simulation complete — {args.n_seeds} seed(s) written to {os.path.abspath(str(args.output))}")
-    # return the results after all seeds have run
+    print(f"Simulation complete — {cfg.n_seeds} seed(s) written to {os.path.abspath(output_dir)}")
     return output_dict
+
+
+def main(args=None):
+    """Run the simulation with the given parameters (argparse entrypoint).
+
+    :param args: parsed argparse Namespace, defaults to None (parse from argv)
+    :return: dictionary containing the simulation results
+    """
+    if args is None:
+        args = parse_arguments()
+    cfg = args_to_config(args)
+    return run_simulation_from_config(cfg)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,27 @@
+# Hydra entrypoint config for run_experiment.py.
+#
+# Field defaults live in the ExperimentConfig dataclass (llm_culture/config.py);
+# this file wires that schema in and sets Hydra runtime behavior. Override any
+# field with `key=value`, or select a preset with `+experiment=<name>`:
+#
+#   uv run python run_experiment.py backend=llama_cpp model=... n_agents=5
+#   uv run python run_experiment.py +experiment=base
+#
+# Enum fields accept their string values:
+#   backend: none | vllm | llama_cpp
+#   network_structure: sequence | fully_connected | circle | caveman
+
+defaults:
+  - experiment_schema
+  - _self_
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+hydra:
+  run:
+    dir: .
+  sweep:
+    dir: multirun/${now:%Y-%m-%d_%H-%M-%S}
+  output_subdir: null
+  job:
+    chdir: false

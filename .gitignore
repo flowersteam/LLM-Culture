@@ -10,6 +10,11 @@ venv/
 # local working notes (private, never committed)
 .dev/
 
+# Hydra run outputs (run_experiment.py)
+outputs/
+multirun/
+.hydra/
+
 # TODO: update this later when merge w main
 # local Kiro agent config (kept local, not pushed)
 .kiro/

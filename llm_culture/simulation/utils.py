@@ -11,57 +11,47 @@ PERSONALITIES_JSON = PARAMS_DIR / "personalities.json"
 
 
 def init_agents(
-        n_agents,
+        cfg,
         network_structure,
         prompt_init,
         prompt_update,
         personality_list,
-        access_url,
-        sequence=False,
-        debug=False,
-        instruct=True,
         llm_backend=False,
         model=None,
         sampling_params=None,
-        temperature=0.8
     ):
-    """Initialize the agents
+    """Initialize the agents from an ExperimentConfig and the runtime objects.
 
-    :param n_agents: n_agents
-    :param network_structure: network_structure
-    :param prompt_init: initial prompt
-    :param prompt_update: update prompt
-    :param personality_list: personality_list
-    :param access_url: url to access the server
-    :param sequence: sequence, defaults to False
-    :param debug: debug flag, defaults to False
-    :param instruct: use instruct mode, defaults to True
-    :param llm_backend: LLM backend to use, defaults to False
-    :param model: LLM model instance, defaults to None
-    :param sampling_params: LLM sampling params, defaults to None
-    :param temperature: sampling temperature, defaults to 0.8
+    :param cfg: ExperimentConfig (provides n_agents, access_url, debug, instruct, temperature)
+    :param network_structure: the built networkx graph (directed => sequence mode)
+    :param prompt_init: resolved initial prompt text
+    :param prompt_update: resolved update prompt text
+    :param personality_list: resolved personality texts (one per agent)
+    :param llm_backend: loaded backend tag ("vllm"/"llama.cpp") or False
+    :param model: loaded model instance or None
+    :param sampling_params: optional sampling params
     :return: list of agents
     """
+    # A sequence chain is the only directed topology; derive it from the graph so
+    # this works for every structure (including custom ones).
+    sequence = network_structure.is_directed()
+
     agent_list = []
     wait = 0
 
-    for agent_id in range(n_agents):
+    for agent_id in range(cfg.n_agents):
         personality = personality_list[agent_id]
         agent = Agent(
+            cfg,
             agent_id,
-            network_structure,
             prompt_init,
             prompt_update,
             personality,
-            access_url=access_url,
             wait=wait,
-            debug=debug,
             sequence=sequence,
-            instruct=instruct,
             llm_backend=llm_backend,
             model=model,
             sampling_params=sampling_params,
-            temperature=temperature,
         )
         agent_list.append(agent)
         if sequence:
@@ -71,42 +61,29 @@ def init_agents(
 
 
 def run_simul(
-        access_url,
-        n_timesteps=5,
-        network_structure=None,
-        prompt_init=None,
-        prompt_update=None,
-        personality_list=None,
-        n_agents=5,
-        sequence=False,
-        output_folder=None,
-        debug=False,
-        instruct=True,
+        cfg,
+        network_structure,
+        prompt_init,
+        prompt_update,
+        personality_list,
         llm_backend=False,
         model=None,
         sampling_params=None,
-        temperature=0.8,
         progress_callback=None,
-        verbose=False
     ):
-    """Run the simulation
+    """Run the simulation.
 
-    :param access_url: url to access the server
-    :param n_timesteps: n_timesteps, defaults to 5
-    :param network_structure: network_structure, defaults to None
-    :param prompt_init: prompt_init, defaults to None
-    :param prompt_update: prompt_update, defaults to None
-    :param personality_list: personality_list, defaults to None
-    :param n_agents: n_agents, defaults to 5
-    :param sequence: sequence, defaults to False
-    :param output_folder: output_folder, defaults to None
-    :param debug: debug, defaults to False
-    :param instruct: use instruct mode, defaults to True
-    :param llm_backend: LLM backend to use, defaults to False
-    :param model: LLM model instance, defaults to None
-    :param sampling_params: LLM sampling params, defaults to None
-    :param temperature: sampling temperature, defaults to 0.8
-    :param verbose: if True, print each agent's generated story text, defaults to False
+    :param cfg: ExperimentConfig providing the scalar simulation params
+        (n_agents, n_timesteps, access_url, debug, instruct, temperature,
+        verbose, output)
+    :param network_structure: the built networkx graph
+    :param prompt_init: resolved initial prompt text
+    :param prompt_update: resolved update prompt text
+    :param personality_list: resolved personality texts (one per agent)
+    :param llm_backend: loaded backend tag ("vllm"/"llama.cpp") or False
+    :param model: loaded model instance or None
+    :param sampling_params: optional sampling params
+    :param progress_callback: optional callback(current_step, total_steps)
     :return: stories_history
     """
     # storage for the stories
@@ -114,38 +91,33 @@ def run_simul(
 
     # initialize the agents
     agent_list = init_agents(
-        n_agents,
+        cfg,
         network_structure,
         prompt_init,
         prompt_update,
         personality_list,
-        access_url,
-        sequence=sequence,
-        debug=debug,
-        instruct=instruct,
         llm_backend=llm_backend,
         model=model,
         sampling_params=sampling_params,
-        temperature=temperature,
     )
 
     for agent in agent_list:
-        agent.update_neighbours(network_structure, agent_list )
+        agent.update_neighbours(network_structure, agent_list)
 
     # set the path to store the state history
-    if output_folder is None:
+    if cfg.output is None:
         state_history_path = 'results/state_history.json'
     else:
-        state_history_path = f'{output_folder}/state_history.json'
+        state_history_path = f'{cfg.output}/state_history.json'
 
     # run the simulation
-    for t in range(n_timesteps):
-        new_stories = update_step(agent_list, t, state_history_path, verbose=verbose)
+    for t in range(cfg.n_timesteps):
+        new_stories = update_step(agent_list, t, state_history_path, verbose=cfg.verbose)
         print(f'\nTimestep: {t}')
         print(f'Number of new_stories: {len(new_stories)}')
         stories_history.append(new_stories)
         if progress_callback is not None:
-            progress_callback(t + 1, n_timesteps)
+            progress_callback(t + 1, cfg.n_timesteps)
 
     return stories_history
 
@@ -238,6 +210,41 @@ def register_custom_network_structure(name, graph, replace = True):
         
     return name
 
+def load_named_prompt(json_path, name):
+    """Return the 'prompt' text for the entry named `name` in a parameter JSON file.
+
+    :param json_path: path to a parameter file (list of {name, prompt} dicts)
+    :param name: the registered entry name to look up
+    :return: the prompt string
+    :raises KeyError: if no entry with that name exists
+    """
+    with open(json_path, 'r') as f:
+        data = json.load(f)
+    for d in data:
+        if d['name'] == name:
+            return d['prompt']
+    raise KeyError(f"No entry named {name!r} in {json_path}")
+
+
+def load_personalities(json_path, names):
+    """Return the prompt texts for each personality name, in order.
+
+    :param json_path: path to the personalities parameter file
+    :param names: iterable of registered personality names (one per agent)
+    :return: list of prompt strings, same length/order as `names`
+    :raises KeyError: if any name is missing
+    """
+    with open(json_path, 'r') as f:
+        data = json.load(f)
+    by_name = {d['name']: d['prompt'] for d in data}
+    resolved = []
+    for name in names:
+        if name not in by_name:
+            raise KeyError(f"No personality named {name!r} in {json_path}")
+        resolved.append(by_name[name])
+    return resolved
+
+
 def build_network_structure(structure, n_agents, n_cliques=2):
     '''Build the networkx graph for a given topology name (mirrors scripts/run_simulation.py).'''
     sequence = False
@@ -298,6 +305,7 @@ def run_experiment(config, repo_dir=None, hf_cache_dir=None):
     output_folder = Path("results", "experiments", config["output_name"])
     output_folder.mkdir(parents=True, exist_ok=True)
 
+    model = None
     if config.get("llm_backend") == "vllm":
         import vllm
         model = vllm.LLM(model=config.get("model"), n_gpus=-1)
@@ -318,21 +326,25 @@ def run_experiment(config, repo_dir=None, hf_cache_dir=None):
     # 4. Run the simulation for each seed using the framework's own run_simul()
     for seed in range(config["n_seeds"]):
         print(f"\n=== Seed {seed} ===")
+        from llm_culture.config import ExperimentConfig
+
+        cfg = ExperimentConfig(
+            n_agents=config["n_agents"],
+            n_timesteps=config["n_timesteps"],
+            access_url=config["access_url"],
+            debug=config.get("debug", False),
+            temperature=config.get("temperature", 0.8),
+            output=str(output_folder),
+        )
         stories = run_simul(
-            config["access_url"],
-            config["n_timesteps"],
+            cfg,
             network_structure,
             prompt_init_text,
             prompt_update_text,
             personality_texts,
-            config["n_agents"],
-            sequence=sequence,
-            output_folder=str(output_folder),
-            debug=config.get("debug", False),
             llm_backend=config.get("llm_backend", False),
             model=model,
             sampling_params=config.get("sampling_params", None),
-            temperature=config.get("temperature", 0.8)
         )
         output_dict = {
             "adjacency_matrix": adjacency_matrix,

@@ -1,0 +1,28 @@
+# @package _global_
+#
+# Base experiment preset. Copy this file (e.g. conf/experiment/my_run.yaml),
+# edit the fields, and run it with:
+#
+#   uv run python run_experiment.py +experiment=my_run
+#
+# Any field from llm_culture/config.py:ExperimentConfig can be set here.
+
+n_agents: 2
+n_timesteps: 2
+n_seeds: 1
+network_structure: sequence        # sequence | fully_connected | circle | caveman
+
+prompt_init: kid
+prompt_update: kid
+personality_list: [Empty, Empty]   # one per agent (length must equal n_agents)
+
+backend: llama_cpp                 # none | vllm | llama_cpp
+model: unsloth/SmolLM2-135M-Instruct-GGUF
+temperature: 0.8
+verbose: true
+
+output: results/base_experiment
+
+# Analysis
+run_analysis: true
+plot: false

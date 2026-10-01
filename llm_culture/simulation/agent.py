@@ -2,22 +2,17 @@ from llm_culture.simulation.server_answer import get_answer
 
 class Agent:
     def __init__(
-            self, 
+            self,
+            cfg,
             agent_id,
-            network_structure,
-            init_prompt, 
-            prompt_update, 
-            personality, 
-            access_url,
-            wait=0, 
-            string_sep='\n', 
-            debug=False, 
+            init_prompt,
+            prompt_update,
+            personality,
+            wait=0,
             sequence=False,
-            instruct=True,
             llm_backend=False,
             model=None,
             sampling_params=None,
-            temperature=0.8
         ):
         self.agent_id = agent_id
         self.is_new = True
@@ -29,15 +24,17 @@ class Agent:
         self.story = None
         self.prompt = None
         self.wait = wait
-        self.debug = debug
         self.go = True
-        self.access_url = access_url
         self.sequence = sequence
-        self.instruct = instruct
+        # scalar parameters shared across all agents, read from the experiment config
+        self.access_url = cfg.access_url
+        self.debug = cfg.debug
+        self.instruct = cfg.instruct
+        self.temperature = cfg.temperature
+        # runtime objects (loaded model / backend tag)
         self.llm_backend = llm_backend
         self.model = model
         self.sampling_params = sampling_params
-        self.temperature = temperature
 
     def update_neighbours(self, graph, agentList):
         """Update the neighbours of the agent

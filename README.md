@@ -110,6 +110,43 @@ uv run python3 scripts/run_comparison_analysis.py --dirs experiment_1+experiment
 
 It will store the analysis figures in a directory called `results/experiments_comparisons/experiment_1-experiment_2-experiment_3/`.
 
+#### Run a full experiment (simulation + analysis) with Hydra
+
+The easiest way to run an experiment is the Hydra-driven `run_experiment.py`. It
+runs the simulation and then the analysis on the same output folder in a single
+command. All configuration lives in `conf/config.yaml`; override any field on the
+command line with `key=value` syntax:
+
+```bash
+uv run python run_experiment.py \
+  backend=llama_cpp model=unsloth/SmolLM2-135M-Instruct-GGUF \
+  n_agents=2 n_timesteps=2 n_seeds=1 output=results/my_test verbose=true
+```
+
+Common fields (see `conf/config.yaml` for the full, commented list):
+
+| Field | Meaning |
+| --- | --- |
+| `n_agents`, `n_timesteps`, `n_seeds` | population size, generations, seeds |
+| `network_structure` | `sequence` / `fully_connected` / `circle` / `caveman` |
+| `prompt_init`, `prompt_update`, `personality_list` | registered prompt / persona names |
+| `backend` | `none` (remote server via `access_url`), `vllm`, or `llama_cpp` |
+| `model` | HF repo id or local path (for `vllm` / `llama_cpp`) |
+| `temperature`, `instruct`, `verbose` | sampling temperature, instruct vs raw, print stories |
+| `output` | results folder |
+| `analysis.run`, `analysis.plot` | skip analysis (simulate only) / also open figures interactively |
+
+Sweep over several values in one command with `-m` (Hydra multirun):
+
+```bash
+uv run python run_experiment.py -m n_agents=2,5,10 \
+  backend=llama_cpp model=unsloth/SmolLM2-135M-Instruct-GGUF
+```
+
+The standalone `scripts/run_simulation.py` and `scripts/run_analysis.py` shown
+below still work with their original flags (they are used by the reproduction
+scripts); `run_experiment.py` reuses their code rather than replacing them.
+
 
 ### 2 - Web Interface
 

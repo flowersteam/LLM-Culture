@@ -6,6 +6,7 @@ from pathlib import Path
 import networkx as nx
 
 from llm_culture.simulation.utils import resolve_model_path, run_simul
+from llm_culture.config import ExperimentConfig
 
 RESULTS_DIR = 'results/experiments'
 
@@ -154,21 +155,23 @@ def run_simulation(
                 total_generations,
             )
 
+        cfg = ExperimentConfig(
+            n_agents=n_agents,
+            n_timesteps=n_timesteps,
+            access_url=server_url,
+            instruct=instruct,
+            temperature=temperature,
+            debug=True,
+            output=output_dir,
+        )
         stories = run_simul(
-            server_url,
-            n_timesteps,
+            cfg,
             network_structure,
             prompt_init,
             prompt_update,
             personality_list,
-            n_agents,
-            sequence=sequence,
-            output_folder=output_dir,
-            debug=True,
-            instruct=instruct,
             llm_backend=llm_backend,
             model=model,
-            temperature=temperature,
             progress_callback=_seed_progress,
         )
         

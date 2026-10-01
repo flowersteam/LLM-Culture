@@ -1,58 +1,67 @@
-"""Run a full experiment (simulation + analysis) in a single command.
+"""Run a full experiment (simulation + analysis) from a Hydra config.
 
-This is a convenience wrapper. It does NOT replace the standalone scripts:
-`scripts/run_simulation.py` and `scripts/run_analysis.py` keep working exactly
-as before. This orchestrator just reuses their code so behavior stays identical
-— it runs the simulation, then runs the analysis (which saves the plots) on the
-same output folder.
+Configuration is a structured config: the `ExperimentConfig` dataclass
+(llm_culture/config.py) is registered as a Hydra schema, so the YAML in `conf/`
+is validated against it and converted straight into a typed dataclass instance —
+no argparse involved on this path.
 
-Example (local llama.cpp backend on macOS, tiny model):
+Run from the default config, overriding fields as needed:
 
     uv run python run_experiment.py \\
-        -na 2 -nt 2 -s 1 -o results/my_test \\
-        --use_llama_cpp --model unsloth/SmolLM2-135M-Instruct-GGUF
+        backend=llama_cpp model=unsloth/SmolLM2-135M-Instruct-GGUF \\
+        n_agents=2 n_timesteps=2 n_seeds=1 output=results/my_test verbose=true
 
-All simulation flags are identical to scripts/run_simulation.py (run with -h to
-see them). Analysis-side options are grouped under "analysis" below.
+Or select a ready-made experiment preset from conf/experiment/ (copy one to make
+your own), optionally overriding fields on top:
+
+    uv run python run_experiment.py +experiment=base
+    uv run python run_experiment.py +experiment=base n_timesteps=10
+
+Sweep with -m (multirun):
+
+    uv run python run_experiment.py -m n_agents=2,5,10 +experiment=base
+
+The standalone scripts/run_simulation.py and scripts/run_analysis.py still work
+with their original argparse flags (used by the reproduction scripts); this
+Hydra entrypoint shares their code via run_simulation_from_config.
 """
 import sys
 from pathlib import Path
 
+import hydra
+from hydra.core.config_store import ConfigStore
+from omegaconf import DictConfig, OmegaConf
+
 # Ensure the repo root is importable (so `scripts` resolves) regardless of cwd.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from scripts.run_simulation import build_parser, main as run_simulation_main
+from llm_culture.config import ExperimentConfig, validate_experiment
+from scripts.run_simulation import run_simulation_from_config
 from scripts.run_analysis import main_analysis
 from llm_culture.analysis.utils import initialize_nltk
 
-
-def parse_arguments():
-    # Reuse the exact simulation flags, then add analysis-side options.
-    parser = build_parser()
-    parser.description = "Run a full experiment (simulation + analysis) in one command."
-    analysis = parser.add_argument_group("analysis")
-    analysis.add_argument("--no_analysis", action="store_true",
-                          help="Only run the simulation; skip the analysis/plots step.")
-    analysis.add_argument("--plot", action="store_true",
-                          help="Also display plots interactively (they are saved to the folder either way).")
-    analysis.add_argument("--no_recompute_cache", action="store_true",
-                          help="Reuse an existing analysis cache instead of recomputing from fresh sim output.")
-    analysis.add_argument("--ticks_font_size", type=int, default=12)
-    analysis.add_argument("--labels_font_size", type=int, default=14)
-    analysis.add_argument("--title_font_size", type=int, default=16)
-    return parser.parse_args()
+cs = ConfigStore.instance()
+cs.store(name="experiment_schema", node=ExperimentConfig)
 
 
-def main():
-    args = parse_arguments()
+@hydra.main(version_base=None, config_path="conf", config_name="config")
+def main(cfg: DictConfig) -> None:
+    # Convert the validated DictConfig into a typed ExperimentConfig instance.
+    exp: ExperimentConfig = OmegaConf.to_object(cfg)
+    validate_experiment(exp)
 
     print("\n" + "#" * 64)
+    print("# EXPERIMENT CONFIG")
+    print("#" * 64)
+    print(OmegaConf.to_yaml(cfg), end="")
+
+    print("#" * 64)
     print("# STEP 1/2 — SIMULATION")
     print("#" * 64)
-    run_simulation_main(args)
+    run_simulation_from_config(exp)
 
-    if args.no_analysis:
-        print(f"\nDone (simulation only). Outputs in {Path(args.output).resolve()}")
+    if not exp.run_analysis:
+        print(f"\nDone (simulation only). Outputs in {Path(exp.output).resolve()}")
         return
 
     print("\n" + "#" * 64)
@@ -60,19 +69,18 @@ def main():
     print("#" * 64)
     initialize_nltk()
     font_sizes = {
-        "ticks": args.ticks_font_size,
-        "labels": args.labels_font_size,
-        "title": args.title_font_size,
+        "ticks": exp.ticks_font_size,
+        "labels": exp.labels_font_size,
+        "title": exp.title_font_size,
     }
     main_analysis(
-        str(args.output),
+        str(exp.output),
         font_sizes,
-        args.plot,
-        # Fresh sim output was just written, so recompute unless told otherwise.
-        force_recompute_cache=not args.no_recompute_cache,
+        exp.plot,
+        force_recompute_cache=exp.recompute_cache,
     )
 
-    folder = Path(args.output).resolve()
+    folder = Path(exp.output).resolve()
     outputs = sorted(folder.glob("output*.json"))
     plots = sorted(folder.glob("*.png"))
     print("\n" + "=" * 64)
