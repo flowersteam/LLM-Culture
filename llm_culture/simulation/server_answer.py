@@ -1,7 +1,3 @@
-import time
-
-import requests
-
 def get_answer(
     access_url,
     prompt,
@@ -70,79 +66,66 @@ def get_answer(
 
         return output["choices"][0]["text"] if not instruct else \
             output["choices"][0]["message"]["content"]
-    # llama.cpp server
-    if instruct:
-        url = access_url.rstrip("/") + "/v1/chat/completions"
+    # Remote / server backend: talk to an OpenAI-compatible endpoint (a hosted
+    # server, a vLLM server, or a llama.cpp server) using the official `openai`
+    # client. The client handles retries + exponential backoff + timeouts for us,
+    # so we no longer hand-roll a request loop. The request fields and the way we
+    # read the response are kept identical to the previous implementation, so the
+    # output contract is unchanged.
+    import os
 
-        data = {
-            "messages": [
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            "temperature": temperature,
-            "max_tokens": 512,
-        }
+    from openai import OpenAI
 
-    else:
-        url = access_url.rstrip("/") + "/v1/completions"
+    base_url = access_url.rstrip("/") + "/v1"
+
+    client_kwargs = dict(
+        base_url=base_url,
+        # OpenAI-compatible local servers (vLLM / llama.cpp) accept any key; allow
+        # overriding via env for genuine hosted endpoints.
+        api_key=os.environ.get("OPENAI_API_KEY", "EMPTY"),
+        timeout=timeout,
+        max_retries=max_retries,
+    )
+    if not verify:
+        # Mirror the previous requests(..., verify=False) behavior only when asked;
+        # a custom http_client is what lets us disable TLS verification.
+        import httpx
+
+        client_kwargs["http_client"] = httpx.Client(verify=False, timeout=timeout)
+
+    client = OpenAI(**client_kwargs)
+
+    # The HTTP path historically sent no explicit model name (local servers ignore
+    # it / use the one they loaded). Keep a harmless default; override via the
+    # OPENAI_MODEL env var for servers that validate it (e.g. a remote vLLM).
+    request_model = model if isinstance(model, str) else os.environ.get("OPENAI_MODEL", "local-model")
+
+    if debug:
+        print("POST base_url:", base_url, "| instruct:", instruct, "| model:", request_model)
+
+    try:
+        if instruct:
+            response = client.chat.completions.create(
+                model=request_model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=temperature,
+                max_tokens=512,
+            )
+            return response.choices[0].message.content.replace("</s>", "")
 
         prompt = prompt + "Assistant: Sure, here is the requested answer:\n\n1."
-
         if start_flag is not None:
             prompt += start_flag
 
-        data = {
-            "prompt": prompt,
-            "max_tokens": 512,
-            "temperature": temperature,
-        }
-
-    if debug:
-        print("POST:", url)
-        print("DATA:", data)
-
-    last_error = None
-    delay = 1
-    for attempt in range(1, max_retries + 1):
-        try:
-            response = requests.post(
-                url,
-                headers={"Content-Type": "application/json"},
-                json=data,
-                verify=verify,
-                timeout=timeout,
-            )
-        except requests.exceptions.RequestException as exc:
-            # connection error / timeout / etc.
-            last_error = exc
-            if debug:
-                print(f"Request failed (attempt {attempt}/{max_retries}): {exc}")
-        else:
-            if debug:
-                print("Status:", response.status_code)
-                print("Response:", response.text)
-
-            if response.ok:
-                result = response.json()
-
-                if instruct:
-                    return result["choices"][0]["message"]["content"].replace("</s>", "")
-                else:
-                    return result["choices"][0]["text"]
-
-            last_error = RuntimeError(
-                f"server returned HTTP {response.status_code}: {response.text[:200]}"
-            )
-            if debug:
-                print(f"Server error {response.status_code} (attempt {attempt}/{max_retries}), trying again...")
-
-        # exponential backoff between attempts (1s, 2s, 4s, 8s, capped at 16s)
-        if attempt < max_retries:
-            time.sleep(delay)
-            delay = min(delay * 2, 16)
-
-    raise RuntimeError(
-        f"LLM request to {url} failed after {max_retries} attempts"
-    ) from last_error
+        response = client.completions.create(
+            model=request_model,
+            prompt=prompt,
+            temperature=temperature,
+            max_tokens=512,
+        )
+        return response.choices[0].text
+    except Exception as exc:
+        # Surface a clear error instead of hanging or leaking a raw client error.
+        raise RuntimeError(
+            f"LLM request to {base_url} failed after {max_retries} retries"
+        ) from exc

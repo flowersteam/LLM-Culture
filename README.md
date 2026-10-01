@@ -143,6 +143,21 @@ uv run python run_experiment.py -m n_agents=2,5,10 \
   backend=llama_cpp model=unsloth/SmolLM2-135M-Instruct-GGUF
 ```
 
+Rather than passing fields on the command line, you can define a reusable
+**experiment preset**. Presets live in `conf/experiment/` — copy the provided
+`conf/experiment/base.yaml`, edit the fields, and run it by name (overriding
+extra fields on top if you like):
+
+```bash
+uv run python run_experiment.py +experiment=base
+uv run python run_experiment.py +experiment=base n_timesteps=10
+```
+
+The config is a *structured config*: it is validated against the
+`ExperimentConfig` dataclass in `llm_culture/config.py`, so unknown fields,
+wrong types, or invalid enum values (`backend`, `network_structure`) are caught
+with a clear error before anything runs.
+
 The standalone `scripts/run_simulation.py` and `scripts/run_analysis.py` shown
 below still work with their original flags (they are used by the reproduction
 scripts); `run_experiment.py` reuses their code rather than replacing them.
