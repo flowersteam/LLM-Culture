@@ -5,35 +5,12 @@ from pathlib import Path
 
 import networkx as nx
 
-from llm_culture.simulation.utils import resolve_model_path, run_simul
-from llm_culture.config import ExperimentConfig
+from llm_culture.simulation.utils import run_simul, build_network_structure, load_named_prompt, load_personalities
+from llm_culture.simulation.backends import load_llm_backend
+from llm_culture.config import ExperimentConfig, Backend, GenerationConfig
+from llm_culture.paths import PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
 
 RESULTS_DIR = 'results/experiments'
-
-
-def _create_network_structure(
-        network_structure_name, 
-        n_agents, 
-        n_cliques
-    ):
-    """Create a network structure based on the given parameters
-
-    :param network_structure_name: name
-    :param n_agents: n_agents
-    :param n_cliques: n_cliques
-    :return: network_structure
-    """
-    if network_structure_name == 'sequence':
-        network_structure = nx.DiGraph()
-        for i in range(n_agents - 1):
-            network_structure.add_edge(i, i + 1)
-    elif network_structure_name == 'circle':
-        network_structure = nx.cycle_graph(n_agents)
-    elif network_structure_name == 'caveman':
-        network_structure = nx.connected_caveman_graph(n_cliques, n_agents // n_cliques)
-    elif network_structure_name == 'fully_connected':
-        network_structure = nx.complete_graph(n_agents)
-    return network_structure
 
 
 def run_simulation(
@@ -56,88 +33,40 @@ def run_simulation(
     ):
     """Run the simulation with the given parameters
     """
-    
-    json_prompt_init = 'data/parameters/prompt_init.json'
-    json_prompt_update = 'data/parameters/prompt_update.json'
-    json_personnalities = 'data/parameters/personalities.json'
-    
-    sequence = True if network_structure_name == 'sequence' else False
-    network_structure = _create_network_structure(network_structure_name, n_agents, n_cliques)
+    network_structure, _ = build_network_structure(network_structure_name, n_agents, n_cliques)
 
     output_dict = {}
     output_dict["adjacency_matrix"] = nx.to_numpy_array(network_structure).tolist()
 
-    # Write the prompts and their description in the output dictionary
-    with open(json_prompt_init, 'r') as file:
-        data = json.load(file)
-        for d in data:
-            if d['name'] == init_prompt:
-                prompt_init = d['prompt']
+    prompt_init = load_named_prompt(PROMPT_INIT_JSON, init_prompt)
+    prompt_update = load_named_prompt(PROMPT_UPDATE_JSON, update_prompt)
+    personality_list = load_personalities(PERSONALITIES_JSON, personalities)
     output_dict["prompt_init"] = [prompt_init]
-    
-    with open(json_prompt_update, 'r') as file:
-        data = json.load(file)
-        for d in data:
-            if d['name'] == update_prompt:
-                prompt_update = d['prompt']
-    
     output_dict["prompt_update"] = [prompt_update]
-
-    personality_list = []
-    print("\nAgents personalities:")
-    with open(json_personnalities, 'r') as file:
-        data = json.load(file)
-        for perso in personalities:
-            print(perso)
-            for d in data:
-                if d['name'] == perso:
-                    personality_list.append(d['prompt'])
     output_dict["personality_list"] = personality_list
 
     os.makedirs(os.path.dirname(output_dir + '/'), exist_ok=True)
 
-    llm_backend = False
-    model = None
-    if use_local_model:
-        if not model_source:
-            raise ValueError("Please provide a local model path or Hugging Face repo id")
+    if use_local_model and not model_source:
+        raise ValueError("Please provide a local model path or Hugging Face repo id")
 
-        resolved_model_path = resolve_model_path(
-            model_source,
-            hf_cache_dir or os.path.expanduser("~/.cache/huggingface"),
-        )
+    # One ExperimentConfig for the whole run; the GUI's local backend is llama.cpp.
+    cfg = ExperimentConfig(
+        n_agents=n_agents,
+        n_timesteps=n_timesteps,
+        access_url=server_url,
+        instruct=instruct,
+        generation=GenerationConfig(temperature=temperature),
+        debug=True,
+        output=output_dir,
+        backend=Backend.llama_cpp if use_local_model else Backend.none,
+        model=model_source,
+        hf_cache_dir=hf_cache_dir,
+    )
 
-        resolved_model_path = Path(resolved_model_path)
-        if resolved_model_path.is_dir():
-            gguf_files = sorted(resolved_model_path.rglob("*.gguf"))
-            if len(gguf_files) == 0:
-                raise FileNotFoundError(
-                    f"No .gguf model file found in downloaded snapshot: {resolved_model_path}"
-                )
+    # Load the model once (reused across seeds); remote server -> (False, None).
+    llm_backend, model = load_llm_backend(cfg)
 
-            selected_gguf = next(
-                (model_file for model_file in gguf_files if "q4_k_m" in model_file.name.lower()),
-                gguf_files[0],
-            )
-
-            if len(gguf_files) > 1:
-                print(
-                    f"Multiple .gguf model files found in {resolved_model_path}; using {selected_gguf.name}",
-                    flush=True,
-                )
-
-            resolved_model_path = selected_gguf
-
-        from llama_cpp import Llama
-
-        model = Llama(
-            model_path=str(resolved_model_path),
-            n_ctx=4096,
-            n_gpu_layers=-1,
-            verbose=False,
-        )
-        llm_backend = "llama.cpp"
-    
     for seed in range(n_seeds):
         print(f"\nSeed {seed}")
 
@@ -155,15 +84,6 @@ def run_simulation(
                 total_generations,
             )
 
-        cfg = ExperimentConfig(
-            n_agents=n_agents,
-            n_timesteps=n_timesteps,
-            access_url=server_url,
-            instruct=instruct,
-            temperature=temperature,
-            debug=True,
-            output=output_dir,
-        )
         stories = run_simul(
             cfg,
             network_structure,

@@ -57,6 +57,8 @@ def _ensure_nltk_ready():
         nltk.download("wordnet", quiet=True)
         nltk.download("stopwords", quiet=True)
 
+        # Deferred import: these submodules must be imported only after the
+        # corresponding nltk data has been downloaded above.
         from nltk.corpus import wordnet as _wordnet
         from nltk.corpus import stopwords as _stopwords
         _wordnet.ensure_loaded()

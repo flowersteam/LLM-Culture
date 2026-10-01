@@ -1,273 +1,156 @@
-# LLM-Culture: A flexible and general-purpose framework for conducting cultural evolution experiments with Large Language Models
+# LLM-Culture
 
-This repository provides a comprehensive framework for studying the cultural evolution of linguistic content in populations of Large Language Models (LLM).
+A framework for studying the **cultural evolution of text in populations of LLMs**.
 
-It allows organizing LLM agents into networks wherein each agent interacts with neighboring agents by exchanging stories. Each agent can be assigned specific personalities and transmission instructions, serving as prompts for generating new stories from their neighbors’ narratives. Once the network structure and agent characteristics are defined, you can simulate the cultural evolution of texts across generations of agents. We also provide built-in metrics and visualizations to analyze the results.
-
+Agents are organized into a network; each agent rewrites its neighbours' stories
+according to a personality and a transformation prompt. You simulate how texts
+evolve across generations, then analyze the results with built-in metrics and plots.
 
 ![introduction_figure](/static/introduction_figure.png)
 
-
-## Installation 
-
-1 - Clone the repository
-
+## Installation
 
 ```bash
 git clone git@github.com:flowersteam/LLM-Culture.git
 cd LLM-Culture/
 ```
 
-# TODO: simplify this
-2 - Install the dependencies 
-
-This project uses [uv](https://docs.astral.sh/uv/). Install `uv` if you don't have it:
+This project uses [uv](https://docs.astral.sh/uv/):
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
+curl -LsSf https://astral.sh/uv/install.sh | sh   # if you don't have uv
+uv sync                                            # base install
+uv sync --extra serving                            # + local inference backends
 ```
 
-Then create the environment (uv reads `pyproject.toml` and the pinned `uv.lock`,
-and provisions a compatible Python automatically):
+Prefix commands with `uv run` (e.g. `uv run python run_experiment.py ...`).
 
-```bash
-uv sync
-```
+### Choosing a backend
 
-Run any command with the `uv run` prefix (e.g. `uv run python scripts/run_simulation.py ...`),
-or activate the environment with `source .venv/bin/activate`.
+| Backend | Where it runs | Notes |
+| --- | --- | --- |
+| `none` | — | talk to a remote OpenAI-compatible server via `access_url` |
+| `llama_cpp` | CPU / Apple Metal (**macOS + Linux**) | loads a local GGUF model |
+| `vllm` | **Linux / GPU only** | skipped automatically on macOS |
 
-To use a local serving backend, install the optional `serving` extra:
+For `llama_cpp` / `vllm`, `model` is a local path or a Hugging Face repo id (downloaded
+to `~/.cache/huggingface` on first use and cached afterwards). For a multi-file GGUF
+repo the loader picks the `q4_k_m` file by default, or set `llama_cpp.gguf_filename`.
 
-```bash
-uv sync --extra serving
-```
+## Usage
 
-This exposes two local backends:
+### Run an experiment (recommended): `run_experiment.py`
 
-- **llama.cpp** (`llama-cpp-python`) — runs on CPU / Apple Metal, works on **macOS and Linux**. Use this for local runs on a Mac.
-- **vLLM** — **Linux/GPU only**. It has no macOS wheels, so it is skipped automatically on macOS (a platform marker keeps `uv sync --extra serving` working there — you simply get the llama.cpp backend). To use vLLM, run on a Linux/GPU machine or Colab.
-
-3 - Choose an LLM backend
-
-The framework supports two ways of talking to a model:
-
-- A remote server exposing an OpenAI-compatible URL. This is the simplest option if you already have an inference endpoint.
-- A local Hugging Face model. The code accepts either a local path or a Hugging Face repo id, downloads the snapshot on first use, and reuses the cached copy afterwards.
-
-When you use a Hugging Face repo id, the model is downloaded into the Hugging Face cache directory. By default, that is `~/.cache/huggingface`, unless you set a different cache path in the GUI or in the code. If the snapshot contains several `.gguf` files, the loader prefers the one whose filename contains `q4_k_m` and otherwise falls back to the first `.gguf` file it finds.
-
-To select the right model name, use the repository id shown on the Hugging Face model page, for example `mistralai/Mistral-7B-Instruct-v0.2` or `unsloth/SmolLM2-135M-Instruct-GGUF`. If the repository is gated, make sure your Hugging Face credentials are available before launching the run.
-    
-
-## Usage 
-
-You can use the framework both from command-line interface or from a web interface :
-
-### 1 - Command Line 
-
-Run a simulation with your desired parameters (see parameters details above): 
-
-```bash
-uv run python3 scripts/run_simulation.py --output_file simulation_test
-```
-
-<details>
-    
-  <summary> Show all parameter flags </summary>
-    
-  - "-na" : Number of agents (int).
-
-  - "-nt" : Number of timesteps (int).
-
-  - "-ns" : Network structure (choices: 'sequence','fully_connected' 'circle', 'caveman').
-
-  - "-nc" : Number of cliques for a caveman network (int).
-
-  - "-pi": Name of the initialization prompt (str). The prompt should be already registered in llm_culture/data/parameters/prompt_init.json.
-
-  - "-pu" : Name of the transformation prompt (str). The prompt should be already registered in llm_culture/data/parameters/prompt_update.json.
-
-  - "-pl" : Personality list (list of str). Each personality should be already registered in llm_culture/data/parameters/personalities.json. The length of the list of personalities should be equal to the number of agents.
-
-  - "-o" : Name of the folder in which to store results (str).
-
-  - "-url": URL to send the prompt to (str).
-
-</details>
-
-The results of the experiment will be stored in a directory called `results/simulation_test/` in this case. You can then analyze the texts produced with this command:
-
-```bash
-uv run python3 scripts/run_analysis.py --dir simulation_test
-```
-
-To compare the results of several experiments, run:
-
-```bash
-uv run python3 scripts/run_comparison_analysis.py --dirs experiment_1+experiment_2+experiment_3
-```
-
-It will store the analysis figures in a directory called `results/experiments_comparisons/experiment_1-experiment_2-experiment_3/`.
-
-#### Run a full experiment (simulation + analysis) with Hydra
-
-The easiest way to run an experiment is the Hydra-driven `run_experiment.py`. It
-runs the simulation and then the analysis on the same output folder in a single
-command. All configuration lives in `conf/config.yaml`; override any field on the
-command line with `key=value` syntax:
+The Hydra-driven runner does **simulation + analysis** in one command. Defaults live
+in the `ExperimentConfig` dataclass (`llm_culture/config.py`); override any field with
+`key=value`:
 
 ```bash
 uv run python run_experiment.py \
   backend=llama_cpp model=unsloth/SmolLM2-135M-Instruct-GGUF \
-  n_agents=2 n_timesteps=2 n_seeds=1 output=results/my_test verbose=true
+  n_agents=2 n_timesteps=2 n_seeds=1 output=results/my_test
 ```
 
-Common fields (see `conf/config.yaml` for the full, commented list):
+Common fields:
 
 | Field | Meaning |
 | --- | --- |
 | `n_agents`, `n_timesteps`, `n_seeds` | population size, generations, seeds |
 | `network_structure` | `sequence` / `fully_connected` / `circle` / `caveman` |
 | `prompt_init`, `prompt_update`, `personality_list` | registered prompt / persona names |
-| `backend` | `none` (remote server via `access_url`), `vllm`, or `llama_cpp` |
-| `model` | HF repo id or local path (for `vllm` / `llama_cpp`) |
-| `temperature`, `instruct`, `verbose` | sampling temperature, instruct vs raw, print stories |
+| `backend`, `model` | backend selector + model id/path |
+| `generation.temperature`, `generation.max_tokens`, `generation.top_p` | sampling knobs |
+| `llama_cpp.*` / `vllm.*` | backend tuning (e.g. `llama_cpp.n_gpu_layers`, `vllm.gpu_memory_utilization`) |
+| `instruct`, `verbose` | instruct vs raw completion, print stories as they generate |
 | `output` | results folder |
 | `analysis.run`, `analysis.plot` | skip analysis (simulate only) / also open figures interactively |
 
-Sweep over several values in one command with `-m` (Hydra multirun):
+The config is a *structured config*: unknown fields, wrong types, or invalid enum
+values are rejected with a clear error before anything runs.
 
-```bash
-uv run python run_experiment.py -m n_agents=2,5,10 \
-  backend=llama_cpp model=unsloth/SmolLM2-135M-Instruct-GGUF
-```
-
-Rather than passing fields on the command line, you can define a reusable
-**experiment preset**. Presets live in `conf/experiment/` — copy the provided
-`conf/experiment/base.yaml`, edit the fields, and run it by name (overriding
-extra fields on top if you like):
+**Presets.** Reusable setups live in `conf/experiment/` — copy `base.yaml` and run it
+by name. See `big_model_small_gpu.yaml` for how to tune backend memory/offload:
 
 ```bash
 uv run python run_experiment.py +experiment=base
-uv run python run_experiment.py +experiment=base n_timesteps=10
+uv run python run_experiment.py +experiment=base n_timesteps=10   # override on top
 ```
 
-The config is a *structured config*: it is validated against the
-`ExperimentConfig` dataclass in `llm_culture/config.py`, so unknown fields,
-wrong types, or invalid enum values (`backend`, `network_structure`) are caught
-with a clear error before anything runs.
-
-The standalone `scripts/run_simulation.py` and `scripts/run_analysis.py` shown
-below still work with their original flags (they are used by the reproduction
-scripts); `run_experiment.py` reuses their code rather than replacing them.
-
-
-### 2 - Web Interface
-
-Launch the web user interface with the following command:
+**Sweeps** (`-m` multirun):
 
 ```bash
-uv run python3 web_interface.py
+uv run python run_experiment.py -m n_agents=2,5,10 +experiment=base
 ```
 
-This starts a local Flask app, typically at `http://127.0.0.1:5000`. From there you can launch a simulation, add prompts, analyze results, and browse previous experiment outputs.
+### Standalone scripts
 
-How to use the GUI:
-
-1. Open the simulation page and enter an experiment name. The results will be written under `results/experiments/<experiment name>/`.
-2. Set the number of agents, generations, and seeds.
-3. Choose a network structure. The GUI currently exposes `fully_connected`, `sequence`, `circle`, and `caveman`. For `caveman`, also set the number of cliques.
-4. Pick the initial prompt, update prompt, and personality for each agent from the registered lists. If a value is missing, use the built-in "Add Prompt" form to register a new prompt or personality before starting the run.
-5. Choose the LLM mode. In `Remote server` mode, paste the OpenAI-compatible server URL. In `Local model or Hugging Face download` mode, provide either a local model path or a Hugging Face repo id, plus an optional cache directory.
-6. Start the simulation. The UI shows progress while the job runs and redirects you to the analysis page when it finishes.
-7. Open the analysis or comparison pages to generate plots for one experiment or several experiments.
-
-### Notebook 
-
-
-We provide a notebook allowing to run experiments on Google Colab: [URL](https://colab.research.google.com/drive/1bD9x4KGus6s0ifRiC1rbaZUMCtAxJywf?usp=sharing)
-
-Note: Make sure to select a GPU-based runtime (e.g. GPU T4). 
-
-
-## Reproducibility:
-
-### Data
-
-The data presented in the paper is provided in the experiments/ folder. 
-
-To reproduce the figures corresponding to a single experiment, run:
+The simulation and analysis steps also run on their own (these are what the
+reproduction scripts use):
 
 ```bash
-uv run python3 scripts/run_analysis.py --folder "results/experiments/Network Structure/[experiment_name, e.g. CAVEMAN_10_10_combine5seeds]"
+uv run python scripts/run_simulation.py -na 2 -nt 2 -s 1 -o results/my_test \
+  --use_llama_cpp --model unsloth/SmolLM2-135M-Instruct-GGUF
+uv run python scripts/run_analysis.py --folder results/my_test
 ```
 
-To reproduce the figures comparing several variants:
+### Web interface
 
 ```bash
-# Pass experiment names relative to `results/experiments/`, separated by '+'
-uv run python3 scripts/run_comparison_analysis.py --dirs "Network Structure/CAVEMAN_10_10_combine5seeds+Network Structure/CIRCLE_10_10_combine5seeds+Network Structure/FC_10_10_combine5seeds
+uv run python web_interface.py
 ```
 
-The comparison figures are saved under `results/experiments_comparisons/` in a folder named after the joined experiment basenames (see existing folders in `results/experiments_comparisons/`).
+Launches a local Flask app to configure/launch runs, register prompts, and browse
+plots. Choose `Remote server` mode (paste an OpenAI-compatible URL) or
+`Local model` mode (local path or HF repo id).
 
+### Notebook
 
-### Reproduction Scripts
+A Colab notebook is available [here](https://colab.research.google.com/drive/1bD9x4KGus6s0ifRiC1rbaZUMCtAxJywf?usp=sharing)
+(select a GPU runtime).
 
-The scripts provided in reproduction_scripts allow to reproduce the experiments presented in the paper. Note that due to the stochasticity of text generation, the outputs will be different from those presented in the paper. 
+## Reproducibility
 
-It saves their outputs in `results/experiments/`, generates the analysis plots, and then writes the comparison figures in `results/experiments_comparisons/`. The other scripts in that directory follow the same structure for persona, prompt, and transmission-chain comparisons.
-
-To run them: 
-
+Paper data is under `results/experiments/`. Reproduce single-experiment figures:
 
 ```bash
-uv run python3 transmission_chain.py
+uv run python scripts/run_analysis.py --folder "results/experiments/Network Structure/CAVEMAN_10_10_combine5seeds"
 ```
+
+Comparison figures (names relative to `results/experiments/`, separated by `+`):
 
 ```bash
-uv run python3 network.py
+uv run python scripts/run_comparison_analysis.py --dirs "Network Structure/CAVEMAN_10_10_combine5seeds+Network Structure/CIRCLE_10_10_combine5seeds"
 ```
 
-```bash
-uv run python3 transformation_prompt.py
-```
+The `reproduction_scripts/` directory regenerates the paper experiments
+(`transmission_chain.py`, `network.py`, `transformation_prompt.py`,
+`persona_prompt.py`). Outputs differ from the paper due to generation stochasticity.
 
-```bash
-uv run python3 persona_prompt.py
-```
+## Implemented analysis
 
+Single-experiment plots (registered in `llm_culture/analysis/plots.py`):
 
+| Plot | Description |
+| --- | --- |
+| Similarity Matrix | similarity between all stories in an experiment |
+| Between-Generations Similarity Matrix | each generation vs every other |
+| Word Chains | evolution of key words across generations |
+| Similarity Graph | generations as a graph weighted by similarity |
+| Similarity with First Generation | similarity to the initial generation over time |
+| Within-Generation Similarity | how similar stories are inside each generation |
+| Successive-Generation Similarity | similarity between consecutive generations |
 
-## Implemented Analysis
+![analysis_plots](/static/experiment_analysis_figures.png)
 
-  The default single-experiment plots are registered in `llm_culture/analysis/plots.py` and include:
+## Extending the framework
 
-  | Plot Type | Description |
-  | --- | --- |
-  | **Similarity Matrix** | Compares the similarity between all the stories generated during an experiment. |
-  | **Between Generations Similarity Matrix** | Compares each generation with every other generation. |
-  | **Word Chains Plot** | Visualizes the evolution of key words in texts through generations. |
-  | **Similarity Graph** | Shows generations as a graph weighted by similarity. |
-  | **Similarity with the First Generation** | Tracks similarity to the initial generation across time. |
-  | **Within-Generation Similarity** | Tracks how similar stories are inside each generation. |
-  | **Successive-Generation Similarity** | Tracks similarity between consecutive generations. |
+**Parameters** (named prompts, personalities, network structures) live in
+`llm_culture/data/parameters/`.
 
-  ![analysis_plots](/static/experiment_analysis_figures.png)
-
-## Building on the framework
-
-### Add a Network Structure
-
-The built-in topologies are `sequence`, `circle`, `caveman`, and `fully_connected`. To add a custom structure, register it in `data/parameters/network_structures.json` using the same adjacency-list format used by the loader in `llm_culture/simulation/utils.py`. The helper `register_custom_network_structure` in that module can update the file for you.
-
-If you want the new structure to appear in the GUI, also add it to the network dropdown in `templates/simulation.html`.
-
-### Add Plots or Metrics
-
-Single-experiment plots are registered in `llm_culture/analysis/plots.py` through `DEFAULT_PLOT_NAMES` and `PLOT_REGISTRY`. Comparison plots are registered in `llm_culture/analysis/comparison_plots.py` through `DEFAULT_COMPARISON_PLOT_NAMES` and `COMPARISON_PLOT_REGISTRY`.
-
-To add a new plot, implement the plotting function, add the required metric data in the analysis step if needed, then register the function in the relevant registry. If the plot should be generated by default, add its name to the corresponding default list.
-
-
+- *Add a network structure*: register it in
+  `llm_culture/data/parameters/network_structures.json` (adjacency-list format), or use
+  `register_custom_network_structure` in `llm_culture/simulation/utils.py`. To expose it
+  in the GUI, add it to the dropdown in `templates/simulation.html`.
+- *Add a plot/metric*: implement the function and register it in
+  `llm_culture/analysis/plots.py` (`PLOT_REGISTRY` / `DEFAULT_PLOT_NAMES`) or
+  `comparison_plots.py` for comparison plots.

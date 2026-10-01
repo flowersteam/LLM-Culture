@@ -14,6 +14,7 @@ from flask import send_from_directory
 from scripts.run_analysis import main_analysis
 from scripts.run_comparison_analysis import run_comparison_analysis
 from scripts.run_simulation_interface import run_simulation
+from llm_culture.paths import PARAMS_DIR, PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
 
 app = Flask(__name__)
 RESULTS_DIR = 'results/experiments'
@@ -289,9 +290,9 @@ def _get_prompt_options():
     :return: prompt options
     """
     option_files = {
-        'initial_prompts': 'data/parameters/prompt_init.json',
-        'update_prompts': 'data/parameters/prompt_update.json',
-        'personalities': 'data/parameters/personalities.json'
+        'initial_prompts': PROMPT_INIT_JSON,
+        'update_prompts': PROMPT_UPDATE_JSON,
+        'personalities': PERSONALITIES_JSON,
     }
 
     options = {}
@@ -426,7 +427,7 @@ def _write_prompt_option(prompt_type, name, prompt):
     :param name: prompt name
     :param prompt: prompt content
     """
-    file_path = f"data/parameters/{prompt_type}.json"
+    file_path = PARAMS_DIR / f"{prompt_type}.json"
     with open(file_path, 'r') as f:
         prompts = json.load(f)
 
