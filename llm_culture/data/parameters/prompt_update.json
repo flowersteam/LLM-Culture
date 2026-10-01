@@ -14,9 +14,13 @@
     {
         "name": "MaximizeDifference",
         "prompt": "You will receive stories. Create a story that is as different as possible from the stories you received. Just output your story, nothing else."
-    }, 
+    },
     {
         "name": "kid",
         "prompt": "Here is one or more stories you were told as a kid. It is now your turn to tell a story at your kid. Tell that story. Write only one story. Do not output anything else."
+    },
+    {
+        "name": "Combine2",
+        "prompt": "Combine the stories you have received into a single story. Just output the story, nothing else."
     }
 ]
