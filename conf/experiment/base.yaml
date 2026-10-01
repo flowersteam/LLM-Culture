@@ -7,14 +7,14 @@
 #
 # Any field from llm_culture/config.py:ExperimentConfig can be set here.
 
-n_agents: 2
-n_timesteps: 2
+n_agents: 4
+n_timesteps: 4
 n_seeds: 1
 network_structure: sequence        # sequence | fully_connected | circle | caveman
 
 prompt_init: kid
 prompt_update: kid
-personality_list: [Empty, Empty]   # one per agent (length must equal n_agents)
+personality_list: [Empty, Empty, Empty, Empty]   # one per agent (length must equal n_agents)
 
 backend: llama_cpp                 # none | vllm | llama_cpp
 model: unsloth/SmolLM2-135M-Instruct-GGUF

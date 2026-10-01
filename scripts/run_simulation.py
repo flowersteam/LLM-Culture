@@ -6,7 +6,7 @@ from pathlib import Path
 
 import networkx as nx
 
-from llm_culture.simulation.utils import run_simul, build_network_structure, load_named_prompt, load_personalities
+from llm_culture.simulation.utils import run_simul, build_network_structure, load_named_prompt, load_personalities, log_resources
 from llm_culture.simulation.backends import load_llm_backend
 from llm_culture.config import ExperimentConfig, Backend, Network, validate_experiment, GenerationConfig
 from llm_culture.paths import PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
@@ -113,6 +113,11 @@ def run_simulation_from_config(cfg):
     # Select the backend and load a local model if requested
     # (Backend.none -> remote OpenAI-compatible server via cfg.access_url).
     llm_backend, model = load_llm_backend(cfg)
+    # Report resource usage once the (potentially large) model is resident in
+    # memory, so the footprint of the weights is visible. Skipped for the remote
+    # backend, where no model is loaded in this process.
+    if model is not None:
+        log_resources("after model load")
 
     # Build the network graph (shared builder; also supports custom structures)
     network_structure, _ = build_network_structure(cfg.network_structure.value, n_agents, cfg.n_cliques)
@@ -159,6 +164,8 @@ def run_simulation_from_config(cfg):
         print(f"  seed {seed_idx}: saved {out_path}")
 
     print(f"Simulation complete — {cfg.n_seeds} seed(s) written to {os.path.abspath(output_dir)}")
+    if model is not None:
+        log_resources("after simulation")
     return output_dict
 
 
