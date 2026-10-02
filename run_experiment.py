@@ -10,23 +10,23 @@ overriding fields as needed:
 
     uv run python run_experiment.py
     uv run python run_experiment.py \\
-        backend=llama_cpp model=unsloth/SmolLM2-135M-Instruct-GGUF \\
-        n_agents=2 n_timesteps=2 n_seeds=1 output=results/my_test verbose=true
+        backend.kind=llama_cpp backend.model=unsloth/SmolLM2-135M-Instruct-GGUF \\
+        n_timesteps=2 n_seeds=1 output=results/my_test verbose=true
 
 Select a different preset from conf/experiment/ with `experiment=<name>` (no
 leading `+` — the `experiment` group already has a default), optionally
 overriding fields on top:
 
     uv run python run_experiment.py experiment=big_model_small_gpu
-    uv run python run_experiment.py experiment=base n_timesteps=10
+    uv run python run_experiment.py experiment=base n_seeds=2
 
 Sweep with -m (multirun):
 
-    uv run python run_experiment.py -m n_agents=2,5,10
+    uv run python run_experiment.py -m generation.temperature=0.7,0.9,1.1
 
-The standalone scripts/run_simulation.py and scripts/run_analysis.py still work
-with their original argparse flags (used by the reproduction scripts); this
-Hydra entrypoint shares their code via run_simulation_from_config.
+The standalone scripts/run_simulation.py is a sibling Hydra entrypoint that runs
+the simulation only (no analysis) and shares run_simulation_from_config; this
+runner adds the analysis step. scripts/run_analysis.py keeps its own argparse CLI.
 """
 import sys
 from pathlib import Path

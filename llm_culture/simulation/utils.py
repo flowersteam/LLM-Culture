@@ -7,27 +7,34 @@ import networkx as nx
 from huggingface_hub import snapshot_download
 
 from llm_culture.simulation.agent import Agent
-from llm_culture.config import ExperimentConfig, GenerationConfig
+from llm_culture.config import (
+    ExperimentConfig,
+    PopulationConfig,
+    AgentConfig,
+    BackendConfig,
+    Backend,
+    Network,
+    GenerationConfig,
+)
 from llm_culture.paths import PARAMS_DIR, PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
 
 
 def init_agents(
         cfg,
         network_structure,
-        prompt_init,
-        prompt_update,
-        personality_list,
+        agent_specs,
         llm_backend=False,
         model=None,
         sampling_params=None,
     ):
     """Initialize the agents from an ExperimentConfig and the runtime objects.
 
-    :param cfg: ExperimentConfig (provides n_agents, access_url, debug, instruct, temperature)
+    :param cfg: ExperimentConfig (provides the shared scalars via Agent:
+        backend.access_url, debug, generation)
     :param network_structure: the built networkx graph (directed => sequence mode)
-    :param prompt_init: resolved initial prompt text
-    :param prompt_update: resolved update prompt text
-    :param personality_list: resolved personality texts (one per agent)
+    :param agent_specs: ordered list of per-agent
+        ``(personality_text, prompt_init_text, prompt_update_text)`` triples,
+        one per agent (length == population.n_agents)
     :param llm_backend: loaded backend tag ("vllm"/"llama.cpp") or False
     :param model: loaded model instance or None
     :param sampling_params: optional sampling params
@@ -40,8 +47,7 @@ def init_agents(
     agent_list = []
     wait = 0
 
-    for agent_id in range(cfg.n_agents):
-        personality = personality_list[agent_id]
+    for agent_id, (personality, prompt_init, prompt_update) in enumerate(agent_specs):
         agent = Agent(
             cfg,
             agent_id,
@@ -64,9 +70,7 @@ def init_agents(
 def run_simul(
         cfg,
         network_structure,
-        prompt_init,
-        prompt_update,
-        personality_list,
+        agent_specs,
         llm_backend=False,
         model=None,
         sampling_params=None,
@@ -75,12 +79,10 @@ def run_simul(
     """Run the simulation.
 
     :param cfg: ExperimentConfig providing the scalar simulation params
-        (n_agents, n_timesteps, access_url, debug, instruct, temperature,
-        verbose, output)
+        (n_timesteps, verbose) and the shared Agent scalars
     :param network_structure: the built networkx graph
-    :param prompt_init: resolved initial prompt text
-    :param prompt_update: resolved update prompt text
-    :param personality_list: resolved personality texts (one per agent)
+    :param agent_specs: ordered list of per-agent
+        ``(personality_text, prompt_init_text, prompt_update_text)`` triples
     :param llm_backend: loaded backend tag ("vllm"/"llama.cpp") or False
     :param model: loaded model instance or None
     :param sampling_params: optional sampling params
@@ -94,9 +96,7 @@ def run_simul(
     agent_list = init_agents(
         cfg,
         network_structure,
-        prompt_init,
-        prompt_update,
-        personality_list,
+        agent_specs,
         llm_backend=llm_backend,
         model=model,
         sampling_params=sampling_params,
@@ -434,22 +434,35 @@ def run_experiment(config, repo_dir=None, hf_cache_dir=None):
         )
 
     # 4. Run the simulation for each seed using the framework's own run_simul()
+    #    One agent per personality entry; each gets the shared init/update prompts.
+    #    (This reproduction path loads its own model above and passes the llm_backend
+    #    tag straight to run_simul, so cfg.backend.kind is not used here.)
+    agent_specs = [
+        (persona_text, prompt_init_text, prompt_update_text)
+        for persona_text in personality_texts
+    ]
     for seed in range(config["n_seeds"]):
         print(f"\n=== Seed {seed} ===")
         cfg = ExperimentConfig(
-            n_agents=config["n_agents"],
-            n_timesteps=config["n_timesteps"],
-            access_url=config["access_url"],
-            debug=config.get("debug", False),
+            population=PopulationConfig(
+                network_structure=Network(config["network_structure"]),
+                n_cliques=config.get("n_cliques", 2),
+                agents=[AgentConfig(count=1) for _ in range(config["n_agents"])],
+            ),
+            backend=BackendConfig(
+                kind=Backend.none,
+                model=config.get("model"),
+                access_url=config["access_url"] or "",
+            ),
             generation=GenerationConfig(temperature=config.get("temperature", 0.8)),
+            n_timesteps=config["n_timesteps"],
             output=str(output_folder),
+            debug=config.get("debug", False),
         )
         stories = run_simul(
             cfg,
             network_structure,
-            prompt_init_text,
-            prompt_update_text,
-            personality_texts,
+            agent_specs,
             llm_backend=config.get("llm_backend", False),
             model=model,
             sampling_params=config.get("sampling_params", None),
@@ -487,15 +500,46 @@ def resolve_model_path(model, hf_cache_dir, gguf_filename=None):
  
     print(f"Model '{model}' not found locally — downloading into {hf_cache_dir} (cached after first run)...",
           flush=True)
-    local_path = snapshot_download(repo_id=model, cache_dir=hf_cache_dir)
+    # A GGUF repo (e.g. TheBloke/*-GGUF) holds ONE model re-encoded at ~15 different
+    # quantization levels, each a SEPARATE .gguf file — there is no fp16 base here.
+    # Downloading the whole repo pulls every quant (tens of GB). Restrict the fetch
+    # to just the quant we want via allow_patterns; `gguf_filename` selects it
+    # (default: q4_k_m). fnmatch is case-sensitive, so cover upper/lower spellings
+    # (Q4_K_M vs q4_k_m).
+    quant_token = gguf_filename or "q4_k_m"
+    allow_patterns = sorted({
+        f"*{quant_token}*.gguf",
+        f"*{quant_token.lower()}*.gguf",
+        f"*{quant_token.upper()}*.gguf",
+    })
+    print(f"  (fetching only files matching {allow_patterns})", flush=True)
+    local_path = snapshot_download(
+        repo_id=model, cache_dir=hf_cache_dir, allow_patterns=allow_patterns
+    )
     print(f"Model available at {local_path}")
 
     local_path = Path(local_path)
     if local_path.is_dir():
         gguf_files = sorted(local_path.rglob("*.gguf"))
         if len(gguf_files) == 0:
+            try:
+                from huggingface_hub import HfApi
+                available = sorted(
+                    f for f in HfApi().list_repo_files(model)
+                    if f.lower().endswith(".gguf")
+                )
+            except Exception:
+                available = []
+            hint = (
+                f"Available .gguf files in {model}: {available}. "
+                "Set llama_cpp.gguf_filename to a tag that appears in one of them."
+                if available else
+                "Could not list the repo's files; check the repo id and "
+                "llama_cpp.gguf_filename."
+            )
             raise FileNotFoundError(
-                f"No .gguf model file found in downloaded snapshot: {local_path}"
+                f"No .gguf file matched quant {quant_token!r} after a filtered "
+                f"download of {model} (allow_patterns={allow_patterns}). " + hint
             )
 
         selected_gguf = None

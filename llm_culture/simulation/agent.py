@@ -27,9 +27,9 @@ class Agent:
         self.go = True
         self.sequence = sequence
         # scalar parameters shared across all agents, read from the experiment config
-        self.access_url = cfg.access_url
+        self.access_url = cfg.backend.access_url
         self.debug = cfg.debug
-        self.instruct = cfg.instruct
+        self.instruct = cfg.generation.instruct
         self.generation = cfg.generation
         # runtime objects (loaded model / backend tag)
         self.llm_backend = llm_backend

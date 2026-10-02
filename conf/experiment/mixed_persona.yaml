@@ -1,0 +1,37 @@
+# @package _global_
+#
+# Example: a MIXED population — different agent types in one network.
+#
+#   uv run python run_experiment.py experiment=mixed_persona
+#
+# This is the paper's "mixed" persona setup expressed directly: half the agents
+# are "Creative", half are "NotCreative". With the agent-group model you just list
+# the types and their counts (no index-aligned personality list to keep in sync).
+# Agents are laid out group by group onto node indices 0..n-1.
+#
+# fully_connected is a population network (not a chain), so n_timesteps (the number
+# of generations) is independent of the agent count.
+
+population:
+  network_structure: fully_connected
+  agents:
+    - count: 3
+      personality: Creative
+    - count: 3
+      personality: NotCreative
+
+backend:
+  kind: llama_cpp
+  model: unsloth/SmolLM2-135M-Instruct-GGUF
+
+generation:
+  temperature: 0.8
+
+n_timesteps: 3
+n_seeds: 1
+verbose: true
+output: results/mixed_persona
+
+analysis:
+  run: true
+  plot: false

@@ -3,11 +3,14 @@
 These dataclasses are the single source of truth for an experiment's parameters.
 Hydra registers `ExperimentConfig` as a schema (see run_experiment.py), so a YAML
 config is validated against it and converted straight into a typed instance via
-`OmegaConf.to_object`. The standalone argparse CLI in scripts/run_simulation.py
-also builds an `ExperimentConfig`, so both entrypoints share one config type.
+`OmegaConf.to_object`. Both entrypoints (run_experiment.py = simulation + analysis,
+scripts/run_simulation.py = simulation only) read the same config type.
 
-Flat layout for now (every field at the top level); grouping into nested
-sub-configs can come later.
+Layout: related knobs are grouped into small sub-configs
+(`population`, `backend`, `generation`, `analysis`); cross-cutting scalars
+(`n_timesteps`, `n_seeds`, `seed_offset`, `output`, `verbose`, `debug`) stay at
+the top level. The population is described as agent *groups* (AgentConfig), not a
+per-agent list, so `population.n_agents` is derived rather than a field to sync.
 """
 from dataclasses import dataclass, field
 from enum import Enum
@@ -73,11 +76,31 @@ class VllmConfig:
 
 
 @dataclass
+class BackendConfig:
+    """Which LLM backend to run against, and how to load the model.
+
+    Only the sub-config matching ``kind`` is used:
+      * ``kind=none``      -> talk to a remote OpenAI-compatible server at ``access_url``
+                             (no model is loaded in-process; ``llama_cpp`` / ``vllm`` ignored).
+      * ``kind=llama_cpp`` -> load ``model`` with llama.cpp, tuned by ``llama_cpp.*``.
+      * ``kind=vllm``      -> load ``model`` with vLLM, tuned by ``vllm.*``.
+    """
+    kind: Backend = Backend.none      # none (remote server) | llama_cpp | vllm
+    model: Optional[str] = None       # HF repo id or local path (required for llama_cpp/vllm)
+    access_url: str = ""              # remote server URL (used when kind == none)
+    hf_cache_dir: Optional[str] = None  # HF download cache (default ~/.cache/huggingface)
+    # backend-specific tuning (only the one matching `kind` is read)
+    llama_cpp: LlamaCppConfig = field(default_factory=LlamaCppConfig)
+    vllm: VllmConfig = field(default_factory=VllmConfig)
+
+
+@dataclass
 class GenerationConfig:
-    """LLM text-generation sampling options (shared by every backend)."""
+    """How each story is generated: the sampling knobs plus the request style."""
     temperature: float = 0.8
     max_tokens: int = 512
     top_p: float = 0.95
+    instruct: bool = True   # True -> chat/instruct API; False -> raw text completion (base models)
 
 
 @dataclass
@@ -92,67 +115,111 @@ class AnalysisConfig:
 
 
 @dataclass
-class ExperimentConfig:
-    # ---- Simulation ----
-    n_agents: int = 2
-    n_timesteps: int = 2
-    n_seeds: int = 2
-    seed_offset: int = 0
+class AgentConfig:
+    """One agent *type*: how many agents share it, plus the persona and prompts
+    that define how they write / rewrite stories.
+
+    A population (see PopulationConfig) is an ordered list of these groups. The
+    agents are laid out group by group onto network node indices 0..n-1, so e.g.
+    ``[AgentConfig(count=3, personality="Fantasy"), AgentConfig(count=2,
+    personality="SciFi")]`` places 3 Fantasy agents (nodes 0-2) then 2 SciFi
+    agents (nodes 3-4). The common homogeneous case is a single group whose
+    ``count`` is the population size.
+
+    ``personality`` / ``prompt_init`` / ``prompt_update`` are registered *names*
+    looked up in llm_culture/data/parameters/{personalities,prompt_init,
+    prompt_update}.json.
+    """
+    count: int = 2                 # how many agents of this type
+    personality: str = "Empty"     # persona name (personalities.json)
+    prompt_init: str = "kid"       # seed-story prompt, used on an agent's first (cold) step
+    prompt_update: str = "kid"     # transformation instruction, used once it has neighbour stories
+
+
+@dataclass
+class PopulationConfig:
+    """The agents and how they are wired together.
+
+    ``n_agents`` is **derived** (``sum`` of the group counts), so there is no
+    separate agent-count field to keep in sync with a per-agent list.
+    """
     network_structure: Network = Network.sequence
     n_cliques: int = 2  # only used when network_structure == caveman
-    prompt_init: str = "kid"
-    prompt_update: str = "kid"
-    personality_list: List[str] = field(default_factory=lambda: ["Empty", "Empty"])
-    instruct: bool = True   # False -> raw completion mode
-    verbose: bool = False   # print each agent's generated story text
+    agents: List[AgentConfig] = field(default_factory=lambda: [AgentConfig()])
 
-    # ---- LLM backend ----
-    backend: Backend = Backend.none
-    model: Optional[str] = None       # HF repo id or local path (required for vllm/llama_cpp)
-    access_url: str = ""              # server URL (used when backend == none)
-    hf_cache_dir: Optional[str] = None
-    # backend-specific tuning (only the sub-config matching `backend` is used)
-    llama_cpp: LlamaCppConfig = field(default_factory=LlamaCppConfig)
-    vllm: VllmConfig = field(default_factory=VllmConfig)
+    @property
+    def n_agents(self) -> int:
+        """Total number of agents = sum of each group's count."""
+        return sum(group.count for group in self.agents)
 
-    # ---- Generation (sampling) ----
+
+@dataclass
+class ExperimentConfig:
+    # ---- Who runs + how they're wired + the task prompts ----
+    population: PopulationConfig = field(default_factory=PopulationConfig)
+    # ---- Where the model runs ----
+    backend: BackendConfig = field(default_factory=BackendConfig)
+    # ---- How text is generated ----
     generation: GenerationConfig = field(default_factory=GenerationConfig)
-
-    # ---- Output ----
-    output: str = "results/default_folder"
-    debug: bool = False
-
-    # ---- Analysis ----
+    # ---- Post-run analysis ----
     analysis: AnalysisConfig = field(default_factory=AnalysisConfig)
+
+    # ---- Schedule / repetition (cross-cutting scalars, kept flat) ----
+    n_timesteps: int = 2    # number of generations. For a `sequence` network this MUST
+                            # equal population.n_agents (one generation per agent); see
+                            # validate_experiment.
+    n_seeds: int = 2        # independent repeats of the whole run
+    seed_offset: int = 0    # start index for output{i}.json naming (parallel seed runs)
+
+    # ---- Output / logging ----
+    output: str = "results/default_folder"
+    verbose: bool = False   # print each agent's generated story text
+    debug: bool = False
 
 
 def validate_experiment(cfg: ExperimentConfig) -> None:
     """Validate cross-field constraints the schema can't express.
 
-    Raises ValueError with a clear message when the config is inconsistent.
+    Raises ValueError with a clear, actionable message when the config is
+    inconsistent.
     """
-    if cfg.backend in (Backend.vllm, Backend.llama_cpp) and not cfg.model:
+    backend = cfg.backend
+    if backend.kind in (Backend.vllm, Backend.llama_cpp) and not backend.model:
         raise ValueError(
-            f"backend={cfg.backend.value} requires `model` to be set "
+            f"backend.kind={backend.kind.value} requires `backend.model` to be set "
             "(a Hugging Face repo id or a local model path)."
         )
-    if cfg.backend == Backend.none and not cfg.access_url:
+    if backend.kind == Backend.none and not backend.access_url:
         raise ValueError(
-            "backend=none means 'send requests to a remote OpenAI-compatible "
-            "server', but `access_url` is empty — there is nothing to call. "
+            "backend.kind=none means 'send requests to a remote OpenAI-compatible "
+            "server', but `backend.access_url` is empty — there is nothing to call. "
             "The bare default config has no LLM wired up on purpose; pick one:\n"
             "  • local smoke test (recommended first run):\n"
             "      uv run python run_experiment.py experiment=base\n"
             "  • a local model via llama.cpp:\n"
-            "      uv run python run_experiment.py backend=llama_cpp "
-            "model=unsloth/SmolLM2-135M-Instruct-GGUF\n"
+            "      uv run python run_experiment.py backend.kind=llama_cpp "
+            "backend.model=unsloth/SmolLM2-135M-Instruct-GGUF\n"
             "  • a remote OpenAI-compatible server:\n"
-            "      uv run python run_experiment.py access_url=http://localhost:8000"
+            "      uv run python run_experiment.py backend.access_url=http://localhost:8000"
         )
-    if len(cfg.personality_list) != cfg.n_agents:
+
+    pop = cfg.population
+    if pop.n_agents < 1:
         raise ValueError(
-            f"personality_list has {len(cfg.personality_list)} entrie(s) but "
-            f"n_agents={cfg.n_agents}; provide exactly one persona per agent."
+            "population has no agents — the agent group counts sum to "
+            f"{pop.n_agents}. Add at least one AgentConfig with count >= 1."
         )
-    if cfg.network_structure == Network.caveman and cfg.n_cliques <= 0:
+    if pop.network_structure == Network.caveman and pop.n_cliques <= 0:
         raise ValueError("network_structure=caveman requires n_cliques > 0.")
+
+    # A `sequence` network is a transmission chain: agent i generates exactly once,
+    # at timestep i, so the number of generations is fixed by the agent count.
+    if pop.network_structure == Network.sequence and cfg.n_timesteps != pop.n_agents:
+        raise ValueError(
+            "network_structure=sequence is a transmission chain: it runs exactly one "
+            f"generation per agent, so n_timesteps must equal the number of agents "
+            f"({pop.n_agents}). Got n_timesteps={cfg.n_timesteps}. "
+            f"Set n_timesteps={pop.n_agents} (or change the agent counts), or use a "
+            "non-sequence network (fully_connected / circle / caveman) where the two "
+            "are independent."
+        )

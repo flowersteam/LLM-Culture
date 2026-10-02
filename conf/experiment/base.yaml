@@ -1,30 +1,40 @@
 # @package _global_
 #
-# Base experiment preset — this is the DEFAULT (a bare `run_experiment.py` uses it).
-# Copy this file (e.g. conf/experiment/my_run.yaml), edit the fields, and run it with:
+# Base experiment preset — a small local llama.cpp smoke test (the default).
+# Copy this file (e.g. conf/experiment/my_run.yaml), edit the fields, and run it:
 #
 #   uv run python run_experiment.py experiment=my_run
 #
 # Any field from llm_culture/config.py:ExperimentConfig can be set here.
 
-n_agents: 4
-n_timesteps: 4
-n_seeds: 1
-network_structure: sequence        # sequence | fully_connected | circle | caveman
+# WHO runs + how they're wired. The population is a list of agent *groups*; each
+# group is `count` agents sharing a persona + prompts. n_agents is the sum of the
+# counts (here 4). For a `sequence` network the chain runs one generation per
+# agent, so n_timesteps below must equal the agent count.
+population:
+  network_structure: sequence        # sequence | fully_connected | circle | caveman
+  agents:
+    - count: 4
+      personality: Empty             # persona name (data/parameters/personalities.json)
+      prompt_init: kid               # seed-story prompt name
+      prompt_update: kid             # transformation-prompt name
 
-prompt_init: kid
-prompt_update: kid
-personality_list: [Empty, Empty, Empty, Empty]   # one per agent (length must equal n_agents)
+# WHERE the model runs.
+backend:
+  kind: llama_cpp                    # none (remote server) | llama_cpp | vllm
+  model: unsloth/SmolLM2-135M-Instruct-GGUF
 
-backend: llama_cpp                 # none | vllm | llama_cpp
-model: unsloth/SmolLM2-135M-Instruct-GGUF
+# HOW text is generated.
 generation:
   temperature: 0.8
-verbose: true
 
+# Schedule / output (top-level scalars).
+n_timesteps: 4                       # == agent count, required for a sequence chain
+n_seeds: 1
+verbose: true
 output: results/base_experiment
 
-# Analysis
+# Post-run analysis.
 analysis:
   run: true
   plot: false

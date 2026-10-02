@@ -27,15 +27,16 @@ Prefix commands with `uv run` (e.g. `uv run python run_experiment.py ...`).
 
 ### Choosing a backend
 
-| Backend | Where it runs | Notes |
+| `backend.kind` | Where it runs | Notes |
 | --- | --- | --- |
-| `none` | — | talk to a remote OpenAI-compatible server via `access_url` |
+| `none` | — | talk to a remote OpenAI-compatible server via `backend.access_url` |
 | `llama_cpp` | CPU / Apple Metal (**macOS + Linux**) | loads a local GGUF model |
 | `vllm` | **Linux / GPU only** | skipped automatically on macOS |
 
-For `llama_cpp` / `vllm`, `model` is a local path or a Hugging Face repo id (downloaded
-to `~/.cache/huggingface` on first use and cached afterwards). For a multi-file GGUF
-repo the loader picks the `q4_k_m` file by default, or set `llama_cpp.gguf_filename`.
+For `llama_cpp` / `vllm`, `backend.model` is a local path or a Hugging Face repo id
+(downloaded to `~/.cache/huggingface` on first use and cached afterwards). For a
+multi-file GGUF repo the loader picks the `q4_k_m` file by default, or set
+`backend.llama_cpp.gguf_filename`.
 
 ## Usage
 
@@ -43,27 +44,49 @@ repo the loader picks the `q4_k_m` file by default, or set `llama_cpp.gguf_filen
 
 The Hydra-driven runner does **simulation + analysis** in one command. Defaults live
 in the `ExperimentConfig` dataclass (`llm_culture/config.py`); override any field with
-`key=value`:
+`dotted.key=value`:
 
 ```bash
 uv run python run_experiment.py \
-  backend=llama_cpp model=unsloth/SmolLM2-135M-Instruct-GGUF \
-  n_agents=2 n_timesteps=2 n_seeds=1 output=results/my_test
+  backend.kind=llama_cpp backend.model=unsloth/SmolLM2-135M-Instruct-GGUF \
+  n_timesteps=2 n_seeds=1 output=results/my_test
 ```
 
-Common fields:
+### Config structure
 
-| Field | Meaning |
+Related knobs are grouped into small sub-configs; a few cross-cutting scalars stay
+at the top level:
+
+| Group / field | Meaning |
 | --- | --- |
-| `n_agents`, `n_timesteps`, `n_seeds` | population size, generations, seeds |
-| `network_structure` | `sequence` / `fully_connected` / `circle` / `caveman` |
-| `prompt_init`, `prompt_update`, `personality_list` | registered prompt / persona names |
-| `backend`, `model` | backend selector + model id/path |
-| `generation.temperature`, `generation.max_tokens`, `generation.top_p` | sampling knobs |
-| `llama_cpp.*` / `vllm.*` | backend tuning (e.g. `llama_cpp.n_gpu_layers`, `vllm.gpu_memory_utilization`) |
-| `instruct`, `verbose` | instruct vs raw completion, print stories as they generate |
-| `output` | results folder |
-| `analysis.run`, `analysis.plot` | skip analysis (simulate only) / also open figures interactively |
+| `population.network_structure` | `sequence` / `fully_connected` / `circle` / `caveman` |
+| `population.agents` | list of agent **groups** — each `{count, personality, prompt_init, prompt_update}` (names registered in `data/parameters/`). `population.n_agents` is the sum of the counts |
+| `population.n_cliques` | number of cliques (caveman only) |
+| `backend.kind`, `backend.model` | backend selector + model id/path |
+| `backend.access_url` | remote server URL (when `kind=none`) |
+| `backend.llama_cpp.*` / `backend.vllm.*` | backend tuning (e.g. `backend.llama_cpp.n_gpu_layers`) |
+| `generation.temperature` / `.max_tokens` / `.top_p` | sampling knobs |
+| `generation.instruct` | chat/instruct API vs raw completion |
+| `n_timesteps`, `n_seeds`, `seed_offset` | generations, seeds, seed naming offset |
+| `output`, `verbose`, `debug` | results folder, print stories, debug |
+| `analysis.run`, `analysis.plot` | skip analysis (simulate only) / also open figures |
+
+**Agents are described as groups, not a list.** A homogeneous population is a single
+group whose `count` is the size; a mixed population lists several types:
+
+```yaml
+population:
+  network_structure: fully_connected
+  agents:
+    - { count: 3, personality: Creative }
+    - { count: 3, personality: NotCreative }
+```
+
+**Transmission chains.** For `network_structure: sequence` the model generates one
+story per agent down the chain, so the number of generations equals the agent count —
+`n_timesteps` must equal `population.n_agents` (you get a clear error otherwise). Other
+networks are populations where every agent regenerates each step, so `n_timesteps` is
+independent.
 
 The config is a *structured config*: unknown fields, wrong types, or invalid enum
 values are rejected with a clear error before anything runs.
@@ -71,29 +94,28 @@ values are rejected with a clear error before anything runs.
 **Presets.** Reusable setups live in `conf/experiment/` — the `base` preset is the
 default, so a bare run is a small local smoke test. Copy `base.yaml` to make your own
 and select it with `experiment=<name>` (no leading `+`). See `big_model_small_gpu.yaml`
-for how to tune backend memory/offload:
+for backend memory/offload tuning and `mixed_persona.yaml` for a heterogeneous population:
 
 ```bash
 uv run python run_experiment.py                                   # bare run = base preset
-uv run python run_experiment.py n_timesteps=10                    # base + override on top
+uv run python run_experiment.py n_seeds=2                         # base + override on top
 uv run python run_experiment.py experiment=big_model_small_gpu    # switch preset
 ```
 
 **Sweeps** (`-m` multirun):
 
 ```bash
-uv run python run_experiment.py -m n_agents=2,5,10
+uv run python run_experiment.py -m generation.temperature=0.7,0.9,1.1
 ```
 
-### Standalone scripts
+### Simulation only: `run_simulation.py`
 
-The simulation and analysis steps also run on their own (these are what the
-reproduction scripts use):
+A sibling Hydra entrypoint that runs the simulation and stops before analysis (same
+config, same overrides):
 
 ```bash
-uv run python scripts/run_simulation.py -na 2 -nt 2 -s 1 -o results/my_test \
-  --use_llama_cpp --model unsloth/SmolLM2-135M-Instruct-GGUF
-uv run python scripts/run_analysis.py --folder results/my_test
+uv run python scripts/run_simulation.py experiment=base n_seeds=1
+uv run python scripts/run_analysis.py --folder results/base_experiment   # analyse later
 ```
 
 ### Web interface

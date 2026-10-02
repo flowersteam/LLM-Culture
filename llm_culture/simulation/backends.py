@@ -30,32 +30,34 @@ def _forward_kwargs(sub_config, drop=()):
 def load_llm_backend(cfg):
     """Load the model for the backend requested in `cfg`.
 
-    :param cfg: an ExperimentConfig (uses cfg.backend, cfg.model, cfg.hf_cache_dir
-        and the matching cfg.llama_cpp / cfg.vllm sub-config)
+    :param cfg: an ExperimentConfig (uses cfg.backend.kind / .model / .hf_cache_dir
+        and the matching cfg.backend.llama_cpp / cfg.backend.vllm sub-config)
     :return: (llm_backend_tag, model) where the tag is the string "vllm" /
         "llama.cpp" that get_answer expects, or False for the remote-server path
         (in which case model is None).
     """
-    if cfg.backend == Backend.vllm:
+    backend = cfg.backend
+
+    if backend.kind == Backend.vllm:
         # Deferred import: vllm is an optional ("serving") extra, absent in base installs.
         from vllm import LLM
 
-        vllm_kwargs = _forward_kwargs(cfg.vllm)
-        return "vllm", LLM(model=cfg.model, **vllm_kwargs)
+        vllm_kwargs = _forward_kwargs(backend.vllm)
+        return "vllm", LLM(model=backend.model, **vllm_kwargs)
 
-    if cfg.backend == Backend.llama_cpp:
+    if backend.kind == Backend.llama_cpp:
         # Deferred import: llama_cpp is an optional ("serving") extra, absent in base installs.
         from llama_cpp import Llama
 
         resolved_model_path = resolve_model_path(
-            cfg.model,
-            cfg.hf_cache_dir or os.path.expanduser("~/.cache/huggingface"),
-            gguf_filename=cfg.llama_cpp.gguf_filename,
+            backend.model,
+            backend.hf_cache_dir or os.path.expanduser("~/.cache/huggingface"),
+            gguf_filename=backend.llama_cpp.gguf_filename,
         )
         # gguf_filename is only used to pick the file above, not a Llama() kwarg.
-        llama_kwargs = _forward_kwargs(cfg.llama_cpp, drop=("gguf_filename",))
+        llama_kwargs = _forward_kwargs(backend.llama_cpp, drop=("gguf_filename",))
         model = Llama(model_path=str(resolved_model_path), **llama_kwargs)
         return "llama.cpp", model
 
-    # Backend.none -> remote OpenAI-compatible server via cfg.access_url.
+    # Backend.none -> remote OpenAI-compatible server via cfg.backend.access_url.
     return False, None

@@ -7,7 +7,14 @@ import networkx as nx
 
 from llm_culture.simulation.utils import run_simul, build_network_structure, load_named_prompt, load_personalities
 from llm_culture.simulation.backends import load_llm_backend
-from llm_culture.config import ExperimentConfig, Backend, GenerationConfig
+from llm_culture.config import (
+    ExperimentConfig,
+    PopulationConfig,
+    AgentConfig,
+    BackendConfig,
+    Backend,
+    GenerationConfig,
+)
 from llm_culture.paths import PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
 
 RESULTS_DIR = 'results/experiments'
@@ -51,18 +58,39 @@ def run_simulation(
         raise ValueError("Please provide a local model path or Hugging Face repo id")
 
     # One ExperimentConfig for the whole run; the GUI's local backend is llama.cpp.
+    # population.agents mirrors the per-agent personas (one group per agent); the
+    # network is built separately above, so population.network_structure is left at
+    # its default on this path.
     cfg = ExperimentConfig(
-        n_agents=n_agents,
+        population=PopulationConfig(
+            n_cliques=n_cliques,
+            agents=[
+                AgentConfig(
+                    count=1,
+                    personality=persona,
+                    prompt_init=init_prompt,
+                    prompt_update=update_prompt,
+                )
+                for persona in personalities
+            ],
+        ),
+        backend=BackendConfig(
+            kind=Backend.llama_cpp if use_local_model else Backend.none,
+            model=model_source,
+            access_url=server_url,
+            hf_cache_dir=hf_cache_dir,
+        ),
+        generation=GenerationConfig(temperature=temperature, instruct=instruct),
         n_timesteps=n_timesteps,
-        access_url=server_url,
-        instruct=instruct,
-        generation=GenerationConfig(temperature=temperature),
-        debug=True,
         output=output_dir,
-        backend=Backend.llama_cpp if use_local_model else Backend.none,
-        model=model_source,
-        hf_cache_dir=hf_cache_dir,
+        debug=True,
     )
+
+    # Per-agent specs for run_simul: each agent gets its persona text + the shared
+    # init/update prompt texts (resolved above).
+    agent_specs = [
+        (persona_text, prompt_init, prompt_update) for persona_text in personality_list
+    ]
 
     # Load the model once (reused across seeds); remote server -> (False, None).
     llm_backend, model = load_llm_backend(cfg)
@@ -87,9 +115,7 @@ def run_simulation(
         stories = run_simul(
             cfg,
             network_structure,
-            prompt_init,
-            prompt_update,
-            personality_list,
+            agent_specs,
             llm_backend=llm_backend,
             model=model,
             progress_callback=_seed_progress,
