@@ -413,57 +413,46 @@ def run_experiment(config, repo_dir=None, hf_cache_dir=None):
     output_folder = Path("results", "experiments", config["output_name"])
     output_folder.mkdir(parents=True, exist_ok=True)
 
-    model = None
-    if config.get("llm_backend") == "vllm":
-        # Deferred import: vllm is an optional ("serving") extra, absent in base installs.
-        import vllm
-        model = vllm.LLM(model=config.get("model"), n_gpus=-1)
-    elif config.get("llm_backend") == "llama.cpp":
-        resolved_model_path = resolve_model_path(
-            config.get("model"),
-            hf_cache_dir or os.path.expanduser("~/.cache/huggingface"),
-        )
-        # Deferred import: llama_cpp is an optional ("serving") extra, absent in base installs.
-        from llama_cpp import Llama
-        # Start the llama.cpp server if not already running
-        model = Llama(
-            model_path=str(resolved_model_path),
-            n_ctx=4096,
-            n_gpu_layers=-1,  
-            verbose=False,
-        )
+    # Build the experiment config once (shared across all seeds) and load the model
+    # through the SAME shared helper every other entrypoint uses. This replaces the
+    # old hand-rolled loader and fixes its `vllm.LLM(..., n_gpus=-1)` call (`n_gpus`
+    # is not a vLLM kwarg) and the undefined `hf_cache_dir` reference in it.
+    backend_tags = {"vllm": Backend.vllm, "llama.cpp": Backend.llama_cpp}
+    cfg = ExperimentConfig(
+        population=PopulationConfig(
+            network_structure=Network(config["network_structure"]),
+            n_cliques=config.get("n_cliques", 2),
+            agents=[AgentConfig(count=1) for _ in range(config["n_agents"])],
+        ),
+        backend=BackendConfig(
+            kind=backend_tags.get(config.get("llm_backend"), Backend.none),
+            model=config.get("model"),
+            access_url=config["access_url"] or "",
+            hf_cache_dir=config.get("hf_cache_dir"),
+        ),
+        generation=GenerationConfig(temperature=config.get("temperature", 0.8)),
+        n_timesteps=config["n_timesteps"],
+        output=str(output_folder),
+        debug=config.get("debug", False),
+    )
+    # Deferred import avoids a circular import (backends imports resolve_model_path
+    # from this module). Returns the ("vllm" / "llama.cpp" / False) tag run_simul wants.
+    from llm_culture.simulation.backends import load_llm_backend
+    llm_backend, model = load_llm_backend(cfg)
 
-    # 4. Run the simulation for each seed using the framework's own run_simul()
+    # 4. Run the simulation for each seed using the framework's own run_simul().
     #    One agent per personality entry; each gets the shared init/update prompts.
-    #    (This reproduction path loads its own model above and passes the llm_backend
-    #    tag straight to run_simul, so cfg.backend.kind is not used here.)
     agent_specs = [
         (persona_text, prompt_init_text, prompt_update_text)
         for persona_text in personality_texts
     ]
     for seed in range(config["n_seeds"]):
         print(f"\n=== Seed {seed} ===")
-        cfg = ExperimentConfig(
-            population=PopulationConfig(
-                network_structure=Network(config["network_structure"]),
-                n_cliques=config.get("n_cliques", 2),
-                agents=[AgentConfig(count=1) for _ in range(config["n_agents"])],
-            ),
-            backend=BackendConfig(
-                kind=Backend.none,
-                model=config.get("model"),
-                access_url=config["access_url"] or "",
-            ),
-            generation=GenerationConfig(temperature=config.get("temperature", 0.8)),
-            n_timesteps=config["n_timesteps"],
-            output=str(output_folder),
-            debug=config.get("debug", False),
-        )
         stories = run_simul(
             cfg,
             network_structure,
             agent_specs,
-            llm_backend=config.get("llm_backend", False),
+            llm_backend=llm_backend,
             model=model,
             sampling_params=config.get("sampling_params", None),
         )

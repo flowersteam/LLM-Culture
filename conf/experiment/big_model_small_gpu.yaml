@@ -15,10 +15,19 @@
 # So on a ~6 GB GPU, start around n_gpu_layers: 20 and adjust.
 
 population:
-  network_structure: sequence
+  # Two loosely-connected cliques (a "caveman" graph): each clique is densely
+  # wired internally and linked to the next by a single edge. With 2 cliques and
+  # 10 agents you get two groups of 5 — and because agents are laid onto node
+  # indices group-by-group, each clique ends up as ONE persona: a Fantasy
+  # subculture (nodes 0-4) and a SciFi subculture (nodes 5-9). Watch them diverge
+  # within each clique and slowly cross-pollinate through the single bridge edge.
+  network_structure: caveman
+  n_cliques: 2                     # must divide the total agent count (10 / 2 = 5 per clique)
   agents:
-    - count: 2
-      personality: Empty
+    - { count: 5, personality: Fantasy }
+    - { count: 5, personality: SciFi }
+  # Alternatives: swap to `network_structure: fully_connected` (drop n_cliques) for
+  # a single well-mixed population where every agent reads every other each step.
 
 backend:
   kind: llama_cpp
@@ -41,7 +50,9 @@ backend:
 generation:
   temperature: 0.8
 
-n_timesteps: 2                       # == agent count (sequence chain)
+n_timesteps: 4                       # non-sequence: every agent regenerates each step,
+                                     # so this is independent of the agent count. 10 agents
+                                     # × 4 steps = 40 generations/seed — slow on a fanless M2.
 n_seeds: 1
 verbose: true
 output: results/big_model_small_gpu
