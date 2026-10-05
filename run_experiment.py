@@ -76,6 +76,7 @@ def main(cfg: DictConfig) -> None:
         exp.analysis.font_sizes,
         exp.analysis.plot,
         force_recompute_cache=exp.analysis.recompute_cache,
+        embedding=exp.analysis.embedding,
     )
 
     folder = Path(exp.output).resolve()

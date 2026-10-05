@@ -32,6 +32,12 @@ serving = [
     "llama-cpp-python",
 ]
 
+# Optional HuggingFace sentence-embedding backend for the similarity analysis
+# (alternative to the default TF-IDF). Pulls in torch, hence a separate extra.
+embeddings = [
+    "sentence-transformers>=3,<6",
+]
+
 [project.urls]
 Homepage = "https://github.com/flowersteam/LLM-Culture"
 

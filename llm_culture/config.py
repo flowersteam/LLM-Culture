@@ -104,6 +104,17 @@ class GenerationConfig:
 
 
 @dataclass
+class EmbeddingConfig:
+    """How stories are vectorized for the story-similarity matrix. "tfidf" (default)
+    is reproducible + dependency-light; "huggingface" needs the [embeddings] extra.
+    Switching method/model uses a separate analysis cache."""
+    method: str = "tfidf"                                  # "tfidf" | "huggingface"
+    model: str = "sentence-transformers/all-MiniLM-L6-v2"  # HF model id (huggingface only)
+    batch_size: int = 32                                   # encode batch size (huggingface only)
+    device: Optional[str] = None                           # torch device, or None -> library picks
+
+
+@dataclass
 class AnalysisConfig:
     """Post-simulation analysis options."""
     run: bool = True            # False -> simulate only, skip plots
@@ -112,6 +123,7 @@ class AnalysisConfig:
     font_sizes: Dict[str, int] = field(
         default_factory=lambda: {"ticks": 12, "labels": 14, "title": 16}
     )
+    embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
 
 
 @dataclass

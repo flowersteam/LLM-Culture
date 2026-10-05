@@ -16,6 +16,8 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from llm_culture.analysis.embedders import make_embedder
 from textblob import TextBlob
 
 try:
@@ -134,28 +136,28 @@ def preprocess_stories(all_seeds_stories):
     
     return all_seeds_flat_stories, all_seeds_keywords, all_seeds_stem_words
 
-def get_similarity_matrix_single_seed(flat_stories):
-    """Compute the similarity matrix of the stories
+def get_similarity_matrix_single_seed(flat_stories, embedder=None):
+    """N x N cosine-similarity matrix for one seed (TF-IDF reproduces the paper).
 
-    :param flat_stories: list of stories
-    :return: similarity matrix
+    :param flat_stories: list of story texts
+    :param embedder: text embedder (see analysis.embedders); None -> TF-IDF
+    :return: N x N cosine-similarity matrix (numpy array)
     """
-    vect = TfidfVectorizer(min_df=1, stop_words="english")     
-    tfidf = vect.fit_transform(flat_stories)                                                                                                                                                                                                                       
-    similarity_matrix = tfidf * tfidf.T 
-    return similarity_matrix.toarray()
+    if embedder is None:
+        embedder = make_embedder()
+    # cosine_similarity handles both sparse (TF-IDF) and dense (HF) vectors.
+    return cosine_similarity(embedder.embed(flat_stories))
 
-def get_similarity_matrix(all_seed_flat_stories):
-    """Compute the similarity matrix of the stories for all seeds
+def get_similarity_matrix(all_seed_flat_stories, embedder=None):
+    """Per-seed cosine-similarity matrices.
 
-    :param all_seed_flat_stories: list of flat stories for each seed
-    :return: list of similarity matrices
+    :param all_seed_flat_stories: list of flat stories, one list per seed
+    :param embedder: shared embedder reused across seeds (so a HF model loads once); None -> TF-IDF
+    :return: list of N x N similarity matrices
     """
-    all_seeds_similarity_matrix = []
-    for flat_stories in all_seed_flat_stories:
-        similarity_matrix = get_similarity_matrix_single_seed(flat_stories)
-        all_seeds_similarity_matrix.append(similarity_matrix)
-    return all_seeds_similarity_matrix
+    if embedder is None:
+        embedder = make_embedder()
+    return [get_similarity_matrix_single_seed(s, embedder) for s in all_seed_flat_stories]
 
 def extract_keywords(text, num_keywords=30):
     """Extract the keywords from the text

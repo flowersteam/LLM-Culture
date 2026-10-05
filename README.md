@@ -21,6 +21,7 @@ This project uses [uv](https://docs.astral.sh/uv/):
 curl -LsSf https://astral.sh/uv/install.sh | sh   # if you don't have uv
 uv sync                                            # base install
 uv sync --extra serving                            # + local inference backends
+uv sync --extra embeddings                         # + HuggingFace embeddings for analysis
 ```
 
 Prefix commands with `uv run` (e.g. `uv run python run_experiment.py ...`).
@@ -70,6 +71,8 @@ at the top level:
 | `n_timesteps`, `n_seeds`, `seed_offset` | generations, seeds, seed naming offset |
 | `output`, `verbose`, `debug` | results folder, print stories, debug |
 | `analysis.run`, `analysis.plot` | skip analysis (simulate only) / also open figures |
+| `analysis.embedding.method` | how stories are vectorized for the similarity matrix: `tfidf` (default) or `huggingface` |
+| `analysis.embedding.model` | HuggingFace model id when `analysis.embedding.method=huggingface` |
 
 **Agents are described as groups, not a list.** A homogeneous population is a single
 group whose `count` is the size; a mixed population lists several types:
@@ -166,6 +169,25 @@ Single-experiment plots (registered in `llm_culture/analysis/plots.py`):
 | Successive-Generation Similarity | similarity between consecutive generations |
 
 ![analysis_plots](/static/experiment_analysis_figures.png)
+
+### Similarity: TF-IDF or HuggingFace embeddings
+
+The story-similarity metrics are built from a cosine-similarity matrix over the
+stories. By default stories are vectorized with **TF-IDF** (word overlap) — fast,
+dependency-free, and what the paper used. For **semantic** similarity you can
+instead use a HuggingFace sentence-embedding model:
+
+```bash
+uv sync --extra embeddings    # one-time: installs sentence-transformers
+uv run python run_experiment.py experiment=base \
+  analysis.embedding.method=huggingface \
+  analysis.embedding.model=sentence-transformers/all-MiniLM-L6-v2
+```
+
+`all-MiniLM-L6-v2` is a good, small default (384-dim, fast on CPU). The two methods
+write separate analysis caches, so switching back and forth never mixes results.
+Everything downstream (plots, between-generation similarities, graphs) is identical
+regardless of method — only how each story becomes a vector changes.
 
 ## Extending the framework
 
