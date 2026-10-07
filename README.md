@@ -118,7 +118,7 @@ config, same overrides):
 
 ```bash
 uv run python scripts/run_simulation.py experiment=base n_seeds=1
-uv run python scripts/run_analysis.py --folder results/base_experiment   # analyse later
+uv run python scripts/run_analysis.py folder=results/base_experiment   # analyse later
 ```
 
 ### Web interface
@@ -138,21 +138,27 @@ A Colab notebook is available [here](https://colab.research.google.com/drive/1bD
 
 ## Reproducibility
 
-Paper data is under `results/experiments/`. Reproduce single-experiment figures:
+Paper data is under `results/experiments/`. Reproduce single-experiment figures
+(these analysis scripts are Hydra entrypoints too — override fields with `key=value`):
 
 ```bash
-uv run python scripts/run_analysis.py --folder "results/experiments/Network Structure/CAVEMAN_10_10_combine5seeds"
+uv run python scripts/run_analysis.py folder="results/experiments/Network Structure/CAVEMAN_10_10_combine5seeds"
 ```
 
-Comparison figures (names relative to `results/experiments/`, separated by `+`):
+Comparison figures (`folders` entries are names relative to `results/experiments/`
+by default — the `root` field; pass them as a Hydra list):
 
 ```bash
-uv run python scripts/run_comparison_analysis.py --dirs "Network Structure/CAVEMAN_10_10_combine5seeds+Network Structure/CIRCLE_10_10_combine5seeds"
+uv run python scripts/run_comparison_analysis.py 'folders=[Network Structure/CAVEMAN_10_10_combine5seeds, Network Structure/CIRCLE_10_10_combine5seeds]'
 ```
 
 The `reproduction_scripts/` directory regenerates the paper experiments
 (`transmission_chain.py`, `network.py`, `transformation_prompt.py`,
 `persona_prompt.py`). Outputs differ from the paper due to generation stochasticity.
+
+> **TODO (dev):** the `reproduction_scripts/` still use argparse and the legacy
+> dict-based `run_experiment` API. Migrate them to build `ExperimentConfig`
+> directly (like the Hydra entrypoints) and drop the dict shim.
 
 ## Implemented analysis
 

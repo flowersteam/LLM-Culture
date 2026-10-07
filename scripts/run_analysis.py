@@ -1,13 +1,29 @@
+"""Analyse an existing results folder (Hydra entrypoint).
+
+Config: AnalysisRunConfig (llm_culture/config.py) via conf/analysis.yaml.
+
+    uv run python scripts/run_analysis.py folder=results/my_run
+"""
 import re
-import argparse
+import sys
 from pathlib import Path
+
 import pandas as pd
+import hydra
+from hydra.core.config_store import ConfigStore
+from omegaconf import DictConfig, OmegaConf
+
+# Ensure the repo root is importable (so `llm_culture` resolves) regardless of cwd.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from llm_culture.analysis.utils import get_stories, get_plotting_infos, initialize_nltk, preprocess_stories, get_similarity_matrix
 from llm_culture.analysis.utils import compute_between_gen_similarities, get_polarities_subjectivities
 from llm_culture.analysis.plots import run_configured_plots
 from llm_culture.analysis.embedders import make_embedder, TFIDF
-from llm_culture.config import EmbeddingConfig
+from llm_culture.config import EmbeddingConfig, AnalysisRunConfig
+
+cs = ConfigStore.instance()
+cs.store(name="analysis_schema", node=AnalysisRunConfig)
 
 
 def _embedding_cache_name(method, model, base="analysis_cache_df"):
@@ -109,57 +125,38 @@ def main_analysis(
     run_configured_plots(analysis_data, folder, plot=plot, sizes=font_sizes, plot_names=plot_configs)
     print(f"\nAnalysis complete — plots + cache saved to {Path(folder).resolve()}")
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--dir", type=str, default="FC_10_10_combine_mixedPop_5seeds")
-    parser.add_argument("--folder", type=str, default=None, help="Full or repo-relative folder to analyze (overrides --dir)")
-    parser.add_argument("--plot", action="store_true")
-    parser.add_argument("--cache_file", type=str, default=None,
-                        help="override the cache filename (default: derived from the embedding method/model)")
-    parser.add_argument("--force_recompute_cache", action="store_true")
-    parser.add_argument("--embedding-method", dest="embedding_method", type=str,
-                        default="tfidf", choices=["tfidf", "huggingface"])
-    parser.add_argument("--embedding-model", dest="embedding_model", type=str,
-                        default="sentence-transformers/all-MiniLM-L6-v2")
-    parser.add_argument("--embedding-batch-size", dest="embedding_batch_size", type=int, default=32)
-    parser.add_argument("--embedding-device", dest="embedding_device", type=str, default=None)
-    parser.add_argument("--ticks_font_size", type=int, default=12)
-    parser.add_argument("--labels_font_size", type=int, default=14)
-    parser.add_argument("--title_font_size", type=int, default=16)
-    args = parser.parse_args()
+def _resolve_folder(folder: str) -> str:
+    """Resolve the folder to analyze: use the path as given, falling back to a
+    cwd-relative path, and raise a clear error if neither exists."""
+    path = Path(folder)
+    if not path.exists():
+        path = Path.cwd() / folder
+    if not path.exists():
+        raise FileNotFoundError(f"Analysis folder not found: {folder}")
+    return str(path)
+
+
+@hydra.main(version_base=None, config_path="../conf", config_name="analysis")
+def main(cfg: DictConfig) -> None:
+    conf: AnalysisRunConfig = OmegaConf.to_object(cfg)
+
+    print("\n" + "#" * 64)
+    print("# ANALYSIS CONFIG")
+    print("#" * 64)
+    print(OmegaConf.to_yaml(cfg), end="")
 
     initialize_nltk()
-
-    if args.folder is not None:
-        analyzed_dir = Path(args.folder)
-        if not analyzed_dir.exists():
-            analyzed_dir = Path.cwd() / args.folder
-    else:
-        analyzed_dir = Path("results") / args.dir
-
-    if not analyzed_dir.exists():
-        raise FileNotFoundError(f"Analysis folder not found: {analyzed_dir}")
-
-    analyzed_dir = str(analyzed_dir)
-    
-    font_sizes = {
-        'ticks': args.ticks_font_size,
-        'labels': args.labels_font_size,
-        'title': args.title_font_size
-    }
-    
-    print(f"\nLaunching analysis on the {analyzed_dir} results")
-    print(f"plot = {args.plot}")
+    folder = _resolve_folder(conf.folder)
+    print(f"\nLaunching analysis on the {folder} results (plot={conf.plot})")
     main_analysis(
-        analyzed_dir,
-        font_sizes,
-        args.plot,
-        cache_file_name=args.cache_file,
-        force_recompute_cache=args.force_recompute_cache,
-        embedding=EmbeddingConfig(
-            method=args.embedding_method,
-            model=args.embedding_model,
-            batch_size=args.embedding_batch_size,
-            device=args.embedding_device,
-        ),
+        folder,
+        conf.font_sizes,
+        conf.plot,
+        cache_file_name=conf.cache_file,
+        force_recompute_cache=conf.recompute_cache,
+        embedding=conf.embedding,
     )
+
+
+if __name__ == "__main__":
+    main()

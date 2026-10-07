@@ -26,7 +26,8 @@ Sweep with -m (multirun):
 
 The standalone scripts/run_simulation.py is a sibling Hydra entrypoint that runs
 the simulation only (no analysis) and shares run_simulation_from_config; this
-runner adds the analysis step. scripts/run_analysis.py keeps its own argparse CLI.
+runner adds the analysis step. scripts/run_analysis.py is a sibling Hydra entrypoint
+that analyses an existing results folder on its own (AnalysisRunConfig).
 """
 import sys
 from pathlib import Path

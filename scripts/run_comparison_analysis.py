@@ -1,11 +1,29 @@
+"""Compare several existing results folders (Hydra entrypoint).
+
+Config: ComparisonConfig (llm_culture/config.py) via conf/comparison.yaml.
+
+    uv run python scripts/run_comparison_analysis.py \\
+        'folders=[Network Structure/CAVEMAN_10_10_combine5seeds, Network Structure/CIRCLE_10_10_combine5seeds]'
+"""
 import os
-import argparse
+import sys
+from pathlib import Path
+
+import hydra
+from hydra.core.config_store import ConfigStore
+from omegaconf import DictConfig, OmegaConf
+
+# Ensure the repo root is importable (so `llm_culture` resolves) regardless of cwd.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from llm_culture.analysis.utils import get_stories, get_plotting_infos, preprocess_stories, get_similarity_matrix
 from llm_culture.analysis.utils import compute_between_gen_similarities, get_polarities_subjectivities
 from llm_culture.analysis.comparison_plots import run_configured_comparison_plots
 from llm_culture.analysis.embedders import make_embedder
-from llm_culture.config import EmbeddingConfig
+from llm_culture.config import EmbeddingConfig, ComparisonConfig
+
+cs = ConfigStore.instance()
+cs.store(name="comparison_schema", node=ComparisonConfig)
 
 RESULTS_DIR = 'results/experiments'
 COMPARISON_DIR = 'results/experiments_comparisons'
@@ -59,44 +77,42 @@ def run_comparison_analysis(folders, plot, scale_y_axis, labels, sizes, plot_con
     run_configured_comparison_plots(data, plot, sizes, saving_folder, scale_y_axis, plot_names=plot_configs)
 
 
+@hydra.main(version_base=None, config_path="../conf", config_name="comparison")
+def main(cfg: DictConfig) -> None:
+    conf: ComparisonConfig = OmegaConf.to_object(cfg)
+
+    print("\n" + "#" * 64)
+    print("# COMPARISON CONFIG")
+    print("#" * 64)
+    print(OmegaConf.to_yaml(cfg), end="")
+
+    if not conf.folders:
+        raise ValueError(
+            "No folders to compare — set `folders=[...]` (names/paths joined under "
+            f"`root`, default '{RESULTS_DIR}'). Example:\n"
+            "  uv run python scripts/run_comparison_analysis.py "
+            "'folders=[Network Structure/CAVEMAN_10_10_combine5seeds, "
+            "Network Structure/CIRCLE_10_10_combine5seeds]'"
+        )
+
+    dirs_list = [os.path.join(conf.root, name) if conf.root else name for name in conf.folders]
+    labels = conf.labels if conf.labels else [os.path.basename(d) for d in dirs_list]
+    if len(labels) != len(dirs_list):
+        raise ValueError(
+            f"Got {len(labels)} labels for {len(dirs_list)} folders — provide one "
+            "label per folder, or omit `labels` to use the folder basenames."
+        )
+
+    print(f"\nLaunching comparison analysis on {len(dirs_list)} folder(s) (plot={conf.plot})")
+    run_comparison_analysis(
+        dirs_list,
+        conf.plot,
+        conf.scale_y_axis,
+        labels,
+        conf.sizes,
+        embedding=conf.embedding,
+    )
+
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    # Enter the names of the experiments separated by '+'
-    parser.add_argument("--dirs", type=str, default="FC_10_10_combine_crea_not_crea+FC_10_10_combine_creative_2")
-    parser.add_argument("--plot", action="store_true")
-    parser.add_argument("--scale_y_axis", action="store_true")
-    parser.add_argument("--labels", type=str, default="None")
-    parser.add_argument("--ticks_font_size", type=int, default=16)
-    parser.add_argument("--labels_font_size", type=int, default=18)
-    parser.add_argument("--legend_font_size", type=int, default=16)
-    parser.add_argument("--title_font_size", type=int, default=23)
-    parser.add_argument("--matrix_size", type=int, default=8)
-    parser.add_argument("--embedding-method", dest="embedding_method", type=str,
-                        default="tfidf", choices=["tfidf", "huggingface"])
-    parser.add_argument("--embedding-model", dest="embedding_model", type=str,
-                        default="sentence-transformers/all-MiniLM-L6-v2")
-    parser.add_argument("--embedding-batch-size", dest="embedding_batch_size", type=int, default=32)
-    parser.add_argument("--embedding-device", dest="embedding_device", type=str, default=None)
-    args = parser.parse_args()
-
-    analyzed_dirs = args.dirs.split('+')
-    dirs_list = [f"{RESULTS_DIR}/{dir_name}" for dir_name in analyzed_dirs]
-
-    labels = args.labels.split('+')
-    sizes = {
-        'ticks': args.ticks_font_size,
-        'labels': args.labels_font_size,
-        'legend': args.legend_font_size,
-        'title': args.title_font_size,
-        'matrix': args.matrix_size
-    }
-
-    print(f"\nLaunching analysis on the {args.dirs} results")
-    print(f"plot = {args.plot}")
-    run_comparison_analysis(dirs_list, args.plot, args.scale_y_axis, labels, sizes,
-                            embedding=EmbeddingConfig(
-                                method=args.embedding_method,
-                                model=args.embedding_model,
-                                batch_size=args.embedding_batch_size,
-                                device=args.embedding_device,
-                            ))
+    main()

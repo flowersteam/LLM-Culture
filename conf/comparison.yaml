@@ -1,0 +1,19 @@
+# Hydra entrypoint config for scripts/run_comparison_analysis.py.
+# Defaults live in ComparisonConfig (llm_culture/config.py); `folders` entries are
+# joined under `root` (default results/experiments):
+#   uv run python scripts/run_comparison_analysis.py 'folders=[a, b]' plot=true
+
+defaults:
+  - comparison_schema
+  - _self_
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+hydra:
+  run:
+    dir: .
+  sweep:
+    dir: multirun/${now:%Y-%m-%d_%H-%M-%S}
+  output_subdir: null
+  job:
+    chdir: false

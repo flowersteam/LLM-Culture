@@ -127,6 +127,33 @@ class AnalysisConfig:
 
 
 @dataclass
+class AnalysisRunConfig:
+    """Config for analysing an existing results folder (scripts/run_analysis.py)."""
+    folder: str = "results/default_folder"  # results folder to analyze (full or repo-relative)
+    plot: bool = False                       # also open figures interactively (saved either way)
+    recompute_cache: bool = True             # ignore any existing cache and recompute
+    cache_file: Optional[str] = None         # override cache filename (None -> derived from embedding)
+    font_sizes: Dict[str, int] = field(
+        default_factory=lambda: {"ticks": 12, "labels": 14, "title": 16}
+    )
+    embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
+
+
+@dataclass
+class ComparisonConfig:
+    """Config for comparing several results folders (scripts/run_comparison_analysis.py)."""
+    folders: List[str] = field(default_factory=list)  # entries joined under `root`
+    root: str = "results/experiments"                 # prefix for each entry ("" -> none)
+    labels: Optional[List[str]] = None                # legend labels (None -> folder basenames)
+    plot: bool = False                                 # also open figures interactively
+    scale_y_axis: bool = False                         # shared y-axis scale across folders
+    sizes: Dict[str, int] = field(
+        default_factory=lambda: {"ticks": 16, "labels": 18, "legend": 16, "title": 23, "matrix": 8}
+    )
+    embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
+
+
+@dataclass
 class AgentConfig:
     """One agent *type*: how many agents share it, plus the persona and prompts
     that define how they write / rewrite stories.
