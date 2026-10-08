@@ -28,8 +28,8 @@ from llm_culture.simulation.utils import (
     build_network_structure,
     load_named_prompt,
     load_personalities,
-    log_resources,
 )
+from llm_culture.resources import log_resources
 from llm_culture.simulation.backends import load_llm_backend
 from llm_culture.config import ExperimentConfig, validate_experiment
 from llm_culture.paths import PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
