@@ -103,6 +103,7 @@ def _generate_remote(
                 model=request_model,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=generation.temperature,
+                top_p=generation.top_p,
                 max_tokens=generation.max_tokens,
             )
             return response.choices[0].message.content.replace("</s>", "")
@@ -115,6 +116,7 @@ def _generate_remote(
             model=request_model,
             prompt=prompt,
             temperature=generation.temperature,
+            top_p=generation.top_p,
             max_tokens=generation.max_tokens,
         )
         return response.choices[0].text

@@ -39,6 +39,46 @@ For `llama_cpp` / `vllm`, `backend.model` is a local path or a Hugging Face repo
 multi-file GGUF repo the loader picks the `q4_k_m` file by default, or set
 `backend.llama_cpp.gguf_filename`.
 
+### Generation settings (apply to every backend)
+
+The sampling knobs under `generation.*` are backend-agnostic — the **same** values
+are sent whether you run `vllm`, `llama_cpp`, or a remote server, so you tune
+generation once and switch backends freely:
+
+| Field | Meaning |
+| --- | --- |
+| `generation.temperature` | randomness (0 = deterministic, higher = more diverse) |
+| `generation.top_p` | nucleus sampling cutoff (keep the top-`p` probability mass) |
+| `generation.max_tokens` | max tokens generated per story |
+| `generation.instruct` | `true` → chat/instruct API (chat template applied); `false` → raw completion for base models |
+
+```bash
+uv run python run_experiment.py \
+  generation.temperature=0.9 generation.top_p=0.95 generation.max_tokens=256
+```
+
+**Remote servers (`backend.kind=none`).** Point `backend.access_url` at any
+OpenAI-compatible endpoint (a hosted API, or a vLLM / llama.cpp server you started
+yourself). Two optional environment variables cover authenticated or model-validating
+servers:
+
+- `OPENAI_API_KEY` — auth token (defaults to `EMPTY`, which local servers accept;
+  set it for a genuine hosted API). Never hardcode it — it is read from the environment.
+- `OPENAI_MODEL` — the model name to request, for servers that validate it (local
+  servers ignore it and serve whatever they loaded).
+
+`backend.max_concurrent_requests` caps how many requests are sent in parallel when a
+timestep is batched (remote only — the server's own batching does the real overlap).
+
+```bash
+export OPENAI_API_KEY=sk-...                     # only for a hosted/authenticated server
+export OPENAI_MODEL=gpt-4o-mini                  # only if the server validates the name
+uv run python run_experiment.py \
+  backend.kind=none backend.access_url=https://my-server:8000 \
+  backend.max_concurrent_requests=8 \
+  generation.temperature=0.9 generation.max_tokens=256
+```
+
 ## Usage
 
 ### Run an experiment (recommended): `run_experiment.py`
