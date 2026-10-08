@@ -93,6 +93,10 @@ class Agent:
         """
         return self.story
 
+    def set_story(self, text):
+        """Set the agent's story directly (used by the batched update path)."""
+        self.story = text
+
     def decrease_wait(self):
         """Decrease the wait time
         """

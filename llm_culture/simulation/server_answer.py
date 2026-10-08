@@ -134,3 +134,92 @@ def get_answer(
         raise RuntimeError(
             f"LLM request to {base_url} failed after {max_retries} retries"
         ) from exc
+
+
+def get_answers_batch(
+    prompts,
+    generation,
+    *,
+    access_url="",
+    debug=False,
+    instruct=True,
+    llm_backend=False,
+    model=None,
+    sampling_params=None,
+    max_concurrent_requests=8,
+    verify=True,
+    timeout=120,
+    max_retries=5,
+):
+    """Generate one answer per prompt, batched where the backend supports it.
+
+    Returns a list aligned 1:1 (and in order) with `prompts`. The prompts in one
+    call must be INDEPENDENT (they come from a single simulation timestep). Per
+    backend:
+      * "vllm"      -> one native batched model.generate(list) (continuous batching)
+      * "llama.cpp" -> sequential loop (the high-level binding is single-sequence)
+      * remote      -> concurrent requests; the server's batching does the overlap
+    """
+    if not prompts:
+        return []
+
+    if llm_backend == "vllm":
+        # Deferred import: vllm is an optional ("serving") extra.
+        from vllm import SamplingParams
+
+        tokenizer = model.get_tokenizer()
+        if instruct:
+            conversations = [
+                tokenizer.apply_chat_template(
+                    [{"role": "user", "content": p}], tokenize=False
+                )
+                for p in prompts
+            ]
+        else:
+            conversations = [
+                p + "Assistant: Sure, here is the requested answer:\n\n1."
+                for p in prompts
+            ]
+        params = sampling_params if sampling_params is not None else SamplingParams(
+            temperature=generation.temperature,
+            top_p=generation.top_p,
+            max_tokens=generation.max_tokens,
+            stop_token_ids=[tokenizer.eos_token_id],
+        )
+        # vLLM schedules all sequences together and returns them in input order.
+        outputs = model.generate(conversations, params)
+        return [o.outputs[0].text for o in outputs]
+
+    def _one(prompt):
+        # Exactly one answer via the existing single-call path (shares its retries).
+        return get_answer(
+            access_url,
+            prompt,
+            generation,
+            debug=debug,
+            instruct=instruct,
+            llm_backend=llm_backend,
+            model=model,
+            sampling_params=sampling_params,
+            verify=verify,
+            timeout=timeout,
+            max_retries=max_retries,
+        )
+
+    if llm_backend == "llama.cpp":
+        # In-process high-level llama.cpp is single-sequence: no true batched decode,
+        # so run them one after another (correct, just not faster). For real batching
+        # on this backend, run the llama.cpp *server* with --parallel/--cont-batching
+        # and use the remote path below.
+        return [_one(p) for p in prompts]
+
+    # Remote OpenAI-compatible server: fire the independent requests concurrently and
+    # let the server overlap them. ThreadPoolExecutor.map keeps input order and
+    # re-raises the first exception (fail-loud, like get_answer).
+    if max_concurrent_requests <= 1 or len(prompts) == 1:
+        return [_one(p) for p in prompts]
+    from concurrent.futures import ThreadPoolExecutor
+
+    workers = min(max_concurrent_requests, len(prompts))
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        return list(pool.map(_one, prompts))

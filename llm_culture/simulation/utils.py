@@ -7,6 +7,7 @@ import networkx as nx
 from huggingface_hub import snapshot_download
 
 from llm_culture.simulation.agent import Agent
+from llm_culture.simulation.server_answer import get_answers_batch
 from llm_culture.config import (
     ExperimentConfig,
     PopulationConfig,
@@ -109,7 +110,12 @@ def run_simul(
     for t in range(cfg.n_timesteps):
         # Header BEFORE the agents act, so the log reads top-to-bottom in order.
         print(f"\n┌─ Timestep {t + 1}/{cfg.n_timesteps} " + "─" * 46)
-        new_stories = update_step(agent_list, verbose=cfg.verbose)
+        new_stories = update_step(
+            agent_list,
+            verbose=cfg.verbose,
+            batch=cfg.generation.batch,
+            max_concurrent_requests=cfg.backend.max_concurrent_requests,
+        )
         plural = "story" if len(new_stories) == 1 else "stories"
         print(f"└─ {len(new_stories)} new {plural} this timestep " + "─" * 34)
         stories_history.append(new_stories)
@@ -135,22 +141,69 @@ def _print_story_block(text, width=88):
 
 def update_step(
         agent_list,
-        verbose=False
+        verbose=False,
+        batch=True,
+        max_concurrent_requests=8,
     ):
-    """Update the agents
+    """Advance every agent one step: build prompts, generate, store stories.
+
+    All prompts are built (Phase A) from the PREVIOUS step's stories before any
+    generation (Phase B), so a step is a synchronous update: the eligible agents'
+    generations are independent. With ``batch`` they are generated together via
+    get_answers_batch; otherwise one at a time. Semantics are identical either way.
 
     :param agent_list: list of agents
-    :param verbose: if True, print each agent's generated story text, defaults to False
-    :return: new_stories
+    :param verbose: if True, print each agent's generated story text
+    :param batch: generate the step's eligible agents together (vs one-by-one)
+    :param max_concurrent_requests: cap for the remote backend's concurrent requests
+    :return: new_stories (in agent order)
     """
-    # update the prompt of the agents
-    new_stories = []
-
+    # Phase A — every agent (re)builds its prompt from neighbours' previous stories.
+    # A waiting agent (e.g. not yet reached in a sequence chain) gets prompt = None.
     for agent in agent_list:
         agent.update_prompt()
 
+    eligible = [agent for agent in agent_list if agent.prompt is not None]
+    prompts = [agent.prompt for agent in eligible]
+
+    # Phase B — generate. All eligible agents share one backend/model/params (built
+    # from a single config), so read those from a representative agent.
+    if prompts:
+        ref = eligible[0]
+        kwargs = dict(
+            access_url=ref.access_url,
+            debug=ref.debug,
+            instruct=ref.instruct,
+            llm_backend=ref.llm_backend,
+            model=ref.model,
+            sampling_params=ref.sampling_params,
+        )
+        if batch:
+            results = get_answers_batch(
+                prompts, ref.generation,
+                max_concurrent_requests=max_concurrent_requests, **kwargs,
+            )
+        else:
+            # One at a time, through the same path (single-element batches).
+            results = [
+                get_answers_batch([p], ref.generation,
+                                  max_concurrent_requests=1, **kwargs)[0]
+                for p in prompts
+            ]
+        for agent, text in zip(eligible, results):
+            agent.set_story(text)
+
+    # Waiting agents produce nothing; then EVERY agent's wait ticks down exactly
+    # once (the same bookkeeping the old per-agent update_story did).
     for agent in agent_list:
-        story = agent.get_updated_story()
+        if agent.prompt is None:
+            agent.set_story(None)
+        agent.decrease_wait()
+
+    # Collect + log in agent order (output format unchanged).
+    new_stories = []
+    for agent in agent_list:
+        story = agent.get_story()
         if story is None:
             # Agent produced nothing this step. In a sequence / transmission-chain
             # network this is EXPECTED: only the agent whose turn it is generates;

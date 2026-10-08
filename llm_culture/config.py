@@ -89,6 +89,7 @@ class BackendConfig:
     model: Optional[str] = None       # HF repo id or local path (required for llama_cpp/vllm)
     access_url: str = ""              # remote server URL (used when kind == none)
     hf_cache_dir: Optional[str] = None  # HF download cache (default ~/.cache/huggingface)
+    max_concurrent_requests: int = 8  # remote (kind=none) only: max in-flight requests when a timestep is batched
     # backend-specific tuning (only the one matching `kind` is read)
     llama_cpp: LlamaCppConfig = field(default_factory=LlamaCppConfig)
     vllm: VllmConfig = field(default_factory=VllmConfig)
@@ -101,6 +102,7 @@ class GenerationConfig:
     max_tokens: int = 512
     top_p: float = 0.95
     instruct: bool = True   # True -> chat/instruct API; False -> raw text completion (base models)
+    batch: bool = True      # generate a timestep's independent agents together (get_answers_batch); False = one at a time
 
 
 @dataclass
