@@ -1,0 +1,26 @@
+# @package _global_
+# Reproduction: transformation-prompt comparison. fully_connected, 10 agents, 10
+# generations, 5 seeds. The script runs CombineTwo / MinorChanges / Repeat /
+# MaximizeDifference and compares them. Run: reproduction_scripts/transformation_prompt.py
+population:
+  network_structure: fully_connected
+  agents:
+    - count: 10
+      personality: empty
+      prompt_init: simple
+      prompt_update: CombineTwo
+
+backend:
+  kind: llama_cpp
+  model: unsloth/SmolLM2-135M-Instruct-GGUF
+
+generation:
+  temperature: 0.8
+
+n_timesteps: 10
+n_seeds: 5
+output: results/experiments/transformation
+
+analysis:
+  run: true
+  plot: false

@@ -154,11 +154,24 @@ uv run python scripts/run_comparison_analysis.py 'folders=[Network Structure/CAV
 
 The `reproduction_scripts/` directory regenerates the paper experiments
 (`transmission_chain.py`, `network.py`, `transformation_prompt.py`,
-`persona_prompt.py`). Outputs differ from the paper due to generation stochasticity.
+`persona_prompt.py`). They are config-driven: each builds an `ExperimentConfig`
+from a `conf/experiment/repro_*.yaml` preset, runs simulation + analysis, and (for
+the multi-variant ones) a comparison. Run one with, e.g.:
 
-> **TODO (dev):** the `reproduction_scripts/` still use argparse and the legacy
-> dict-based `run_experiment` API. Migrate them to build `ExperimentConfig`
-> directly (like the Hydra entrypoints) and drop the dict shim.
+```bash
+uv run python reproduction_scripts/network.py
+```
+
+Edit the matching `conf/experiment/repro_*.yaml` to change the model, sizes, or
+seeds (e.g. swap `backend.model` for a paper-scale model). You can also run a
+single variant through the main entrypoint:
+`uv run python run_experiment.py experiment=repro_network`. Outputs differ from the
+paper due to generation stochasticity.
+
+> **TODO (dev):** make the library approachable for researchers who aren't software
+> specialists — plain-language docs (quickstart, worked examples, an explanation of
+> each config knob) and a friendlier interface (the web GUI and/or a guided CLI) so
+> running and analysing experiments needs no Python/Hydra knowledge.
 
 ## Implemented analysis
 

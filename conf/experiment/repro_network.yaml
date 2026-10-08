@@ -1,0 +1,27 @@
+# @package _global_
+# Reproduction: network-structure comparison. Base is fully_connected; the script
+# runs circle / caveman / fully_connected and compares them. Run:
+# reproduction_scripts/network.py
+population:
+  network_structure: fully_connected
+  n_cliques: 2
+  agents:
+    - count: 10
+      personality: empty
+      prompt_init: simple
+      prompt_update: CombineTwo
+
+backend:
+  kind: llama_cpp
+  model: unsloth/SmolLM2-135M-Instruct-GGUF
+
+generation:
+  temperature: 0.8
+
+n_timesteps: 5
+n_seeds: 1
+output: results/experiments/network
+
+analysis:
+  run: true
+  plot: false

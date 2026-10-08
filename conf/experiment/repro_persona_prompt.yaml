@@ -1,0 +1,26 @@
+# @package _global_
+# Reproduction: persona comparison. fully_connected, 10 agents, 10 generations, 5
+# seeds, CombineTwo update. The script runs creative / not_creative / mixed and
+# compares them. Run: reproduction_scripts/persona_prompt.py
+population:
+  network_structure: fully_connected
+  agents:
+    - count: 10
+      personality: Creative
+      prompt_init: simple
+      prompt_update: CombineTwo
+
+backend:
+  kind: llama_cpp
+  model: unsloth/SmolLM2-135M-Instruct-GGUF
+
+generation:
+  temperature: 0.8
+
+n_timesteps: 10
+n_seeds: 5
+output: results/experiments/persona
+
+analysis:
+  run: true
+  plot: false
