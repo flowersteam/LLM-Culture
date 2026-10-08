@@ -4,6 +4,127 @@ import httpx
 from openai import OpenAI
 
 
+# Appended to the raw prompt when `instruct=False`, to coax a base (non-chat)
+# model into continuing as the assistant.
+_COMPLETION_PRIMER = "Assistant: Sure, here is the requested answer:\n\n1."
+
+
+# --- vLLM helpers (shared by the single-prompt and batch paths) ---------------
+
+def _vllm_conversations(tokenizer, prompts, instruct):
+    """Render each prompt into the string vLLM expects (chat-templated or primed)."""
+    if instruct:
+        return [
+            tokenizer.apply_chat_template(
+                [{"role": "user", "content": p}], tokenize=False
+            )
+            for p in prompts
+        ]
+    return [p + _COMPLETION_PRIMER for p in prompts]
+
+
+def _vllm_sampling_params(tokenizer, generation, sampling_params):
+    """Use the caller's SamplingParams if given, else build one from `generation`."""
+    if sampling_params is not None:
+        return sampling_params
+    from vllm import SamplingParams  # optional "serving" extra
+
+    return SamplingParams(
+        temperature=generation.temperature,
+        top_p=generation.top_p,
+        max_tokens=generation.max_tokens,
+        stop_token_ids=[tokenizer.eos_token_id],
+    )
+
+
+# --- single-prompt backends ---------------------------------------------------
+
+def _generate_vllm(model, prompt, generation, instruct, sampling_params):
+    """In-process vLLM generation (GPU)."""
+    tokenizer = model.get_tokenizer()
+    conversations = _vllm_conversations(tokenizer, [prompt], instruct)
+    params = _vllm_sampling_params(tokenizer, generation, sampling_params)
+    output = model.generate(conversations, params)
+    return output[0].outputs[0].text
+
+
+def _generate_llama_cpp(model, prompt, generation, instruct):
+    """In-process llama.cpp generation (CPU / Apple Metal)."""
+    if instruct:
+        output = model.create_chat_completion(
+            messages=[{"role": "user", "content": prompt}],
+            temperature=generation.temperature,
+            top_p=generation.top_p,
+            max_tokens=generation.max_tokens,
+        )
+        return output["choices"][0]["message"]["content"]
+
+    output = model(
+        prompt + _COMPLETION_PRIMER,
+        temperature=generation.temperature,
+        top_p=generation.top_p,
+        max_tokens=generation.max_tokens,
+    )
+    return output["choices"][0]["text"]
+
+
+def _build_remote_client(access_url, verify, timeout, max_retries):
+    """OpenAI-compatible client; the SDK handles retries/backoff/timeouts."""
+    base_url = access_url.rstrip("/") + "/v1"
+    client_kwargs = dict(
+        base_url=base_url,
+        # Local servers (vLLM / llama.cpp) accept any key; env override for hosted.
+        api_key=os.environ.get("OPENAI_API_KEY", "EMPTY"),
+        timeout=timeout,
+        max_retries=max_retries,
+    )
+    if not verify:
+        # Disabling TLS verification requires injecting a custom http client.
+        client_kwargs["http_client"] = httpx.Client(verify=False, timeout=timeout)
+    return OpenAI(**client_kwargs), base_url
+
+
+def _generate_remote(
+    access_url, prompt, generation, instruct, start_flag, model,
+    debug, verify, timeout, max_retries,
+):
+    """Generation via a remote OpenAI-compatible server (HTTP)."""
+    client, base_url = _build_remote_client(access_url, verify, timeout, max_retries)
+
+    # Local servers ignore the model name; env override for servers that validate it.
+    request_model = model if isinstance(model, str) else os.environ.get("OPENAI_MODEL", "local-model")
+
+    if debug:
+        print("POST base_url:", base_url, "| instruct:", instruct, "| model:", request_model)
+
+    try:
+        if instruct:
+            response = client.chat.completions.create(
+                model=request_model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=generation.temperature,
+                max_tokens=generation.max_tokens,
+            )
+            return response.choices[0].message.content.replace("</s>", "")
+
+        prompt = prompt + _COMPLETION_PRIMER
+        if start_flag is not None:
+            prompt += start_flag
+
+        response = client.completions.create(
+            model=request_model,
+            prompt=prompt,
+            temperature=generation.temperature,
+            max_tokens=generation.max_tokens,
+        )
+        return response.choices[0].text
+    except Exception as exc:
+        # Surface a clear error instead of hanging or leaking a raw client error.
+        raise RuntimeError(
+            f"LLM request to {base_url} failed after {max_retries} retries"
+        ) from exc
+
+
 def get_answer(
     access_url,
     prompt,
@@ -18,122 +139,45 @@ def get_answer(
     timeout=120,
     max_retries=5,
 ):
-    temperature = generation.temperature
-    max_tokens = generation.max_tokens
-    top_p = generation.top_p
-
+    """Generate one answer, dispatching to the selected backend."""
     if llm_backend == "vllm":
-        # Deferred import: vllm is an optional ("serving") extra, absent in base installs.
-        from vllm import SamplingParams
-
-        if instruct:
-            tokenizer = model.get_tokenizer()
-
-            conversations = tokenizer.apply_chat_template(
-                [{"role": "user", "content": prompt}],
-                tokenize=False,
-            )
-        else:
-            conversations = (
-                prompt +
-                "Assistant: Sure, here is the requested answer:\n\n1."
-            )
-
-        output = model.generate(
-            [conversations],
-            sampling_params if sampling_params is not None else SamplingParams(
-                temperature=temperature,
-                top_p=top_p,
-                max_tokens=max_tokens,
-                stop_token_ids=[tokenizer.eos_token_id],
-            )
-        )
-
-        return output[0].outputs[0].text
+        return _generate_vllm(model, prompt, generation, instruct, sampling_params)
     if llm_backend == "llama.cpp":
-        if instruct:
-            conversations = [
-                {"role": "user", "content": prompt}
-            ]
-
-            output = model.create_chat_completion(
-                messages=conversations,
-                temperature=temperature,
-                top_p=top_p,
-                max_tokens=max_tokens,
-            )
-        else:
-            conversations = (
-                prompt +
-                "Assistant: Sure, here is the requested answer:\n\n1."
-            )
-
-            output = model(
-                conversations,
-                temperature=temperature,
-                top_p=top_p,
-                max_tokens=max_tokens,
-            )
-
-        return output["choices"][0]["text"] if not instruct else \
-            output["choices"][0]["message"]["content"]
-    # Remote / server backend: talk to an OpenAI-compatible endpoint (a hosted
-    # server, a vLLM server, or a llama.cpp server) using the official `openai`
-    # client. The client handles retries + exponential backoff + timeouts for us,
-    # so we no longer hand-roll a request loop. The request fields and the way we
-    # read the response are kept identical to the previous implementation, so the
-    # output contract is unchanged.
-    base_url = access_url.rstrip("/") + "/v1"
-
-    client_kwargs = dict(
-        base_url=base_url,
-        # OpenAI-compatible local servers (vLLM / llama.cpp) accept any key; allow
-        # overriding via env for genuine hosted endpoints.
-        api_key=os.environ.get("OPENAI_API_KEY", "EMPTY"),
-        timeout=timeout,
-        max_retries=max_retries,
+        return _generate_llama_cpp(model, prompt, generation, instruct)
+    return _generate_remote(
+        access_url, prompt, generation, instruct, start_flag, model,
+        debug, verify, timeout, max_retries,
     )
-    if not verify:
-        # Mirror the previous requests(..., verify=False) behavior only when asked;
-        # a custom http_client is what lets us disable TLS verification.
-        client_kwargs["http_client"] = httpx.Client(verify=False, timeout=timeout)
 
-    client = OpenAI(**client_kwargs)
 
-    # The HTTP path historically sent no explicit model name (local servers ignore
-    # it / use the one they loaded). Keep a harmless default; override via the
-    # OPENAI_MODEL env var for servers that validate it (e.g. a remote vLLM).
-    request_model = model if isinstance(model, str) else os.environ.get("OPENAI_MODEL", "local-model")
+# --- batch backends -----------------------------------------------------------
 
-    if debug:
-        print("POST base_url:", base_url, "| instruct:", instruct, "| model:", request_model)
+def _generate_vllm_batch(model, prompts, generation, instruct, sampling_params):
+    """One native batched vLLM call; outputs come back in input order."""
+    tokenizer = model.get_tokenizer()
+    conversations = _vllm_conversations(tokenizer, prompts, instruct)
+    params = _vllm_sampling_params(tokenizer, generation, sampling_params)
+    outputs = model.generate(conversations, params)
+    return [o.outputs[0].text for o in outputs]
 
-    try:
-        if instruct:
-            response = client.chat.completions.create(
-                model=request_model,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=temperature,
-                max_tokens=max_tokens,
-            )
-            return response.choices[0].message.content.replace("</s>", "")
 
-        prompt = prompt + "Assistant: Sure, here is the requested answer:\n\n1."
-        if start_flag is not None:
-            prompt += start_flag
+def _generate_sequential(prompts, one):
+    """Run prompts one after another (llama.cpp high-level binding is single-sequence)."""
+    return [one(p) for p in prompts]
 
-        response = client.completions.create(
-            model=request_model,
-            prompt=prompt,
-            temperature=temperature,
-            max_tokens=max_tokens,
-        )
-        return response.choices[0].text
-    except Exception as exc:
-        # Surface a clear error instead of hanging or leaking a raw client error.
-        raise RuntimeError(
-            f"LLM request to {base_url} failed after {max_retries} retries"
-        ) from exc
+
+def _generate_concurrent(prompts, one, max_concurrent_requests):
+    """Fire independent requests concurrently; the server overlaps them.
+
+    ThreadPoolExecutor.map keeps input order and re-raises the first exception.
+    """
+    if max_concurrent_requests <= 1 or len(prompts) == 1:
+        return _generate_sequential(prompts, one)
+    from concurrent.futures import ThreadPoolExecutor
+
+    workers = min(max_concurrent_requests, len(prompts))
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        return list(pool.map(one, prompts))
 
 
 def get_answers_batch(
@@ -153,9 +197,8 @@ def get_answers_batch(
 ):
     """Generate one answer per prompt, batched where the backend supports it.
 
-    Returns a list aligned 1:1 (and in order) with `prompts`. The prompts in one
-    call must be INDEPENDENT (they come from a single simulation timestep). Per
-    backend:
+    Returns a list aligned 1:1 (and in order) with `prompts`. Prompts in one call
+    must be INDEPENDENT (a single simulation timestep). Per backend:
       * "vllm"      -> one native batched model.generate(list) (continuous batching)
       * "llama.cpp" -> sequential loop (the high-level binding is single-sequence)
       * remote      -> concurrent requests; the server's batching does the overlap
@@ -164,34 +207,10 @@ def get_answers_batch(
         return []
 
     if llm_backend == "vllm":
-        # Deferred import: vllm is an optional ("serving") extra.
-        from vllm import SamplingParams
-
-        tokenizer = model.get_tokenizer()
-        if instruct:
-            conversations = [
-                tokenizer.apply_chat_template(
-                    [{"role": "user", "content": p}], tokenize=False
-                )
-                for p in prompts
-            ]
-        else:
-            conversations = [
-                p + "Assistant: Sure, here is the requested answer:\n\n1."
-                for p in prompts
-            ]
-        params = sampling_params if sampling_params is not None else SamplingParams(
-            temperature=generation.temperature,
-            top_p=generation.top_p,
-            max_tokens=generation.max_tokens,
-            stop_token_ids=[tokenizer.eos_token_id],
-        )
-        # vLLM schedules all sequences together and returns them in input order.
-        outputs = model.generate(conversations, params)
-        return [o.outputs[0].text for o in outputs]
+        return _generate_vllm_batch(model, prompts, generation, instruct, sampling_params)
 
     def _one(prompt):
-        # Exactly one answer via the existing single-call path (shares its retries).
+        # Exactly one answer via the single-call path (shares its retries).
         return get_answer(
             access_url,
             prompt,
@@ -207,19 +226,8 @@ def get_answers_batch(
         )
 
     if llm_backend == "llama.cpp":
-        # In-process high-level llama.cpp is single-sequence: no true batched decode,
-        # so run them one after another (correct, just not faster). For real batching
-        # on this backend, run the llama.cpp *server* with --parallel/--cont-batching
-        # and use the remote path below.
-        return [_one(p) for p in prompts]
+        # For real batching here, run the llama.cpp *server* with
+        # --parallel/--cont-batching and use the remote path instead.
+        return _generate_sequential(prompts, _one)
 
-    # Remote OpenAI-compatible server: fire the independent requests concurrently and
-    # let the server overlap them. ThreadPoolExecutor.map keeps input order and
-    # re-raises the first exception (fail-loud, like get_answer).
-    if max_concurrent_requests <= 1 or len(prompts) == 1:
-        return [_one(p) for p in prompts]
-    from concurrent.futures import ThreadPoolExecutor
-
-    workers = min(max_concurrent_requests, len(prompts))
-    with ThreadPoolExecutor(max_workers=workers) as pool:
-        return list(pool.map(_one, prompts))
+    return _generate_concurrent(prompts, _one, max_concurrent_requests)
