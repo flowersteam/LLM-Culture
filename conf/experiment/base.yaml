@@ -8,10 +8,10 @@
 # Any field from llm_culture/config.py:ExperimentConfig can be set here. The
 # inference/backend setup is a separate config group (conf/inference/) pulled in
 # via the defaults list below — swap it without editing this file, e.g.:
-#   uv run python run_experiment.py inference=mac_mx
+#   uv run python run_experiment.py inference=mistral_7b_instruct_v0_2_gguf_metal
 
 defaults:
-  - /inference: smol_cpu   # WHERE the model runs (conf/inference/smol_cpu.yaml)
+  - /inference: smollm2_135m_instruct_llama_cpp   # WHERE the model runs (conf/inference/)
   - _self_
 
 # WHO runs + how they're wired. The population is a list of agent *groups*; each

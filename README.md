@@ -197,14 +197,18 @@ uv run python run_experiment.py experiment=linux_gpu              # ~7B with vLL
 ```
 
 **Inference is its own config group.** The backend/model setup (and all its
-hardware-tuning comments) lives in `conf/inference/` — one file per setup
-(`smol_cpu`, `mac_mx`, `linux_gpu`, `mistral_partial_offload`). Each experiment
-preset pulls one in through its `defaults` list, so you can mix any population with
-any backend without editing files:
+hardware-tuning comments) lives in `conf/inference/` — one file per setup, named for
+the model + backend (`smollm2_135m_instruct_llama_cpp`,
+`mistral_7b_instruct_v0_2_gguf_metal`, `mistral_7b_instruct_v0_2_vllm_gpu`,
+`mistral_7b_instruct_v0_2_gguf_partial_offload`). Each experiment preset pulls one in
+through its `defaults` list, so you can mix any population with any backend without
+editing files:
 
 ```bash
-uv run python run_experiment.py experiment=mac_mx inference=linux_gpu   # mac_mx population, vLLM backend
-uv run python run_experiment.py experiment=base inference=mac_mx        # base population, real 7B on Metal
+# mac_mx population, but the vLLM backend instead of Metal:
+uv run python run_experiment.py experiment=mac_mx inference=mistral_7b_instruct_v0_2_vllm_gpu
+# base population, but a real 7B on Apple Silicon instead of the tiny smoke model:
+uv run python run_experiment.py experiment=base inference=mistral_7b_instruct_v0_2_gguf_metal
 ```
 
 **Sweeps** (`-m` multirun):

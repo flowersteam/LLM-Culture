@@ -13,7 +13,7 @@
 # of generations) is independent of the agent count.
 
 defaults:
-  - /inference: smol_cpu   # WHERE the model runs (conf/inference/smol_cpu.yaml)
+  - /inference: smollm2_135m_instruct_llama_cpp   # WHERE the model runs (conf/inference/)
   - _self_
 
 population:

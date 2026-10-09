@@ -16,7 +16,7 @@
 #
 # The backend/inference setup is its own config group (conf/inference/). Each
 # experiment preset pulls one in via its `defaults` list; swap it independently:
-#   uv run python run_experiment.py experiment=mac_mx inference=linux_gpu
+#   uv run python run_experiment.py experiment=mac_mx inference=mistral_7b_instruct_v0_2_vllm_gpu
 #
 # Enum fields accept their string values:
 #   backend: none | vllm | llama_cpp

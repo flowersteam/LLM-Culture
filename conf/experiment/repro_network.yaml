@@ -3,7 +3,7 @@
 # runs circle / caveman / fully_connected and compares them. Run:
 # reproduction_scripts/network.py
 defaults:
-  - /inference: smol_cpu
+  - /inference: smollm2_135m_instruct_llama_cpp
   - _self_
 
 population:

@@ -1,7 +1,7 @@
 # @package backend
 #
-# Apple Silicon inference — llama.cpp with Metal GPU offload. Works on any M-series
-# Mac (M1/M2/M3/M4), hence "mx".
+# Mistral-7B-Instruct-v0.2 (Q4_K_M GGUF) on Apple Silicon — llama.cpp with Metal
+# GPU offload. Works on any M-series Mac (M1/M2/M3/M4).
 #
 # WHY these values on Apple Silicon:
 #   - Unified Memory (UMA): the Metal GPU shares the one system RAM pool, so there is

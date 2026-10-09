@@ -1,7 +1,8 @@
 # @package backend
 #
-# Linux / NVIDIA GPU inference — vLLM. Requires the serving extra on a Linux GPU
-# box:  uv sync --extra serving  (vLLM is skipped on macOS — use inference=mac_mx).
+# Mistral-7B-Instruct-v0.2 on Linux / NVIDIA GPU — vLLM. Requires the serving extra
+# on a Linux GPU box:  uv sync --extra serving  (vLLM is skipped on macOS — use
+# inference=mistral_7b_instruct_v0_2_gguf_metal there).
 #
 # WHY vLLM: it keeps every agent's KV cache in paged GPU memory and runs the whole
 # timestep as ONE continuous batch, so with generation.batch=true (default) all

@@ -3,7 +3,7 @@
 # one generation per agent (n_timesteps == n_agents). Tiny default model; override
 # backend.model for a paper-scale model. Run: reproduction_scripts/transmission_chain.py
 defaults:
-  - /inference: smol_cpu
+  - /inference: smollm2_135m_instruct_llama_cpp
   - _self_
 
 population:

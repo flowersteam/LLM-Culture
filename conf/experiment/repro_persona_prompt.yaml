@@ -3,7 +3,7 @@
 # seeds, CombineTwo update. The script runs creative / not_creative / mixed and
 # compares them. Run: reproduction_scripts/persona_prompt.py
 defaults:
-  - /inference: smol_cpu
+  - /inference: smollm2_135m_instruct_llama_cpp
   - _self_
 
 population:

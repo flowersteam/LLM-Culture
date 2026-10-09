@@ -1,12 +1,12 @@
 # @package _global_
 #
 # Worked example: run a LARGER model on a SMALL GPU (partial layer offload).
-# The backend/offload tuning lives in conf/inference/mistral_partial_offload.yaml.
+# The backend/offload tuning lives in conf/inference/mistral_7b_instruct_v0_2_gguf_partial_offload.yaml.
 #
 #   uv run python run_experiment.py experiment=big_model_small_gpu
 
 defaults:
-  - /inference: mistral_partial_offload   # WHERE the model runs (partial GPU offload)
+  - /inference: mistral_7b_instruct_v0_2_gguf_partial_offload   # WHERE the model runs
   - _self_
 
 population:

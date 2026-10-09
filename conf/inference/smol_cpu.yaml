@@ -1,8 +1,0 @@
-# @package backend
-#
-# Tiny local smoke-test inference — a 135M model via llama.cpp. Fast, runs
-# anywhere (CPU or any GPU), tiny download. Great for wiring/plumbing checks; the
-# text quality is NOT the point. Swap in a real ~7B model with `inference=mac_mx`
-# (Apple Silicon) or `inference=linux_gpu` (Linux/NVIDIA).
-kind: llama_cpp
-model: unsloth/SmolLM2-135M-Instruct-GGUF

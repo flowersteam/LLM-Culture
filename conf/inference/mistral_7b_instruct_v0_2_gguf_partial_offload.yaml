@@ -1,8 +1,9 @@
 # @package backend
 #
-# Worked example: run a LARGER model on a SMALL (discrete) GPU by offloading only
-# SOME layers to the GPU and running the rest on CPU. This is the discrete-GPU
-# counterpart to inference=mac_mx (on Apple Silicon you'd just use n_gpu_layers: -1).
+# Mistral-7B-Instruct-v0.2 (Q4_K_M GGUF) on a SMALL discrete GPU — llama.cpp with
+# PARTIAL layer offload: put some layers on the GPU, run the rest on CPU. This is
+# the discrete-GPU counterpart to inference=mistral_7b_instruct_v0_2_gguf_metal (on
+# Apple Silicon you'd just use n_gpu_layers: -1).
 #
 # Rough memory intuition for a 7B Q4_K_M model (~4.4 GB of weights):
 #   - a layer is roughly weights / n_layers (a 7B model has ~32 layers)
@@ -10,7 +11,7 @@
 #   - KV cache grows with n_ctx; shrink n_ctx if you are tight on memory
 # So on a ~6 GB GPU, start around n_gpu_layers: 20 and adjust (watch for CUDA OOM).
 #
-# vLLM equivalent (Linux/GPU): see conf/inference/linux_gpu.yaml.
+# vLLM equivalent (Linux/GPU): see mistral_7b_instruct_v0_2_vllm_gpu.yaml.
 kind: llama_cpp
 model: TheBloke/Mistral-7B-Instruct-v0.2-GGUF
 llama_cpp:

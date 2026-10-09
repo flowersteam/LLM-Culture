@@ -3,7 +3,7 @@
 # generations, 5 seeds. The script runs CombineTwo / MinorChanges / Repeat /
 # MaximizeDifference and compares them. Run: reproduction_scripts/transformation_prompt.py
 defaults:
-  - /inference: smol_cpu
+  - /inference: smollm2_135m_instruct_llama_cpp
   - _self_
 
 population:
