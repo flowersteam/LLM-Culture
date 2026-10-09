@@ -9,7 +9,9 @@ import networkx as nx
 import matplotlib
 matplotlib.use("Agg")
 
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+
+from llm_culture.analysis.plot_utils import setup_axes, save_figure
 
 
 def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, sizes, save=True, seed = 0):
@@ -24,10 +26,8 @@ def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, siz
     else:
         x_ticks_space = 5
     
-    plt.xlabel('History idx', fontsize=sizes['labels'])
-    plt.ylabel('History idx', fontsize=sizes['labels'])
-    plt.title('Stories similarity Matrix', fontsize=sizes['title'])
-    
+    setup_axes('Stories similarity Matrix', 'History idx', 'History idx', sizes)
+
     # Add black lines to delimit generations
     for i in range(int(n_gen)):      
         plt.axvline(x = i * n_agents - 0.5, color = 'black')
@@ -39,22 +39,15 @@ def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, siz
     cbar = plt.colorbar(pad=0.02, shrink=0.83)
 
     if save:
-        #check if folder exists
-        if not os.path.exists(folder):
-            os.makedirs(folder)
-        plt.savefig(folder + '/stories_similarity_matrix'+str(seed)+'.png')
-        print("Saved stories_similarity_matrix"+str(seed)+".png")
-
-    if plot:
+        save_figure(folder, f'stories_similarity_matrix{seed}.png', plot)
+    elif plot:
         plt.show()
 
 
 
 def plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True, seed = 0):
     plt.figure(figsize=(8, 8))
-    plt.xlabel('Generation idx', fontsize=sizes['labels'])
-    plt.ylabel('Generation idx', fontsize=sizes['labels'])
-    plt.title('Between generations similarity Matrix', fontsize=sizes['title'])
+    setup_axes('Between generations similarity Matrix', 'Generation idx', 'Generation idx', sizes)
     plt.xticks(range(0, between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(range(0, between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
 
@@ -62,18 +55,15 @@ def plot_between_gen_similarities(between_gen_similarity_matrix, folder, plot, x
     cbar = plt.colorbar(pad=0.02, shrink=0.83)
    
     if save:
-        plt.savefig(folder + '/between_gen_similarity_matrix' + str(seed)+'.png')
-        print("Saved between_gen_similarity_matrix"+str(seed)+".png")
-    
-    if plot:
+        save_figure(folder, f'between_gen_similarity_matrix{seed}.png', plot)
+    elif plot:
         plt.show()
 
 
 def plot_init_generation_similarity_evolution(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True, scale_y_axis = False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of similarity with the initial generation', fontsize=sizes['title'])
-    plt.xlabel('Generations', fontsize=sizes['labels'])
-    plt.ylabel('Similarity with first generation', fontsize=sizes['labels'])
+    setup_axes('Evolution of similarity with the initial generation', 'Generations',
+               'Similarity with first generation', sizes)
 
     plt.ylim(0, 1)
     plt.xticks(range(0, all_seeds_between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
@@ -91,18 +81,15 @@ def plot_init_generation_similarity_evolution(all_seeds_between_gen_similarity_m
     for i in range(len(all_seeds_between_gen_similarity_matrix)):
         plt.plot(range(1, all_seeds_between_gen_similarity_matrix[0].shape[0]), all_seeds_between_gen_similarity_matrix[i][0, 1:], alpha=0.2, color = color)
     if save:
-        plt.savefig(folder + '/similarity_first_gen.png')
-        print("Saved similarity_first_gen.png")
-    
-    if plot:
+        save_figure(folder, 'similarity_first_gen.png', plot)
+    elif plot:
         plt.show()
     
 
 def plot_within_gen_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes,save=True, scale_y_axis = False):
     plt.figure(figsize=(10, 6))
-    plt.title('Within generations texts similarities', fontsize=sizes['title'])
-    plt.xlabel('Generations', fontsize=sizes['labels'])
-    plt.ylabel('Within-generation similarity', fontsize=sizes['labels'])
+    setup_axes('Within generations texts similarities', 'Generations',
+               'Within-generation similarity', sizes)
     plt.xticks(range(0, all_seeds_between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
     plt.ylim(0 , 1.1)
@@ -120,17 +107,15 @@ def plot_within_gen_similarities(all_seeds_between_gen_similarity_matrix, folder
         plt.plot(np.diag(all_seeds_between_gen_similarity_matrix[i]), alpha=0.2, color = color)
 
     if save:
-        plt.savefig(folder + '/within_gen_similarity.png')
-        print("Saved within_gen_similarity.png")
-    if plot:
+        save_figure(folder, 'within_gen_similarity.png', plot)
+    elif plot:
         plt.show()
 
 
 def plot_successive_generations_similarities(all_seeds_between_gen_similarity_matrix, folder, plot, x_ticks_space, sizes, save=True, scale_y_axis = False):
     plt.figure(figsize=(10, 6))
-    plt.title('Successive generations similarities', fontsize=sizes['title'])
-    plt.xlabel('Generations', fontsize=sizes['labels'])
-    plt.ylabel('Similarity between successive generations', fontsize=sizes['labels'])
+    setup_axes('Successive generations similarities', 'Generations',
+               'Similarity between successive generations', sizes)
     plt.xticks(range(0, all_seeds_between_gen_similarity_matrix[0].shape[0], x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
 
@@ -150,9 +135,8 @@ def plot_successive_generations_similarities(all_seeds_between_gen_similarity_ma
     for i in range(n_seeds):
         plt.plot(all_seeds_successive_sim[i], alpha=0.2, color = color)
     if save:
-        plt.savefig(folder + '/successive_similarity.png')
-        print("Saved successive_similarity.png")
-    if plot:
+        save_figure(folder, 'successive_similarity.png', plot)
+    elif plot:
         plt.show()
 
 
@@ -166,9 +150,8 @@ def plot_positivity_evolution(all_seeds_positivities, folder, plot, x_ticks_spac
             gen_positivities.append(np.mean(p))
         all_seeds_gen_positivities.append(gen_positivities)
 
-    plt.title("Evolution of positivity across generations", fontsize=sizes['title'])
-    plt.ylabel("Positivity", fontsize=sizes['labels'])
-    plt.ylabel("Generation", fontsize=sizes['labels'])
+    # NB: pre-existing — ylabel set to "Generation" (and no xlabel) on this plot.
+    setup_axes("Evolution of positivity across generations", ylabel="Generation", sizes=sizes)
 
     plt.xticks(range(0, len(gen_positivities), x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(-1, 1, 11), fontsize=sizes['ticks'])
@@ -189,10 +172,8 @@ def plot_positivity_evolution(all_seeds_positivities, folder, plot, x_ticks_spac
         plt.plot(all_seeds_gen_positivities[i], alpha=0.2, color = color)
 
     if save:
-        plt.savefig(folder + '/positivity_evolution.png')
-        print("Saved positivity_evolution.png")
-
-    if plot:
+        save_figure(folder, 'positivity_evolution.png', plot)
+    elif plot:
         plt.show()
 
 
@@ -207,9 +188,8 @@ def plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_
             gen_subjectivities.append(np.mean(gen_subjectivity))
         all_see_gen_subjectivities.append(gen_subjectivities)
 
-    plt.title("Evolution of subjectivity across generations", fontsize=sizes['title'])
-    plt.ylabel("Positivity", fontsize=sizes['labels'])
-    plt.ylabel("Generation", fontsize=sizes['labels'])
+    # NB: pre-existing — ylabel set to "Generation" (and no xlabel) on this plot.
+    setup_axes("Evolution of subjectivity across generations", ylabel="Generation", sizes=sizes)
 
     plt.xticks(range(0, len(gen_subjectivities), x_ticks_space), fontsize=sizes['ticks'])
     plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
@@ -226,10 +206,8 @@ def plot_subjectivity_evolution(all_seeds_subjectivities, folder, plot, x_ticks_
         plt.plot(all_see_gen_subjectivities[i], alpha=0.2, color = color)
 
     if save:
-        plt.savefig(folder + '/subjectivity_evolution.png')
-        print("Saved subjectivity_evolution.png")
-
-    if plot:
+        save_figure(folder, 'subjectivity_evolution.png', plot)
+    elif plot:
         plt.show()
 
     
@@ -306,10 +284,8 @@ def plot_similarity_graph(between_gen_similarity_matrix, folder, plot, sizes, sa
     plt.axis('off')
 
     if save:
-        plt.savefig(folder + '/generation_similarities_graph'+str(seed)+'.png')
-        print("Saved generation_similarities_graph"+str(seed)+".png")
-    
-    if plot:
+        save_figure(folder, f'generation_similarities_graph{seed}.png', plot)
+    elif plot:
         plt.show()
 
     return G
@@ -330,9 +306,8 @@ def plot_word_chains(word_lists, folder, plot, ticks_space, sizes, save=True, se
     # Scale the fig size with the number of words (not optimal but works atm)
     x_fig_size = len(known_words) // 10
     plt.figure(figsize=(x_fig_size, 6))
-    plt.title("Evolution of words presence in texts across generations", fontsize=sizes['title'])
-    plt.ylabel("Presence across generations", fontsize=sizes['labels'])
-    plt.xlabel("Words", fontsize=sizes['labels'])
+    setup_axes("Evolution of words presence in texts across generations",
+               "Words", "Presence across generations", sizes)
     ax = plt.gca()
 
     for i, key in enumerate(known_words.keys()):
@@ -370,10 +345,8 @@ def plot_word_chains(word_lists, folder, plot, ticks_space, sizes, save=True, se
     ax2.grid()
 
     if save:
-        plt.savefig(folder + '/wordchains'+str(seed)+'.png')
-        print("Saved wordchains"+str(seed)+".png")
-    
-    if plot:
+        save_figure(folder, f'wordchains{seed}.png', plot)
+    elif plot:
         plt.show()
         
 

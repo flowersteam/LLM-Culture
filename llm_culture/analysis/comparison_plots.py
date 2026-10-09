@@ -2,7 +2,9 @@ import os
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+
+from llm_culture.analysis.plot_utils import setup_axes, save_figure
 
 PAD = 20
 LABEL_PAD = 10
@@ -10,19 +12,24 @@ MATRIX_SIZE = 10
 COMPARISON_DIR = 'results/experiments_comparisons'
 
 
-def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
-    plt.figure(figsize=(10, 6))
-    plt.title('Evolution of similarity with the initial generation', fontsize=sizes['title'], pad=PAD)
-    plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    plt.ylabel('Similarity with first generation', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    
-    max_num_ticks = 0 
-
+def _max_x_ticks(data):
+    """Largest generation count across folders + its matching x-tick spacing."""
+    max_num_ticks = 0
+    x_ticks_space = 1
     for folder in data:
         num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
         if num_ticks > max_num_ticks:
             max_num_ticks = num_ticks
             x_ticks_space = data[folder]['x_ticks_space']
+    return max_num_ticks, x_ticks_space
+
+
+def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
+    plt.figure(figsize=(10, 6))
+    setup_axes('Evolution of similarity with the initial generation', 'Generations',
+               'Similarity with first generation', sizes, pad=PAD, labelpad=LABEL_PAD)
+
+    max_num_ticks, x_ticks_space = _max_x_ticks(data)
 
     plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
     if scale_y_axis:
@@ -39,30 +46,19 @@ def compare_init_generation_similarity_evolution(data, plot, sizes, saving_folde
         plt.fill_between(range(1, num_points), value - std, value + std, alpha=0.3)
 
     plt.legend(fontsize=sizes['legend'])
-    
+
     if saving_folder:
-        saving_name = '/similarity_first_gen_comparison.png'
-        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
-        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
-        print(f"Saved {saving_name}")
-    
-    if plot:
+        save_figure(f"{COMPARISON_DIR}/{saving_folder}", 'similarity_first_gen_comparison.png', plot)
+    elif plot:
         plt.show()
     
 def compare_within_generation_similarity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
     plt.subplots_adjust(top=0.9)
-    plt.title('Evolution of similarity within generations', fontsize=sizes['title'], pad=PAD)
-    plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    plt.ylabel('Similarity within generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    
-    max_num_ticks = 0 
+    setup_axes('Evolution of similarity within generations', 'Generations',
+               'Similarity within generations', sizes, pad=PAD, labelpad=LABEL_PAD)
 
-    for folder in data:
-        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
-        if num_ticks > max_num_ticks:
-            max_num_ticks = num_ticks
-            x_ticks_space = data[folder]['x_ticks_space']
+    max_num_ticks, x_ticks_space = _max_x_ticks(data)
 
     if scale_y_axis:
         plt.ylim(-0.1, 1.1)
@@ -80,30 +76,19 @@ def compare_within_generation_similarity_evolution(data, plot, sizes, saving_fol
         plt.plot(value, label=label)
         plt.fill_between(range(0, len(value)), value - std, value + std, alpha=0.3)
     plt.legend(fontsize=sizes['legend'])
-    
+
     if saving_folder:
-        saving_name = '/similarity_within_gen_comparison.png'
-        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
-        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
-        print(f"Saved {saving_name}")
-    
-    if plot:
+        save_figure(f"{COMPARISON_DIR}/{saving_folder}", 'similarity_within_gen_comparison.png', plot)
+    elif plot:
         plt.show()
 
 
 def compare_successive_generations_similarities(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of similarity with previous generation', fontsize=sizes['title'], pad=PAD)
-    plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    plt.ylabel('Similarity with previous generation', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    
-    max_num_ticks = 0 
+    setup_axes('Evolution of similarity with previous generation', 'Generations',
+               'Similarity with previous generation', sizes, pad=PAD, labelpad=LABEL_PAD)
 
-    for folder in data:
-        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
-        if num_ticks > max_num_ticks:
-            max_num_ticks = num_ticks
-            x_ticks_space = data[folder]['x_ticks_space']
+    max_num_ticks, x_ticks_space = _max_x_ticks(data)
 
     if scale_y_axis:
         plt.ylim(-0.1, 1.1)
@@ -122,30 +107,19 @@ def compare_successive_generations_similarities(data, plot, sizes, saving_folder
         plt.fill_between(range(1, len(value) + 1), value - std, value + std, alpha=0.3)
 
     plt.legend(fontsize=sizes['legend'])
-    
+
     if saving_folder:
-        saving_name = '/similarity_successive_gen_comparison.png'
-        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
-        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
-        print(f"Saved {saving_name}")
-    
-    if plot:
+        save_figure(f"{COMPARISON_DIR}/{saving_folder}", 'similarity_successive_gen_comparison.png', plot)
+    elif plot:
         plt.show()
 
 
 def compare_positivity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of positivity within generations', fontsize=sizes['title'], pad=PAD)
-    plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    plt.ylabel('Positivity value', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    
-    max_num_ticks = 0 
+    setup_axes('Evolution of positivity within generations', 'Generations',
+               'Positivity value', sizes, pad=PAD, labelpad=LABEL_PAD)
 
-    for folder in data:
-        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
-        if num_ticks > max_num_ticks:
-            max_num_ticks = num_ticks
-            x_ticks_space = data[folder]['x_ticks_space']
+    max_num_ticks, x_ticks_space = _max_x_ticks(data)
 
     if scale_y_axis:
         plt.ylim(-1, 1)
@@ -171,30 +145,19 @@ def compare_positivity_evolution(data, plot, sizes, saving_folder=None, scale_y_
         plt.fill_between(range(0, len(all_seeds_gen_positivities[0])), np.mean(all_seeds_gen_positivities, axis=0) - np.std(all_seeds_gen_positivities, axis=0), np.mean(all_seeds_gen_positivities, axis=0) + np.std(all_seeds_gen_positivities, axis=0), alpha=0.3)
 
     plt.legend(fontsize=sizes['legend'])
-    
+
     if saving_folder:
-        saving_name = '/positivity_gen_comparison.png'
-        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
-        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
-        print(f"Saved {saving_name}")
-    
-    if plot:
+        save_figure(f"{COMPARISON_DIR}/{saving_folder}", 'positivity_gen_comparison.png', plot)
+    elif plot:
         plt.show()
         
 
 def compare_subjectivity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
     plt.figure(figsize=(10, 6))
-    plt.title('Evolution of subjectivity within generations', fontsize=sizes['title'], pad=PAD)
-    plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    plt.ylabel('Subjectivity value', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    
-    max_num_ticks = 0 
+    setup_axes('Evolution of subjectivity within generations', 'Generations',
+               'Subjectivity value', sizes, pad=PAD, labelpad=LABEL_PAD)
 
-    for folder in data:
-        num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
-        if num_ticks > max_num_ticks:
-            max_num_ticks = num_ticks
-            x_ticks_space = data[folder]['x_ticks_space']
+    max_num_ticks, x_ticks_space = _max_x_ticks(data)
 
     if scale_y_axis:
         plt.ylim(0, 1)
@@ -217,14 +180,10 @@ def compare_subjectivity_evolution(data, plot, sizes, saving_folder=None, scale_
         plt.fill_between(range(0, len(all_see_gen_subjectivities[0])), np.mean(all_see_gen_subjectivities, axis=0) - np.std(all_see_gen_subjectivities, axis=0), np.mean(all_see_gen_subjectivities, axis=0) + np.std(all_see_gen_subjectivities, axis=0), alpha=0.3)
 
     plt.legend(fontsize=sizes['legend'])
-    
+
     if saving_folder:
-        saving_name = '/subjectivity_gen_comparison.png'
-        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
-        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
-        print(f"Saved {saving_name}")
-    
-    if plot:
+        save_figure(f"{COMPARISON_DIR}/{saving_folder}", 'subjectivity_gen_comparison.png', plot)
+    elif plot:
         plt.show()
 
 
@@ -275,7 +234,7 @@ def compare_subjectivity_evolution(data, plot, sizes, saving_folder=None, scale_
 
 
 
-def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, plot, sizes, saving_folder=None, seed = 0):
+def compare_similarity_matrix(similarity_matrix, n_gen, n_agents, plot, sizes, saving_folder=None, seed = 0):
     plt.figure(figsize=(sizes['matrix'], sizes['matrix']))
     plt.imshow(similarity_matrix, vmin=0, vmax=1, cmap='viridis')
     label = f'{saving_folder}_seed_{seed}'
@@ -287,9 +246,8 @@ def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, plot, sizes, savi
     else:
         x_ticks_space = 5
     
-    plt.xlabel('History idx', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    plt.ylabel('History idx', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-    plt.title(f'Stories similarity matrix for {label}', fontsize=sizes['title'], pad=PAD)
+    setup_axes(f'Stories similarity matrix for {label}', 'History idx', 'History idx',
+               sizes, pad=PAD, labelpad=LABEL_PAD)
     
     # Add black lines to delimit generations
     for i in range(n_gen):      
@@ -302,17 +260,13 @@ def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, plot, sizes, savi
     cbar = plt.colorbar(pad=0.02, shrink=0.84)
 
     if saving_folder:
-        saving_name = f'/stories_similarity_matrix_{label}_{seed}.png'
-        os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
-        plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
-        print(f"Saved {saving_name}")
-
-    if plot:
+        save_figure(f"{COMPARISON_DIR}/{saving_folder}", f'stories_similarity_matrix_{label}_{seed}.png', plot)
+    elif plot:
         plt.show()
 
 
 DEFAULT_COMPARISON_PLOT_NAMES = [
-    "plot_similarity_matrix",
+    "compare_similarity_matrix",
     "compare_init_generation_similarity_evolution",
     "compare_within_generation_similarity_evolution",
     "compare_successive_generations_similarities",
@@ -320,8 +274,8 @@ DEFAULT_COMPARISON_PLOT_NAMES = [
 
 
 COMPARISON_PLOT_REGISTRY = {
-    "plot_similarity_matrix": {
-        "function": plot_similarity_matrix,
+    "compare_similarity_matrix": {
+        "function": compare_similarity_matrix,
         "group": "seed",
         "build_kwargs": lambda data, saving_folder, plot, sizes, seed=None: {
             "similarity_matrix": data["all_seeds_similarity_matrix"][seed],
