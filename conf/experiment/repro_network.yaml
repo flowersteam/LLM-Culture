@@ -2,6 +2,10 @@
 # Reproduction: network-structure comparison. Base is fully_connected; the script
 # runs circle / caveman / fully_connected and compares them. Run:
 # reproduction_scripts/network.py
+defaults:
+  - /inference: smol_cpu
+  - _self_
+
 population:
   network_structure: fully_connected
   n_cliques: 2
@@ -10,10 +14,6 @@ population:
       personality: empty
       prompt_init: simple
       prompt_update: CombineTwo
-
-backend:
-  kind: llama_cpp
-  model: unsloth/SmolLM2-135M-Instruct-GGUF
 
 generation:
   temperature: 0.8

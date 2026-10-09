@@ -8,11 +8,15 @@
 #   uv run python run_experiment.py
 #
 # Override any field with `key=value`:
-#   uv run python run_experiment.py backend=llama_cpp model=... n_agents=5
+#   uv run python run_experiment.py backend.model=... n_timesteps=5
 #
 # Switch to a different preset from conf/experiment/ with `experiment=<name>`
 # (no leading `+` — the `experiment` group already has a default here):
 #   uv run python run_experiment.py experiment=big_model_small_gpu
+#
+# The backend/inference setup is its own config group (conf/inference/). Each
+# experiment preset pulls one in via its `defaults` list; swap it independently:
+#   uv run python run_experiment.py experiment=mac_mx inference=linux_gpu
 #
 # Enum fields accept their string values:
 #   backend: none | vllm | llama_cpp

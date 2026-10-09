@@ -12,6 +12,10 @@
 # fully_connected is a population network (not a chain), so n_timesteps (the number
 # of generations) is independent of the agent count.
 
+defaults:
+  - /inference: smol_cpu   # WHERE the model runs (conf/inference/smol_cpu.yaml)
+  - _self_
+
 population:
   network_structure: fully_connected
   agents:
@@ -19,10 +23,6 @@ population:
       personality: Creative
     - count: 3
       personality: NotCreative
-
-backend:
-  kind: llama_cpp
-  model: unsloth/SmolLM2-135M-Instruct-GGUF
 
 generation:
   temperature: 0.8

@@ -2,6 +2,10 @@
 # Reproduction: persona comparison. fully_connected, 10 agents, 10 generations, 5
 # seeds, CombineTwo update. The script runs creative / not_creative / mixed and
 # compares them. Run: reproduction_scripts/persona_prompt.py
+defaults:
+  - /inference: smol_cpu
+  - _self_
+
 population:
   network_structure: fully_connected
   agents:
@@ -9,10 +13,6 @@ population:
       personality: Creative
       prompt_init: simple
       prompt_update: CombineTwo
-
-backend:
-  kind: llama_cpp
-  model: unsloth/SmolLM2-135M-Instruct-GGUF
 
 generation:
   temperature: 0.8

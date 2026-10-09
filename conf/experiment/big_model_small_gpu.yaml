@@ -1,18 +1,13 @@
 # @package _global_
 #
-# Worked example: run a LARGER model on a SMALL GPU.
+# Worked example: run a LARGER model on a SMALL GPU (partial layer offload).
+# The backend/offload tuning lives in conf/inference/mistral_partial_offload.yaml.
 #
 #   uv run python run_experiment.py experiment=big_model_small_gpu
-#
-# The idea is to load a 7B model quantized to ~4 bits (GGUF) and offload only
-# SOME of its layers to the GPU — the rest run on CPU. Tune `n_gpu_layers` to the
-# largest value that still fits your VRAM (watch for CUDA OOM and lower it).
-#
-# Rough memory intuition for a 7B Q4_K_M model (~4.4 GB of weights):
-#   - a layer is roughly weights / n_layers (a 7B model has ~32 layers)
-#   - VRAM used ≈ (n_gpu_layers / n_layers) * weight_size  +  KV cache
-#   - KV cache grows with n_ctx; shrink n_ctx if you are tight on memory
-# So on a ~6 GB GPU, start around n_gpu_layers: 20 and adjust.
+
+defaults:
+  - /inference: mistral_partial_offload   # WHERE the model runs (partial GPU offload)
+  - _self_
 
 population:
   # Two loosely-connected cliques (a "caveman" graph): each clique is densely
@@ -28,24 +23,6 @@ population:
     - { count: 5, personality: SciFi }
   # Alternatives: swap to `network_structure: fully_connected` (drop n_cliques) for
   # a single well-mixed population where every agent reads every other each step.
-
-backend:
-  kind: llama_cpp
-  model: TheBloke/Mistral-7B-Instruct-v0.2-GGUF
-  llama_cpp:
-    gguf_filename: q4_k_m   # pick the Q4_K_M quant from the multi-file GGUF repo
-    n_gpu_layers: 20        # offload ~20 of ~32 layers to the GPU; raise/lower to fit VRAM
-    n_ctx: 4096             # lower (e.g. 2048) to shrink the KV cache if memory is tight
-    flash_attn: true        # reduces KV-cache memory (if your llama.cpp build supports it)
-  # --- vLLM equivalent (Linux/GPU) — set kind: vllm, swap the model, use vllm: ---
-  # kind: vllm
-  # model: mistralai/Mistral-7B-Instruct-v0.2
-  # vllm:
-  #   gpu_memory_utilization: 0.80   # cap VRAM fraction vLLM may grab
-  #   max_model_len: 4096            # cap context length -> smaller KV cache
-  #   dtype: float16
-  #   cpu_offload_gb: 4              # spill some weights to CPU RAM
-  #   enforce_eager: true           # skip CUDA graphs -> less VRAM (a bit slower)
 
 generation:
   temperature: 0.8

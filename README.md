@@ -79,6 +79,53 @@ uv run python run_experiment.py \
   generation.temperature=0.9 generation.max_tokens=256
 ```
 
+# TODO --> also explain how to run exps w a remote open ai model ... give several examples
+
+### Tuning generation & inference for your hardware
+
+The sampling knobs (previous section) decide *what* text you get; the knobs below
+decide *whether the model fits and how fast it runs*. They are backend-specific. The
+two hardware presets (`mac_mx`, `linux_gpu`) are worked examples — read them alongside
+this table and copy the one that matches your machine.
+
+**The one mental model:** a run must hold **weights + KV cache** in memory. Weights are
+fixed by the model and its quantization; the **KV cache grows with context length and
+with how many sequences run at once**. Almost all tuning is "make it fit" (shrink the KV
+cache / offload weights) or "go faster" (batch more sequences together).
+
+**llama.cpp (`backend.kind=llama_cpp`) — CPU / Apple Metal.** Loads a quantized GGUF.
+
+| Knob | What it does | How to pick it |
+| --- | --- | --- |
+| `llama_cpp.n_gpu_layers` | how many transformer layers run on the GPU | **Apple Silicon: `-1`** (all layers; unified memory shares one RAM pool). Discrete GPU: raise until just before VRAM OOM, rest stay on CPU. |
+| `llama_cpp.n_ctx` | context window (tokens) | drives KV-cache size — the main memory lever. 4096 is a good default; drop to 2048 on an 8 GB machine. |
+| `llama_cpp.gguf_filename` | which quant to load from a multi-quant repo | `q4_k_m` is the size/quality sweet spot; `q5_k_m`/`q6_k` for more quality, `q3_k_m` to save RAM. |
+| `llama_cpp.flash_attn` | smaller KV cache (if built with it) | leave `true`; harmless if unsupported. |
+| `llama_cpp.n_batch` | prompt (prefill) batch size | raise for faster prompt ingestion if you have headroom. |
+
+*Note:* in-process llama.cpp generates a timestep's agents **sequentially** (the binding
+is single-sequence). For real batching on this backend, run the **llama.cpp server** with
+`--parallel N --cont-batching` and point at it via `backend.kind=none` (next).
+
+**vLLM (`backend.kind=vllm`) — Linux / NVIDIA GPU.** Loads a full-precision (or quantized)
+HF checkpoint and batches the whole timestep natively.
+
+| Knob | What it does | How to pick it |
+| --- | --- | --- |
+| `vllm.gpu_memory_utilization` | fraction of VRAM vLLM may claim | 0.90 default; lower if other processes share the GPU, raise toward 0.95 for headroom. |
+| `vllm.max_model_len` | caps context length → caps KV cache | **the usual OOM lever** — lower it first when you hit CUDA OOM. |
+| `vllm.quantization` + an AWQ/GPTQ repo | load 4-bit weights | fits a 7-8B model on a ~12 GB card (fp16 needs ~16 GB of weights alone). |
+| `vllm.cpu_offload_gb` | spill weights to CPU RAM | alternative to quantization when a bit short on VRAM (slower). |
+| `vllm.tensor_parallel_size` | shard across N GPUs | set to your GPU count for big models. |
+
+**Remote server (`backend.kind=none`).** The server does the batching; you only control
+how many requests you send at once via `backend.max_concurrent_requests` (see above).
+
+**Batching across agents (every backend).** `generation.batch` (default `true`) generates
+a timestep's independent agents together. It's a near-free speedup on vLLM / a llama.cpp
+server / a remote endpoint; a no-op (sequential) for in-process llama.cpp. Set it to
+`false` only to debug or to reproduce strictly one-at-a-time behaviour.
+
 ## Usage
 
 ### Run an experiment (recommended): `run_experiment.py`
@@ -136,13 +183,28 @@ values are rejected with a clear error before anything runs.
 
 **Presets.** Reusable setups live in `conf/experiment/` — the `base` preset is the
 default, so a bare run is a small local smoke test. Copy `base.yaml` to make your own
-and select it with `experiment=<name>` (no leading `+`). See `big_model_small_gpu.yaml`
-for backend memory/offload tuning and `mixed_persona.yaml` for a heterogeneous population:
+and select it with `experiment=<name>` (no leading `+`). Ready-made hardware presets:
+`mac_mx.yaml` runs a real ~7B model locally on any Apple Silicon Mac (M1/M2/M3/M4,
+llama.cpp + Metal), `linux_gpu.yaml` runs one with vLLM on a Linux/NVIDIA box, and
+`big_model_small_gpu.yaml` shows partial GPU-offload tuning. `mixed_persona.yaml` is a
+heterogeneous population example.
 
 ```bash
 uv run python run_experiment.py                                   # bare run = base preset
 uv run python run_experiment.py n_seeds=2                         # base + override on top
-uv run python run_experiment.py experiment=big_model_small_gpu    # switch preset
+uv run python run_experiment.py experiment=mac_mx                 # ~7B locally on Apple Silicon
+uv run python run_experiment.py experiment=linux_gpu              # ~7B with vLLM on a Linux GPU
+```
+
+**Inference is its own config group.** The backend/model setup (and all its
+hardware-tuning comments) lives in `conf/inference/` — one file per setup
+(`smol_cpu`, `mac_mx`, `linux_gpu`, `mistral_partial_offload`). Each experiment
+preset pulls one in through its `defaults` list, so you can mix any population with
+any backend without editing files:
+
+```bash
+uv run python run_experiment.py experiment=mac_mx inference=linux_gpu   # mac_mx population, vLLM backend
+uv run python run_experiment.py experiment=base inference=mac_mx        # base population, real 7B on Metal
 ```
 
 **Sweeps** (`-m` multirun):
