@@ -20,13 +20,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 from llm_culture.analysis.embedders import make_embedder
 from textblob import TextBlob
 
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-
 
 # # Download an NLP model to preprocess the text
 # nltk.download('punkt')
@@ -54,10 +47,22 @@ def _ensure_nltk_ready():
         if _NLTK_INITIALIZED:
             return
 
-        nltk.download("punkt", quiet=True)
-        nltk.download("punkt_tab", quiet=True)
-        nltk.download("wordnet", quiet=True)
-        nltk.download("stopwords", quiet=True)
+        # Relax TLS verification ONLY around the nltk downloads, then restore it.
+        # Some systems (e.g. stock macOS Python) lack a configured cert bundle, so
+        # nltk.download would fail with CERTIFICATE_VERIFY_FAILED; scoping it here
+        # keeps normal verification for the rest of the process.
+        _saved_ctx = getattr(ssl, "_create_default_https_context", None)
+        _unverified = getattr(ssl, "_create_unverified_context", None)
+        try:
+            if _unverified is not None:
+                ssl._create_default_https_context = _unverified
+            nltk.download("punkt", quiet=True)
+            nltk.download("punkt_tab", quiet=True)
+            nltk.download("wordnet", quiet=True)
+            nltk.download("stopwords", quiet=True)
+        finally:
+            if _saved_ctx is not None:
+                ssl._create_default_https_context = _saved_ctx
 
         # Deferred import: these submodules must be imported only after the
         # corresponding nltk data has been downloaded above.
