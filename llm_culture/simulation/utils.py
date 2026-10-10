@@ -236,25 +236,6 @@ def register_entry(json_path, name, prompt):
     return name
 
 
-# def build_network_structure(structure, n_agents, n_cliques=2):
-#     '''Build the networkx graph for a given topology name (mirrors scripts/run_simulation.py).'''
-#     sequence = False
-#     if structure == "sequence":
-#         g = nx.DiGraph()
-#         for i in range(n_agents - 1):
-#             g.add_edge(i, i + 1)
-#         sequence = True
-#     elif structure == "circle":
-#         g = nx.cycle_graph(n_agents)
-#     elif structure == "caveman":
-#         g = nx.connected_caveman_graph(int(n_cliques), n_agents // int(n_cliques))
-#     elif structure == "fully_connected":
-#         g = nx.complete_graph(n_agents)
-#     else:
-#         raise ValueError(f"Unknown network_structure: {structure!r}")
-#     return g, sequence
-
-# More flexible version of build_network_structure that allows for custom topologies:
 def register_custom_network_structure(name, graph, replace = True):
     '''Register a custom network structure in the framework's own parameter files.'''
     with open(PARAMS_DIR / "network_structures.json", "r") as f:

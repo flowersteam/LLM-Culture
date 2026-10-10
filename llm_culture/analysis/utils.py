@@ -8,14 +8,11 @@ import gensim
 # import spacy
 import numpy as np
 import ssl
-from nltk.corpus import wordnet
 
 from nltk.stem import WordNetLemmatizer
 from nltk.stem.porter import PorterStemmer
-from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from llm_culture.analysis.embedders import make_embedder
 from textblob import TextBlob
