@@ -4,6 +4,7 @@
 # PARTIAL layer offload: put some layers on the GPU, run the rest on CPU. This is
 # the discrete-GPU counterpart to inference=mistral_7b_instruct_v0_2_gguf_metal (on
 # Apple Silicon you'd just use n_gpu_layers: -1).
+# New to GGUF / layer offload / context window? See docs/llm_for_researchers.md.
 #
 # Rough memory intuition for a 7B Q4_K_M model (~4.4 GB of weights):
 #   - a layer is roughly weights / n_layers (a 7B model has ~32 layers)

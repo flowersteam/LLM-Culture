@@ -5,5 +5,7 @@
 # text quality is NOT the point. Swap in a real ~7B model with
 # `inference=mistral_7b_instruct_v0_2_gguf_metal` (Apple Silicon) or
 # `inference=mistral_7b_instruct_v0_2_vllm_gpu` (Linux/NVIDIA).
+#
+# New to backends/GGUF/quantization? See docs/llm_for_researchers.md.
 kind: llama_cpp
 model: unsloth/SmolLM2-135M-Instruct-GGUF
