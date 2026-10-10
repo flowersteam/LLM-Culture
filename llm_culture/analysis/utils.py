@@ -1,35 +1,85 @@
 import os
 import json
-import pickle
+# import pickle
+import threading
 
 import nltk
 import gensim
-import spacy
+# import spacy
 import numpy as np
 import ssl
 
 from nltk.stem import WordNetLemmatizer
 from nltk.stem.porter import PorterStemmer
-from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+from llm_culture.analysis.embedders import make_embedder
 from textblob import TextBlob
 
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
+
+# # Download an NLP model to preprocess the text
+# nltk.download('punkt')
+# nltk.download('punkt_tab')
+# nltk.download('wordnet')
+# nltk.download('stopwords')
+# # nlp = spacy.load('en_core_web_sm')
+# nlp = None
+
+stemmer = PorterStemmer()
+lemmatizer = WordNetLemmatizer()
+_NLTK_INIT_LOCK = threading.Lock()
+_NLTK_INITIALIZED = False
+STOP_WORDS = None
 
 
-# Download an NLP model to preprocess the text
-nltk.download('punkt')
-nltk.download('punkt_tab')
-nltk.download('wordnet')
-nltk.download('stopwords')
-nlp = spacy.load('en_core_web_sm')
+def _ensure_nltk_ready():
+    """Initialize NLTK resources once, safely, even if multiple threads race to use them."""
+    global _NLTK_INITIALIZED, STOP_WORDS
+
+    if _NLTK_INITIALIZED:
+        return
+
+    with _NLTK_INIT_LOCK:
+        if _NLTK_INITIALIZED:
+            return
+
+        # Relax TLS verification ONLY around the nltk downloads, then restore it.
+        # Some systems (e.g. stock macOS Python) lack a configured cert bundle, so
+        # nltk.download would fail with CERTIFICATE_VERIFY_FAILED; scoping it here
+        # keeps normal verification for the rest of the process.
+        _saved_ctx = getattr(ssl, "_create_default_https_context", None)
+        _unverified = getattr(ssl, "_create_unverified_context", None)
+        try:
+            if _unverified is not None:
+                ssl._create_default_https_context = _unverified
+            nltk.download("punkt", quiet=True)
+            nltk.download("punkt_tab", quiet=True)
+            nltk.download("wordnet", quiet=True)
+            nltk.download("stopwords", quiet=True)
+        finally:
+            if _saved_ctx is not None:
+                ssl._create_default_https_context = _saved_ctx
+
+        # Deferred import: these submodules must be imported only after the
+        # corresponding nltk data has been downloaded above.
+        from nltk.corpus import wordnet as _wordnet
+        from nltk.corpus import stopwords as _stopwords
+        _wordnet.ensure_loaded()
+        STOP_WORDS = set(_stopwords.words("english"))
+
+        _NLTK_INITIALIZED = True
+
+
+def initialize_nltk():
+    """Initialize the NLTK resources required by the pipeline."""
+    _ensure_nltk_ready()
+
+
+def lemmatize_stemming(text):
+    """Lemmatize as a verb and then stem the result."""
+    _ensure_nltk_ready()
+    return stemmer.stem(lemmatizer.lemmatize(text, pos="v"))
 
 
 def get_stories(folder):
@@ -38,6 +88,7 @@ def get_stories(folder):
     :param folder: folder containing the json files
     :return: list of stories
     """
+    _ensure_nltk_ready()
     json_files = [file for file in os.listdir(folder) if file.endswith('.json')]
     all_stories = []
     # json_file  = folder + '/output.json'
@@ -87,28 +138,28 @@ def preprocess_stories(all_seeds_stories):
     
     return all_seeds_flat_stories, all_seeds_keywords, all_seeds_stem_words
 
-def get_similarity_matrix_single_seed(flat_stories):
-    """Compute the similarity matrix of the stories
+def get_similarity_matrix_single_seed(flat_stories, embedder=None):
+    """N x N cosine-similarity matrix for one seed (TF-IDF reproduces the paper).
 
-    :param flat_stories: list of stories
-    :return: similarity matrix
+    :param flat_stories: list of story texts
+    :param embedder: text embedder (see analysis.embedders); None -> TF-IDF
+    :return: N x N cosine-similarity matrix (numpy array)
     """
-    vect = TfidfVectorizer(min_df=1, stop_words="english")     
-    tfidf = vect.fit_transform(flat_stories)                                                                                                                                                                                                                       
-    similarity_matrix = tfidf * tfidf.T 
-    return similarity_matrix.toarray()
+    if embedder is None:
+        embedder = make_embedder()
+    # cosine_similarity handles both sparse (TF-IDF) and dense (HF) vectors.
+    return cosine_similarity(embedder.embed(flat_stories))
 
-def get_similarity_matrix(all_seed_flat_stories):
-    """Compute the similarity matrix of the stories for all seeds
+def get_similarity_matrix(all_seed_flat_stories, embedder=None):
+    """Per-seed cosine-similarity matrices.
 
-    :param all_seed_flat_stories: list of flat stories for each seed
-    :return: list of similarity matrices
+    :param all_seed_flat_stories: list of flat stories, one list per seed
+    :param embedder: shared embedder reused across seeds (so a HF model loads once); None -> TF-IDF
+    :return: list of N x N similarity matrices
     """
-    all_seeds_similarity_matrix = []
-    for flat_stories in all_seed_flat_stories:
-        similarity_matrix = get_similarity_matrix_single_seed(flat_stories)
-        all_seeds_similarity_matrix.append(similarity_matrix)
-    return all_seeds_similarity_matrix
+    if embedder is None:
+        embedder = make_embedder()
+    return [get_similarity_matrix_single_seed(s, embedder) for s in all_seed_flat_stories]
 
 def extract_keywords(text, num_keywords=30):
     """Extract the keywords from the text
@@ -117,23 +168,15 @@ def extract_keywords(text, num_keywords=30):
     :param num_keywords: _description_, defaults to 30
     :return: _description_
     """
+    _ensure_nltk_ready()
     tokens = word_tokenize(text)
-    stop_words = set(stopwords.words('english'))
-    filtered_tokens = [word for word in tokens if word.lower() not in stop_words and word.isalnum()]
+    filtered_tokens = [word for word in tokens if word.lower() not in STOP_WORDS and word.isalnum()]
     fdist = FreqDist(filtered_tokens)
     
     keywords = [word for word, _ in fdist.most_common(num_keywords)]
     
     return keywords
 
-def lemmatize_stemming(text):
-    """Lemmatize and stem the text
-
-    :param text: text to modify
-    :return: lemmatized and stemmed text
-    """
-    stemmer = PorterStemmer()
-    return stemmer.stem(WordNetLemmatizer().lemmatize(text, pos='v'))
 
 # Tokenize and lemmatize
 def preprocess(text):
@@ -149,14 +192,14 @@ def preprocess(text):
             
     return result
 
-def word_to_vector(word, model=nlp):
-    """Convert a word to a vector
-
-    :param word: word to convert
-    :param model: nlp model, defaults to nlp
-    :return: vector of the word
-    """
-    return model(word).vector
+# def word_to_vector(word, model=nlp):
+#     """Convert a word to a vector
+#
+#     :param word: word to convert
+#     :param model: nlp model, defaults to nlp
+#     :return: vector of the word
+#     """
+#     return model(word).vector
 
 def get_similarity(vec1, vec2):
     """Compute the similarity between two vectors
@@ -242,61 +285,61 @@ def get_polarities_subjectivities(all_seed_stories):
         all_seeds_subjectivities.append(subjectivities)
     return all_seeds_polarities, all_seeds_subjectivities
 
-# Pretty long to compute 
-def get_creativity_indexes_single_seed(stories, folder, seed=0):
-    """Compute the creativity indexes of stories for a single seed.
-
-    :param stories: list of stories for a single seed
-    :param folder: folder to save or load the creativity indexes
-    :param seed: seed number, defaults to 0
-    :return: list of creativity indexes for each generation
-    """
-    def story_creativity_index(story_input):
-        words_story = story_input.lower().split()
-        word_vectors = [word_to_vector(word) for word in words_story]
-        non_zero_word_vectors = [vector for vector in word_vectors if np.mean(vector) != 0]
-
-        similarity_scores = []
-        for vector1 in non_zero_word_vectors:
-            for vector2 in non_zero_word_vectors:
-                similarity = get_similarity(vector1, vector2)
-                similarity_scores.append(similarity)
-        
-        ## Handle the case of an empty story
-        if similarity_scores:
-            return np.mean(similarity_scores)
-        else:
-            return 0.0
-    try:
-        # Load existing data 
-        file = open(f"{folder}/creativities"+str(seed)+".obj",'rb')
-        creativities = pickle.load(file)
-        file.close()
-    except:
-        # Compute creativity idx and save it 
-        print(f"Computing creativity indexes of stories for {folder} dir, seed = {seed}...")
-        creativities = []
-        for gen in stories:
-            gen_creativity = []
-            for story in gen:
-                gen_creativity.append(story_creativity_index(story))
-            creativities.append(gen_creativity)
-
-        # Save the results in the texts folder
-        filehandler = open(f"{folder}/creativities"+str(seed)+".obj","wb")
-        pickle.dump(creativities, filehandler)
-        filehandler.close()
-    return creativities
-
-def get_creativity_indexes(all_seed_stories, folder):
-    """Compute the creativity indexes of stories for all seeds.
-
-    :param all_seed_stories: list of stories for each seed
-    :param folder: folder to save or load the creativity indexes
-    :return: list of creativity indexes for each seed
-    """
-    creativities = []
-    for seed, stories in enumerate(all_seed_stories):
-        creativities.append(get_creativity_indexes_single_seed(stories, folder, seed))
-    return creativities
+# # Pretty long to compute 
+# def get_creativity_indexes_single_seed(stories, folder, seed=0):
+#     """Compute the creativity indexes of stories for a single seed.
+#
+#     :param stories: list of stories for a single seed
+#     :param folder: folder to save or load the creativity indexes
+#     :param seed: seed number, defaults to 0
+#     :return: list of creativity indexes for each generation
+#     """
+#     def story_creativity_index(story_input):
+#         words_story = story_input.lower().split()
+#         word_vectors = [word_to_vector(word) for word in words_story]
+#         non_zero_word_vectors = [vector for vector in word_vectors if np.mean(vector) != 0]
+#
+#         similarity_scores = []
+#         for vector1 in non_zero_word_vectors:
+#             for vector2 in non_zero_word_vectors:
+#                 similarity = get_similarity(vector1, vector2)
+#                 similarity_scores.append(similarity)
+#         
+#         ## Handle the case of an empty story
+#         if similarity_scores:
+#             return np.mean(similarity_scores)
+#         else:
+#             return 0.0
+#     try:
+#         # Load existing data 
+#         file = open(f"{folder}/creativities"+str(seed)+".obj",'rb')
+#         creativities = pickle.load(file)
+#         file.close()
+#     except:
+#         # Compute creativity idx and save it 
+#         print(f"Computing creativity indexes of stories for {folder} dir, seed = {seed}...")
+#         creativities = []
+#         for gen in stories:
+#             gen_creativity = []
+#             for story in gen:
+#                 gen_creativity.append(story_creativity_index(story))
+#             creativities.append(gen_creativity)
+#
+#         # Save the results in the texts folder
+#         filehandler = open(f"{folder}/creativities"+str(seed)+".obj","wb")
+#         pickle.dump(creativities, filehandler)
+#         filehandler.close()
+#     return creativities
+#
+# def get_creativity_indexes(all_seed_stories, folder):
+#     """Compute the creativity indexes of stories for all seeds.
+#
+#     :param all_seed_stories: list of stories for each seed
+#     :param folder: folder to save or load the creativity indexes
+#     :return: list of creativity indexes for each seed
+#     """
+#     creativities = []
+#     for seed, stories in enumerate(all_seed_stories):
+#         creativities.append(get_creativity_indexes_single_seed(stories, folder, seed))
+#     return creativities
 

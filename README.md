@@ -1,177 +1,256 @@
 # LLM-Culture
 
-Code for the [Cultural evolution in populations of Large Language Models](https://arxiv.org/abs/2403.08882) paper. This repository provides a comprehensive framework for studying the cultural evolution of linguistic content in populations of Large Language Models (LLM).
+A framework for studying the **cultural evolution of text in populations of LLMs**.
 
-It allows organizing LLM agents into networks wherein each agent interacts with neighboring agents by exchanging stories. Each agent can be assigned specific personalities and transmission instructions, serving as prompts for generating new stories from their neighbors’ narratives. Once the network structure and agent characteristics are defined, you can simulate the cultural evolution of texts across generations of agents. We also provide built-in metrics and vizualizations to analyze the results.
+Agents are organized into a network. Each agent reads the stories of its neighbours
+and rewrites them according to a *personality* and a *transformation prompt*. Repeating
+this over many generations lets you watch stories evolve — drifting, converging, or
+splitting into sub-cultures — much like a transmission-chain or iterated-learning
+experiment, but with LLMs as the "participants".
 
+With this framework you can:
+
+- build a population of agents and wire them into a network (a chain, a fully-connected
+  group, a ring, or loosely-connected cliques);
+- give agents personalities and transmission rules (copy, recombine, innovate, …);
+- simulate how texts change across generations, with the LLM of your choice (a small
+  one on your laptop, a large one on a GPU server, or a hosted API);
+- analyze the results with built-in similarity metrics and plots.
 
 ![introduction_figure](/static/introduction_figure.png)
 
+New to LLMs? See [docs/llm_for_researchers.md](docs/llm_for_researchers.md) for a
+plain-language primer on the LLM concepts used below (what a model is, how to run one,
+and what the generation settings do).
 
-## Installation 
-
-1 - Clone the repository
-
+## Installation
 
 ```bash
 git clone git@github.com:flowersteam/LLM-Culture.git
 cd LLM-Culture/
 ```
 
-2 - Install the dependencies 
+This project is managed with [uv](https://docs.astral.sh/uv/), a fast Python package
+and environment manager (it replaces `pip` + `venv`: it reads `pyproject.toml` and
+builds an isolated environment for you).
 
 ```bash
-python -m venv myvenv
-source myvenv/bin/activate
-
-pip install -r requirements.txt
-pip install -e .
+curl -LsSf https://astral.sh/uv/install.sh | sh   # if you don't have uv yet
+uv sync --extra serving                            # install + local model support
 ```
 
-3 - Install a local LLM (Optional)
+- `uv sync` — base install (simulation + analysis).
+- `uv sync --extra serving` — also installs the local inference backends (needed to run
+  a model on your own machine; use this for the quickstart below).
+- `uv sync --extra embeddings` — adds HuggingFace sentence embeddings for the analysis.
 
-If you want to run experiments with a LLM running on your own computer, follow the instructions below. Otherwise, you can use the framework with any LLM hosted on a remote API.
+Run any command by prefixing it with `uv run` (e.g. `uv run python run_experiment.py`).
 
-<details>
-  <summary> Step-by-step guide to using oogabooga to generate an public URL to request an LLM </summary>
-    
-  - Manually install oogabooga Text generation web UI by following the steps described here: https://github.com/oobabooga/text-generation-webui (section "Setup details and information about installing manually")
-  
-  - Launch a server: 
+## Quickstart
 
-  ```bash
-  python server.py  --gradio-auth <your_username>:<your_password> --listen --public-api --share
-  ```
-  3. This will output an OpenAI-compatible API URL: https://xxxx-xxxx-xxxx-xxxx.trycloudflare, and a "gradio.live" URL: "Running on public URL: https://xxxxxxxx.gradio.live"
-
-  4. Paste the OpenAI-compatible URL in the field "Server access URL" of the LLM-Culture GUI.
-
-  5. Open the gradio.live URL in your browser (use the given username and password to connect). 
-
-  6. Go to the model tab and download a model from [huggingface](https://huggingface.co). We used https://huggingface.co/TheBloke/Mistral-7B-OpenOrca-GGUF, with File name "mistral-7b-openorca.Q4_K_M.gguf". Select an appropriate Model loader (we used llama.cpp). 
-
-  7. Click on Load to load the model. 
-
-  8. Once the model is loaded, you can go back to the LLM-Culture GUI and run your simulations!
-</details>
-    
-
-## Usage 
-
-You can use the framework both from command-line interface or from a web interface :
-
-### 1 - Command Line 
-
-Run a simulation with your desired parameters (see parameters details above): 
+Run the built-in demo — a tiny model, so it works on any laptop with no GPU, no API
+key, and no cost (it downloads a ~100 MB model once and caches it):
 
 ```bash
-python3 scripts/run_simulation.py --output_file simulation_test
+uv run python run_experiment.py
 ```
 
-<details>
-    
-  <summary> Show all parameter flags </summary>
-    
-  - "-na" : Number of agents (int).
+This runs a small simulation and then its analysis, writing results and plots to
+`results/base_experiment/`. That's the whole loop: configure → simulate → analyze.
 
-  - "-nt" : Number of timesteps (int).
+With no arguments it reads the default experiment preset,
+[`conf/experiment/base.yaml`](conf/experiment/base.yaml) — a 4-agent transmission chain
+run with a tiny local model. The next section shows how to point it at your own preset.
 
-  - "-ns" : Network structure (choices: 'sequence','fully_connected' 'circle', 'caveman').
+A Google Colab notebook is also available — it runs the whole configure → simulate →
+analyze loop in the cloud with no local setup (choose a GPU runtime for a real model):
 
-  - "-nc" : Number of cliques for a caveman network (int).
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/flowersteam/LLM-Culture/blob/dev/notebooks/llm_culture_colab.ipynb)
 
-  - "-pi": Name of the initialization prompt (str). The prompt should be already registered in llm_culture/data/parameters/prompt_init.json.
+## Design your own experiment
 
-  - "-pu" : Name of the transformation prompt (str). The prompt should be already registered in llm_culture/data/parameters/prompt_update.json.
+An experiment is described by a small YAML file (a *preset*). Ready-made presets live in
+[`conf/experiment/`](conf/experiment/); the default is
+[`base.yaml`](conf/experiment/base.yaml). To make your own, copy one, edit a few lines,
+and run it by name.
 
-  - "-pl" : Personality list (list of str). Each personality should be already registered in llm_culture/data/parameters/personalities.json. The length of the list of personalities should be equal to the number of agents.
+The fields that define your experimental design:
 
-  - "-o" : Name of the folder in which to store results (str).
+| Field | What it controls |
+| --- | --- |
+| `population.network_structure` | who talks to whom: `sequence` (a transmission chain), `fully_connected` (a closed group where everyone reads everyone), `circle` (a ring), `caveman` (sub-groups joined by a bridge) |
+| `population.agents` | the agents, as a list of **groups** — each `{count, personality, prompt_init, prompt_update}`. One group = a homogeneous population; several groups = a mixed one |
+| `population.n_cliques` | number of sub-groups (for `caveman` only) |
+| `generation.temperature` | how faithfully agents copy vs. innovate (0 = faithful, higher = more variation each step) |
+| `generation.max_tokens` | maximum story length |
+| `n_timesteps` | number of generations |
+| `n_seeds` | number of independent repeats of the whole run |
+| `output` | folder to write results to |
 
-  - "-url": URL to send the prompt to (str).
+A `personality` and the two prompts are **names** registered in
+[`llm_culture/data/parameters/`](llm_culture/data/parameters/):
 
-</details>
+- `personality` — a content bias, e.g. `Creative` / `NotCreative`, `Fantasy` / `SciFi`
+  ([`personalities.json`](llm_culture/data/parameters/personalities.json)).
+- `prompt_init` — the task used to seed the very first story
+  ([`prompt_init.json`](llm_culture/data/parameters/prompt_init.json)).
+- `prompt_update` — the transmission rule applied each generation, e.g. `Repeat` (copy),
+  `MinorChanges` (copy with small edits), `CombineTwo` (recombine), `MaximizeDifference`
+  (innovate) ([`prompt_update.json`](llm_culture/data/parameters/prompt_update.json)).
 
-The results of the experiment will be stored in a directory called ```results/simulation_test/``` in this case. You can then analyze the texts produced with this command : 
+Edit those JSON files to add your own personalities or prompts.
+
+### Example: a mixed-population experiment
+
+Create `conf/experiment/my_run.yaml`:
+
+```yaml
+# @package _global_
+defaults:
+  - /inference: smollm2_135m_instruct_llama_cpp   # which model to run (see below)
+  - _self_
+
+population:
+  network_structure: fully_connected
+  agents:
+    - { count: 3, personality: Creative }
+    - { count: 3, personality: NotCreative }
+
+generation:
+  temperature: 0.8
+
+n_timesteps: 5
+n_seeds: 3
+output: results/my_run
+```
+
+Run it:
 
 ```bash
-python3 scripts/run_analysis.py --dir simulation_test
+uv run python run_experiment.py experiment=my_run
 ```
 
-To compare the results of several experiments, you can can run this command (with the experiment names separated by '+' symbols) : 
+> For a `sequence` network (a transmission chain) each agent generates once, so
+> `n_timesteps` must equal the number of agents. For every other network the two are
+> independent. You get a clear error if they don't match.
+
+## Choosing where the model runs
+
+The experiment needs an LLM to generate the stories. There are three ways to provide
+one — pick based on your resources:
+
+| Option | `backend.kind` | When to use it |
+| --- | --- | --- |
+| **Your own computer** | `llama_cpp` | piloting and small studies — no setup, no cost; smaller/slower models (what the quickstart uses) |
+| **A Linux + NVIDIA GPU machine** | `vllm` | real data collection — large models, fast |
+| **A hosted / online API** | `none` | best quality with no local hardware; costs money and needs an API key |
+
+Which model runs (and how it's tuned for your hardware) is set in its own group of
+files, [`conf/inference/`](conf/inference/). Each experiment preset pulls one in, and
+you can swap it without touching the experiment. Ready-made ones:
 
 ```bash
-python3 scripts/run_comparison_analysis --dirs experiment_1+experiment_2+experiment_3
+uv run python run_experiment.py experiment=mac_mx      # a real ~7B model on an Apple Silicon Mac
+uv run python run_experiment.py experiment=linux_gpu   # a ~7B model with vLLM on a Linux GPU
 ```
 
-It will store the analysis figures in a directory called ```results/Comparisons/experiment_1-experiment_2-experiment_3/```
+If the words *backend*, *GGUF*, *quantization*, or *context window* are unfamiliar, read
+[docs/llm_for_researchers.md](docs/llm_for_researchers.md) first — it explains how to
+choose and run a model for your machine. The inference config files are also heavily
+commented to guide the choice.
 
+## Generation settings
 
-### 2 - Web Interface
+The same sampling knobs apply to every backend:
 
-Launch the web user interface with the following command:
+- `generation.temperature` — randomness of each rewrite. Think of it as copying fidelity
+  vs. mutation rate: `0` is faithful/deterministic, higher values add more variation per
+  generation.
+- `generation.max_tokens` — maximum length of a generated story.
+
+`generation.top_p` and `generation.instruct` can usually stay at their defaults; see the
+[primer](docs/llm_for_researchers.md) for what they do.
 
 ```bash
-python3 web_interface.py
+uv run python run_experiment.py generation.temperature=1.0 generation.max_tokens=256
 ```
 
-This will create a link the website (e.g *http://127.0.0.1:5000* in your terminal), just click on it to open the interface on a web browser. You can then run a simulation, analyze it and visualize the results from previous simulations ! You can find below the details of the different simulation parameters, as well as how to use an LLM in our framework.
+## Running simulation and analysis separately
 
+`run_experiment.py` does simulation **and** analysis. You can also run them on their own:
 
-<!-- ![GUI](/static/web_interface.png) -->
+```bash
+uv run python scripts/run_simulation.py experiment=base       # simulate only
+uv run python scripts/run_analysis.py folder=results/base_experiment   # analyze later
+```
 
-<details>
-  
-  <summary>Display parameters details</summary>
-  
-  - Simulation name: Give a name to your simulation. This will be the name of the folder when the simulation results are stored.
-  
-  - Number of agents: use this to specify how many agents you wish to simulate
-    
-  - Number of timesteps: use this to specify for how many timesteps the simulation should run
+## Web interface
 
-  - Number of seeds: use this to specify how many times the whole simulation should be repeated. 
-    
-  - Network structure: use this to specify the stucture of the social network. You can view the selected structure by clicking on "Display Graph"
+A small local web app lets you configure and launch runs, register prompts, and browse
+plots from the browser:
 
-  - Initialization prompts: use this to set the prompt given each agent at the first timestep. You can choose among already registered prompt using the drop-down menu, or add a new prompt to this list by clicking on "Add Prompt...". This will open a window where you can enter the name and content of your new prompt.
-    
-  - Transmission prompts: use this to set the prompt that will be concatenated with the stories of each agent's neighbors after the first timestep. As for the Initialization prompt, you may select an existing prompt or create a new one.
-    
-  - Personalities: use this to assign a personality to each agent. The personality will be concatenated with the rest of the prompt. If you want all agents to have the same personality, tick the "Same for all agents" box. You can then select a personality from the drop-down menu or create a new one. If you want agents to have different personalities, untick the "Same for all agents" box and select a personality for each agent.  
-    
-  - Server access URL: URL to which the requests will be sent to get answers from the LLM. In our case, we generated such an URL using oogabooga (https://github.com/oobabooga/text-generation-webui) and we provide a step-by-step guide below.
-</details>
+```bash
+uv run python web_interface.py
+```
 
+It starts a local Flask server; open the printed URL and follow the pages to run a
+simulation and view its analysis.
 
-## Implemented Analysis
+## Reading the results
 
-- Our framework generates several plots for each experiment analysis using `run_analysis.py`.
-- In addition to these plots, we track the evolution of several metrics. We also provide a comparison of these metrics across several experiments using `run_comparison_analysis.py`.  
+Each run produces these plots (registered in `llm_culture/analysis/plots.py`):
 
-<details>
-  <summary> Plots details </summary>
+| Plot | What it shows |
+| --- | --- |
+| Similarity Matrix | similarity between all stories in the experiment |
+| Between-Generations Similarity Matrix | each generation compared to every other |
+| Word Chains | how key words survive and spread across generations |
+| Similarity Graph | generations as a graph weighted by similarity |
+| Similarity with First Generation | how far stories drift from the original over time |
+| Within-Generation Similarity | how similar stories are inside a generation (convergence) |
+| Successive-Generation Similarity | how much changes from one generation to the next |
 
-  | Plot Type | Description |
-  | --- | --- |
-  | **Similarity Matrix (a)** | Compares the similarity between all the stories generated during an experiment. |
-  | **Similarity Graph (b)** | Nodes represent stories and are arranged based on their similarities. |
-  | **Word Chains Plot (c)** | Visualizes the evolution of key words in texts through generations. |
+![analysis_plots](/static/experiment_analysis_figures.png)
 
-  ![analysis_plots](/static/experiment_analysis_figures.png)
-   
-</details>
+By default stories are compared with **TF-IDF** (word overlap) — fast, reproducible, and
+what the paper used. For **semantic** similarity instead, install the embeddings extra
+and switch the method:
 
-<details>
-  <summary> Metrics details </summary>
-  
-  - Similarity between new generations of stories and the initial one
-  - Similarity within generations and with successive ones
-  - Positivity across generations
-  - Subjectivity across generations
-  - Creativity across generations
+```bash
+uv sync --extra embeddings
+uv run python run_experiment.py analysis.embedding.method=huggingface
+```
 
-  ![comparison_analysis_plots](/static/experiment_analysis_comparison_figures.png)
-   
-</details>
+## Reproducibility
 
+The paper's data is under `results/experiments/`. Regenerate a single experiment's
+figures:
+
+```bash
+uv run python scripts/run_analysis.py folder="results/experiments/Network Structure/CAVEMAN_10_10_combine5seeds"
+```
+
+Compare several experiments (names are relative to `results/experiments/`):
+
+```bash
+uv run python scripts/run_comparison_analysis.py 'folders=[Network Structure/CAVEMAN_10_10_combine5seeds, Network Structure/CIRCLE_10_10_combine5seeds]'
+```
+
+The [`reproduction_scripts/`](reproduction_scripts/) directory re-runs the paper's
+experiments (`transmission_chain.py`, `network.py`, `transformation_prompt.py`,
+`persona_prompt.py`). Each is driven by a `conf/experiment/repro_*.yaml` preset — edit
+the preset to change the model, sizes, or seeds. Outputs differ from the paper due to
+generation randomness.
+
+```bash
+uv run python reproduction_scripts/network.py
+```
+
+## Extending the framework
+
+- **Add a network structure** — register it in
+  `llm_culture/data/parameters/network_structures.json` (adjacency-list format), or use
+  `register_custom_network_structure` in `llm_culture/simulation/utils.py`.
+- **Add a plot or metric** — implement the function and register it in
+  `llm_culture/analysis/plots.py` (`PLOT_REGISTRY` / `DEFAULT_PLOT_NAMES`), or in
+  `comparison_plots.py` for comparison plots.

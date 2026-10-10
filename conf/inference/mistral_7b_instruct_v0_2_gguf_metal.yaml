@@ -1,0 +1,20 @@
+# @package backend
+#
+# Mistral-7B-Instruct-v0.2 (Q4_K_M GGUF) on Apple Silicon — llama.cpp with Metal
+# GPU offload. Works on any M-series Mac (M1/M2/M3/M4).
+# New to GGUF / quantization / context window? See docs/llm_for_researchers.md.
+#
+# WHY these values on Apple Silicon:
+#   - Unified Memory (UMA): the Metal GPU shares the one system RAM pool, so there is
+#     no separate VRAM to fit the model into — offload ALL layers to the GPU
+#     (n_gpu_layers: -1). That is both the simplest and the fastest choice here.
+#   - A 7B model at Q4_K_M is ~4.4 GB of weights; with n_ctx 4096 the KV cache adds
+#     ~1-2 GB. Comfortable on a 16 GB Mac. On an 8 GB Mac, drop n_ctx to 2048 (or use
+#     a smaller model) to stay out of swap.
+kind: llama_cpp
+model: TheBloke/Mistral-7B-Instruct-v0.2-GGUF   # multi-quant GGUF repo; only the q4_k_m file is fetched
+llama_cpp:
+  gguf_filename: q4_k_m   # pick the Q4_K_M quant (good size/quality sweet spot)
+  n_gpu_layers: -1        # -1 = all layers on the Metal GPU (correct for UMA)
+  n_ctx: 4096             # context window; lower to 2048 on an 8 GB Mac to shrink the KV cache
+  flash_attn: true        # reduces KV-cache memory if your llama.cpp build supports it

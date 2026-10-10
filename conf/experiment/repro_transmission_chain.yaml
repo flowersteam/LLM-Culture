@@ -1,0 +1,26 @@
+# @package _global_
+# Reproduction: transmission chain (paper). A `sequence` network, so the chain runs
+# one generation per agent (n_timesteps == n_agents). Tiny default model; override
+# backend.model for a paper-scale model. Run: reproduction_scripts/transmission_chain.py
+defaults:
+  - /inference: smollm2_135m_instruct_llama_cpp
+  - _self_
+
+population:
+  network_structure: sequence
+  agents:
+    - count: 50
+      personality: empty
+      prompt_init: kid
+      prompt_update: kid
+
+generation:
+  temperature: 0.8
+
+n_timesteps: 50
+n_seeds: 1
+output: results/experiments/transmission_chain
+
+analysis:
+  run: true
+  plot: false

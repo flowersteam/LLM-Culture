@@ -1,138 +1,144 @@
-import os
-import json
-import argparse
+"""Run only the simulation (no analysis) from a Hydra config.
 
+Like run_experiment.py, this reads the structured `ExperimentConfig` from `conf/`
+(no argparse) — it just stops after writing the per-seed output JSON instead of
+also producing the analysis plots. Use run_experiment.py for simulation + analysis.
+
+    uv run python scripts/run_simulation.py                      # base preset, sim only
+    uv run python scripts/run_simulation.py experiment=base n_seeds=1
+    uv run python scripts/run_simulation.py \\
+        backend.kind=llama_cpp backend.model=unsloth/SmolLM2-135M-Instruct-GGUF \\
+        population.agents.0.count=3 n_timesteps=3
+"""
+import os
+import sys
+import json
 from pathlib import Path
 
 import networkx as nx
+import hydra
+from hydra.core.config_store import ConfigStore
+from omegaconf import DictConfig, OmegaConf
 
-from llm_culture.simulation.utils import run_simul
+# Ensure the repo root is importable (so `llm_culture` resolves) regardless of cwd.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from llm_culture.simulation.utils import (
+    run_simul,
+    build_network_structure,
+    load_named_prompt,
+    load_personalities,
+)
+from llm_culture.resources import log_resources
+from llm_culture.simulation.backends import load_llm_backend
+from llm_culture.config import ExperimentConfig, validate_experiment
+from llm_culture.paths import PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
 
-def parse_arguments():
-    parser = argparse.ArgumentParser(description='Run a simulation.')
-    parser.add_argument('-na', '--n_agents', type=int, default=2, help='Number of agents.')
-    parser.add_argument('-nt', '--n_timesteps', type=int, default=2, help='Number of timesteps.')
-    # argument to select the network structure
-    parser.add_argument('-ns', '--network_structure', type=str, default='sequence',
-                        choices=['sequence','fully_connected' 'circle', 'caveman'], help='Network structure.')
-    parser.add_argument('-nc', '--n_cliques', type=int, default=2, help='Number of cliques for the Caveman graph')
-    # argument to select the prompt_init from the list of prompts
-    parser.add_argument('-pi', '--prompt_init', type=str, default='kid',
-                        help='Initial prompt.')
-    # argument to select the prompt_update from the list of prompts
-    parser.add_argument('-pu', '--prompt_update', type=str, default='kid',
-                        help='Update prompt.')    
-    # select a personality from the list of personalities (no choices)
-    parser.add_argument('-pl', '--personality_list', type=str, default= ["Empty", "Empty"],
-                        help='Personality list.')
-    # add an option output folder to save the results
-    parser.add_argument('-o', '--output', type=str, default='results/default_folder', help='Output folder.')
-    # create optional argument for the output file name to save in the output folder
-    parser.add_argument('-of', '--output_file', type=str, default='output.json', help='Output file name.')
-    parser.add_argument('--debug', action='store_true', help='Enable debug mode.')
-    parser.add_argument('-url', '--access_url', type=str, default='', help='URL to send the prompt to.')
-    parser.add_argument('-s', '--n_seeds', type=int, default=2, help='Number of seeds')
-
-    return parser.parse_args()
+cs = ConfigStore.instance()
+cs.store(name="experiment_schema", node=ExperimentConfig)
 
 
-def main(args=None):
-    """Run the simulation with the given parameters
+def resolve_agent_specs(population):
+    """Expand a PopulationConfig's agent groups into an ordered list of per-agent
+    ``(personality_text, prompt_init_text, prompt_update_text)`` triples.
 
-    :param args: simulation parameters, defaults to None
+    Registered names are resolved from the parameter files once per group and
+    repeated ``count`` times. Agents are laid out group by group onto network
+    node indices 0..n-1.
+    """
+    specs = []
+    for group in population.agents:
+        personality_text = load_personalities(PERSONALITIES_JSON, [group.personality])[0]
+        init_text = load_named_prompt(PROMPT_INIT_JSON, group.prompt_init)
+        update_text = load_named_prompt(PROMPT_UPDATE_JSON, group.prompt_update)
+        specs.extend([(personality_text, init_text, update_text)] * group.count)
+    return specs
+
+
+def run_simulation_from_config(cfg):
+    """Run the simulation from an ExperimentConfig and return the results dict.
+
+    Shared core used by both this script's Hydra entrypoint and run_experiment.py.
+
+    :param cfg: an ExperimentConfig instance
     :return: dictionary containing the simulation results
     """
-    json_prompt_init = 'llm_culture/data/parameters/prompt_init.json'
-    json_prompt_update = 'llm_culture/data/parameters/prompt_update.json'
-    json_personnalities = 'llm_culture/data/parameters/personnalities.json'
+    validate_experiment(cfg)
 
-    if args is None:
-        args = parse_arguments()
+    pop = cfg.population
+    n_agents = pop.n_agents
+    n_timesteps = cfg.n_timesteps
 
-    # initialize the output dictionary for results
+    # Select the backend and load a local model if requested
+    # (Backend.none -> remote OpenAI-compatible server via cfg.backend.access_url).
+    llm_backend, model = load_llm_backend(cfg)
+    # Report resource usage once the (potentially large) model is resident in
+    # memory. Skipped for the remote backend, where no model is loaded here.
+    if model is not None:
+        log_resources("after model load")
+
+    # Build the network graph (shared builder; also supports custom structures)
+    network_structure, _ = build_network_structure(
+        pop.network_structure.value, n_agents, pop.n_cliques
+    )
+
+    # Expand the agent groups into resolved per-agent specs
+    agent_specs = resolve_agent_specs(pop)
+
     output_dict = {}
-    debug = args.debug
-    sequence = False
-
-    # Use the arguments
-    n_agents = args.n_agents
-    n_timesteps = args.n_timesteps
-
-    # handle the network structure
-    network_structure = None
-    if args.network_structure == 'sequence':
-        network_structure = nx.DiGraph()
-        for i in range(n_agents - 1):
-            network_structure.add_edge(i, i + 1)
-        sequence = True
-    elif args.network_structure == 'circle':
-        network_structure = nx.cycle_graph(n_agents)
-    elif args.network_structure == 'caveman':
-        network_structure = nx.connected_caveman_graph(int(args.n_cliques), n_agents // int(args.n_cliques))
-    elif args.network_structure == 'fully_connected':
-                network_structure = nx.complete_graph(n_agents)
-
-    # save adjacency matrix to output_dict
     output_dict["adjacency_matrix"] = nx.to_numpy_array(network_structure).tolist()
-
-    # prompt_init = prompts.prompt_init_dict[args.prompt_init]
-    with open(json_prompt_init, 'r') as file:
-        data = json.load(file)
-        for d in data:
-            if d['name'] == args.prompt_init:
-                prompt_init = d['prompt']
-
-    # prompt_update = prompts.prompt_update_dict[args.prompt_update]
-    with open(json_prompt_update, 'r') as file:
-        data = json.load(file)
-        for d in data:
-            if d['name'] == args.prompt_update:
-                prompt_update = d['prompt']
-
-        personality_list = []
-        with open(json_personnalities, 'r') as file:
-                    data = json.load(file)
-                    for perso in args.personality_list:
-                        print(perso)
-                        for d in data:
-                            if d['name'] == perso:
-                                personality_list.append(d['prompt'])
-
-        output_dict["prompt_init"] = [prompt_init]
-        output_dict["prompt_update"] = [prompt_update]
-        output_dict["personality_list"] = personality_list
+    # Provenance (not consumed by analysis): the per-agent resolved texts.
+    output_dict["personality_list"] = [spec[0] for spec in agent_specs]
+    output_dict["prompt_init"] = [spec[1] for spec in agent_specs]
+    output_dict["prompt_update"] = [spec[2] for spec in agent_specs]
 
     # Create the output folder if it does not exist
-    os.makedirs(os.path.dirname(str(args.output) + '/'), exist_ok=True)
-    t = input(args.output)
+    output_dir = str(cfg.output)
+    os.makedirs(os.path.dirname(output_dir + '/'), exist_ok=True)
+
+    backend_desc = llm_backend if llm_backend else f"remote server ({cfg.backend.access_url or 'no url set'})"
+    print("\n" + "=" * 64)
+    print("SIMULATION")
+    print(f"  agents={n_agents}  timesteps={n_timesteps}  seeds={cfg.n_seeds}  network={pop.network_structure.value}")
+    print(f"  backend={backend_desc}" + (f"  model={cfg.backend.model}" if cfg.backend.model else ""))
+    print(f"  output folder: {os.path.abspath(output_dir)}")
+    print("=" * 64)
 
     # Run the simulation for each seed
-    for i in range(args.n_seeds):
-        print(f"Seed {i}")
+    for i in range(cfg.n_seeds):
+        seed_idx = cfg.seed_offset + i
+        print(f"Seed {seed_idx}")
         stories = run_simul(
-             args.access_url, 
-             n_timesteps, 
-             network_structure, 
-             prompt_init,
-            prompt_update, 
-            personality_list, 
-            n_agents,
-            sequence=sequence, 
-            output_folder=args.output,
-            debug=debug
+            cfg,
+            network_structure,
+            agent_specs,
+            llm_backend=llm_backend,
+            model=model,
         )
         output_dict["stories"] = stories
 
-        # Save the output to a file
-        if args.output:
-            with open(Path(args.output, 'output'+str(i)+'.json'), "w") as f:
-                json.dump(output_dict, f, indent=4)
-        else:
-            with open(Path("results/", 'output'+str(i)+'.json'), "w") as f:
-                json.dump(output_dict, f, indent=4)
-            return output_dict
-        
+        out_path = Path(cfg.output, 'output' + str(seed_idx) + '.json')
+        with open(out_path, "w") as f:
+            json.dump(output_dict, f, indent=4)
+        print(f"  seed {seed_idx}: saved {out_path}")
+
+    print(f"Simulation complete — {cfg.n_seeds} seed(s) written to {os.path.abspath(output_dir)}")
+    if model is not None:
+        log_resources("after simulation")
+    return output_dict
+
+
+@hydra.main(version_base=None, config_path="../conf", config_name="config")
+def main(cfg: DictConfig) -> None:
+    exp: ExperimentConfig = OmegaConf.to_object(cfg)
+
+    print("\n" + "#" * 64)
+    print("# SIMULATION CONFIG")
+    print("#" * 64)
+    print(OmegaConf.to_yaml(cfg), end="")
+
+    run_simulation_from_config(exp)
+
 
 if __name__ == "__main__":
     main()

@@ -2,17 +2,17 @@ from llm_culture.simulation.server_answer import get_answer
 
 class Agent:
     def __init__(
-            self, 
+            self,
+            cfg,
             agent_id,
-            network_structure,
-            init_prompt, 
-            prompt_update, 
-            personality, 
-            access_url,
-            wait=0, 
-            string_sep='\n', 
-            debug=False, 
-            sequence = False
+            init_prompt,
+            prompt_update,
+            personality,
+            wait=0,
+            sequence=False,
+            llm_backend=False,
+            model=None,
+            sampling_params=None,
         ):
         self.agent_id = agent_id
         self.is_new = True
@@ -24,10 +24,17 @@ class Agent:
         self.story = None
         self.prompt = None
         self.wait = wait
-        self.debug = debug
         self.go = True
-        self.access_url = access_url
         self.sequence = sequence
+        # scalar parameters shared across all agents, read from the experiment config
+        self.access_url = cfg.backend.access_url
+        self.debug = cfg.debug
+        self.instruct = cfg.generation.instruct
+        self.generation = cfg.generation
+        # runtime objects (loaded model / backend tag)
+        self.llm_backend = llm_backend
+        self.model = model
+        self.sampling_params = sampling_params
 
     def update_neighbours(self, graph, agentList):
         """Update the neighbours of the agent
@@ -67,7 +74,16 @@ class Agent:
         """Update the story of the agent based on the prompt
         """
         if (self.wait == 0 and self.sequence) or (self.wait <= 0 and not(self.sequence)):
-            self.story = get_answer(self.access_url, self.prompt, debug=self.debug)
+            self.story = get_answer(
+                self.access_url,
+                self.prompt,
+                self.generation,
+                debug=self.debug,
+                instruct=self.instruct,
+                llm_backend=self.llm_backend,
+                model=self.model,
+                sampling_params=self.sampling_params,
+            )
         else:
             self.story = None
         self.decrease_wait()
@@ -76,6 +92,10 @@ class Agent:
         """Get the story of the agent
         """
         return self.story
+
+    def set_story(self, text):
+        """Set the agent's story directly (used by the batched update path)."""
+        self.story = text
 
     def decrease_wait(self):
         """Decrease the wait time

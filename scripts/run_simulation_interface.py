@@ -5,34 +5,19 @@ from pathlib import Path
 
 import networkx as nx
 
-from llm_culture.simulation.utils import run_simul
+from llm_culture.simulation.utils import run_simul, build_network_structure, load_named_prompt, load_personalities
+from llm_culture.simulation.backends import load_llm_backend
+from llm_culture.config import (
+    ExperimentConfig,
+    PopulationConfig,
+    AgentConfig,
+    BackendConfig,
+    Backend,
+    GenerationConfig,
+)
+from llm_culture.paths import PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
 
 RESULTS_DIR = 'results/experiments'
-
-
-def _create_network_structure(
-        network_structure_name, 
-        n_agents, 
-        n_cliques
-    ):
-    """Create a network structure based on the given parameters
-
-    :param network_structure_name: name
-    :param n_agents: n_agents
-    :param n_cliques: n_cliques
-    :return: network_structure
-    """
-    if network_structure_name == 'sequence':
-        network_structure = nx.DiGraph()
-        for i in range(n_agents - 1):
-            network_structure.add_edge(i, i + 1)
-    elif network_structure_name == 'circle':
-        network_structure = nx.cycle_graph(n_agents)
-    elif network_structure_name == 'caveman':
-        network_structure = nx.connected_caveman_graph(n_cliques, n_agents // n_cliques)
-    elif network_structure_name == 'fully_connected':
-        network_structure = nx.complete_graph(n_agents)
-    return network_structure
 
 
 def run_simulation(
@@ -45,63 +30,95 @@ def run_simulation(
         init_prompt,
         update_prompt,
         output_dir,
-        server_url
+        server_url,
+        use_local_model=False,
+        model_source=None,
+        hf_cache_dir=None,
+        instruct=True,
+        temperature=0.8,
+        progress_callback=None
     ):
     """Run the simulation with the given parameters
     """
-    
-    json_prompt_init = 'data/parameters/prompt_init.json'
-    json_prompt_update = 'data/parameters/prompt_update.json'
-    json_personnalities = 'data/parameters/personalities.json'
-    
-    sequence = True if network_structure_name == 'sequence' else False
-    network_structure = _create_network_structure(network_structure_name, n_agents, n_cliques)
+    network_structure, _ = build_network_structure(network_structure_name, n_agents, n_cliques)
 
     output_dict = {}
     output_dict["adjacency_matrix"] = nx.to_numpy_array(network_structure).tolist()
 
-    # Write the prompts and their description in the output dictionary
-    with open(json_prompt_init, 'r') as file:
-        data = json.load(file)
-        for d in data:
-            if d['name'] == init_prompt:
-                prompt_init = d['prompt']
+    prompt_init = load_named_prompt(PROMPT_INIT_JSON, init_prompt)
+    prompt_update = load_named_prompt(PROMPT_UPDATE_JSON, update_prompt)
+    personality_list = load_personalities(PERSONALITIES_JSON, personalities)
     output_dict["prompt_init"] = [prompt_init]
-    
-    with open(json_prompt_update, 'r') as file:
-        data = json.load(file)
-        for d in data:
-            if d['name'] == update_prompt:
-                prompt_update = d['prompt']
-    
     output_dict["prompt_update"] = [prompt_update]
-
-    personality_list = []
-    print("\nAgents personalities:")
-    with open(json_personnalities, 'r') as file:
-        data = json.load(file)
-        for perso in personalities:
-            print(perso)
-            for d in data:
-                if d['name'] == perso:
-                    personality_list.append(d['prompt'])
     output_dict["personality_list"] = personality_list
 
     os.makedirs(os.path.dirname(output_dir + '/'), exist_ok=True)
-    
+
+    if use_local_model and not model_source:
+        raise ValueError("Please provide a local model path or Hugging Face repo id")
+
+    # One ExperimentConfig for the whole run; the GUI's local backend is llama.cpp.
+    # population.agents mirrors the per-agent personas (one group per agent); the
+    # network is built separately above, so population.network_structure is left at
+    # its default on this path.
+    cfg = ExperimentConfig(
+        population=PopulationConfig(
+            n_cliques=n_cliques,
+            agents=[
+                AgentConfig(
+                    count=1,
+                    personality=persona,
+                    prompt_init=init_prompt,
+                    prompt_update=update_prompt,
+                )
+                for persona in personalities
+            ],
+        ),
+        backend=BackendConfig(
+            kind=Backend.llama_cpp if use_local_model else Backend.none,
+            model=model_source,
+            access_url=server_url,
+            hf_cache_dir=hf_cache_dir,
+        ),
+        generation=GenerationConfig(temperature=temperature, instruct=instruct),
+        n_timesteps=n_timesteps,
+        output=output_dir,
+        debug=True,
+    )
+
+    # Per-agent specs for run_simul: each agent gets its persona text + the shared
+    # init/update prompt texts (resolved above).
+    agent_specs = [
+        (persona_text, prompt_init, prompt_update) for persona_text in personality_list
+    ]
+
+    # Load the model once (reused across seeds); remote server -> (False, None).
+    llm_backend, model = load_llm_backend(cfg)
+
     for seed in range(n_seeds):
         print(f"\nSeed {seed}")
+
+        def _seed_progress(current_generation, total_generations):
+            if progress_callback is None:
+                return
+
+            completed_generations = (seed * n_timesteps) + current_generation
+            progress_callback(
+                completed_generations,
+                n_seeds * n_timesteps,
+                seed + 1,
+                n_seeds,
+                current_generation,
+                total_generations,
+            )
+
         stories = run_simul(
-            server_url,
-            n_timesteps,
+            cfg,
             network_structure,
-            prompt_init,
-            prompt_update,
-            personality_list,
-            n_agents,
-            sequence=sequence,
-            output_folder=output_dir,
-            debug=True
+            agent_specs,
+            llm_backend=llm_backend,
+            model=model,
+            progress_callback=_seed_progress,
         )
         
         output_dict["stories"] = stories

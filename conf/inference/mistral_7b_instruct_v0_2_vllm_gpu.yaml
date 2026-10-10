@@ -1,0 +1,27 @@
+# @package backend
+#
+# Mistral-7B-Instruct-v0.2 on Linux / NVIDIA GPU — vLLM. Requires the serving extra
+# on a Linux GPU box:  uv sync --extra serving  (vLLM is skipped on macOS — use
+# inference=mistral_7b_instruct_v0_2_gguf_metal there).
+# New to backends / quantization / context window? See docs/llm_for_researchers.md.
+#
+# WHY vLLM: it keeps every agent's KV cache in paged GPU memory and runs the whole
+# timestep as ONE continuous batch, so with generation.batch=true (default) all
+# eligible agents in a step are generated together — the real throughput win. No
+# GGUF quant: vLLM loads the full-precision HF checkpoint and runs it in fp16.
+#
+# TUNING for your card (lower these if you hit CUDA OOM):
+#   - gpu_memory_utilization: fraction of VRAM vLLM may claim (0.90 default).
+#   - max_model_len: caps context length, which caps the KV cache (the usual OOM lever).
+#   - a 7-8B model in fp16 needs ~16 GB just for weights -> a 24 GB+ card, OR load a
+#     quantized checkpoint (vllm.quantization: awq/gptq + an AWQ/GPTQ repo), OR spill
+#     weights with vllm.cpu_offload_gb.
+kind: vllm
+model: mistralai/Mistral-7B-Instruct-v0.2   # full-precision HF repo (not a GGUF)
+max_concurrent_requests: 8                   # ignored by vllm (native batching); used only by kind=none
+vllm:
+  gpu_memory_utilization: 0.90   # raise toward 0.95 if you have headroom; lower if OOM
+  max_model_len: 4096            # cap context length -> smaller KV cache
+  dtype: float16
+  # quantization: awq            # uncomment + use an AWQ repo to fit a 7-8B on a ~12 GB card
+  # cpu_offload_gb: 4            # or spill some weights to CPU RAM
