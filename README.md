@@ -62,6 +62,11 @@ With no arguments it reads the default experiment preset,
 [`conf/experiment/base.yaml`](conf/experiment/base.yaml) — a 4-agent transmission chain
 run with a tiny local model. The next section shows how to point it at your own preset.
 
+A Google Colab notebook is also available — it runs the whole configure → simulate →
+analyze loop in the cloud with no local setup (choose a GPU runtime for a real model):
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/flowersteam/LLM-Culture/blob/dev/notebooks/llm_culture_colab.ipynb)
+
 ## Design your own experiment
 
 An experiment is described by a small YAML file (a *preset*). Ready-made presets live in
@@ -240,15 +245,6 @@ generation randomness.
 ```bash
 uv run python reproduction_scripts/network.py
 ```
-
-A Google Colab notebook is also available — it runs the whole configure → simulate →
-analyze loop in the cloud with no local setup (choose a GPU runtime for a real model):
-
-# TODO --> update w real link
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/flowersteam/LLM-Culture/blob/dev/notebooks/llm_culture_colab.ipynb)
-
-The notebook lives in the repo at [`notebooks/llm_culture_colab.ipynb`](notebooks/llm_culture_colab.ipynb).
 
 ## Extending the framework
 
