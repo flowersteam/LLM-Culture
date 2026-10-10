@@ -8,15 +8,7 @@ from huggingface_hub import snapshot_download
 
 from llm_culture.simulation.agent import Agent
 from llm_culture.simulation.server_answer import get_answers_batch
-from llm_culture.config import (
-    ExperimentConfig,
-    PopulationConfig,
-    AgentConfig,
-    BackendConfig,
-    Backend,
-    Network,
-    GenerationConfig,
-)
+from llm_culture.config import experiment_config_from_dict
 from llm_culture.paths import PARAMS_DIR, PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
 
 
@@ -353,28 +345,10 @@ def run_experiment(config, repo_dir=None, hf_cache_dir=None):
     output_folder = Path("results", "experiments", config["output_name"])
     output_folder.mkdir(parents=True, exist_ok=True)
 
-    # Build the experiment config once (shared across all seeds) and load the model
-    # through the SAME shared helper every other entrypoint uses. This replaces the
-    # old hand-rolled loader and fixes its `vllm.LLM(..., n_gpus=-1)` call (`n_gpus`
-    # is not a vLLM kwarg) and the undefined `hf_cache_dir` reference in it.
-    backend_tags = {"vllm": Backend.vllm, "llama.cpp": Backend.llama_cpp}
-    cfg = ExperimentConfig(
-        population=PopulationConfig(
-            network_structure=Network(config["network_structure"]),
-            n_cliques=config.get("n_cliques", 2),
-            agents=[AgentConfig(count=1) for _ in range(config["n_agents"])],
-        ),
-        backend=BackendConfig(
-            kind=backend_tags.get(config.get("llm_backend"), Backend.none),
-            model=config.get("model"),
-            access_url=config["access_url"] or "",
-            hf_cache_dir=config.get("hf_cache_dir"),
-        ),
-        generation=GenerationConfig(temperature=config.get("temperature", 0.8)),
-        n_timesteps=config["n_timesteps"],
-        output=str(output_folder),
-        debug=config.get("debug", False),
-    )
+    # Build the experiment config (shared across all seeds) via the documented
+    # dict -> ExperimentConfig translation, then load the model through the SAME
+    # shared helper every other entrypoint uses.
+    cfg = experiment_config_from_dict(config)
     # Deferred import avoids a circular import (backends imports resolve_model_path
     # from this module). Returns the ("vllm" / "llama.cpp" / False) tag run_simul wants.
     from llm_culture.simulation.backends import load_llm_backend

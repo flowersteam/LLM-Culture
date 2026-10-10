@@ -14,6 +14,7 @@ per-agent list, so `population.n_agents` is derived rather than a field to sync.
 """
 from dataclasses import dataclass, field
 from enum import Enum
+from pathlib import Path
 from typing import Dict, List, Optional
 
 
@@ -264,3 +265,59 @@ def validate_experiment(cfg: ExperimentConfig) -> None:
             "non-sequence network (fully_connected / circle / caveman) where the two "
             "are independent."
         )
+
+
+# Backend-string (notebook/legacy dict) -> Backend enum.
+_DICT_BACKEND_TAGS = {"vllm": Backend.vllm, "llama.cpp": Backend.llama_cpp}
+
+
+def experiment_config_from_dict(config: dict) -> ExperimentConfig:
+    """Build an ExperimentConfig from a notebook-style CONFIG dict.
+
+    One agent group per entry in ``config['personalities']`` (so a mixed
+    population is expressed naturally); the shared ``prompt_init`` / ``prompt_update``
+    names apply to every agent. Prompt/personality *names* must already be
+    registered in data/parameters/*.json (the notebook helper registers inline
+    ones first). A custom (non-enum) ``network_structure`` name is kept as a
+    placeholder enum here — build the real graph from the raw name separately.
+
+    Example::
+
+        cfg = experiment_config_from_dict(CONFIG)
+        run_simulation_from_config(cfg)   # dataclass-native run (built-in networks)
+    """
+    try:
+        net = Network(config["network_structure"])
+    except ValueError:
+        net = Network.fully_connected  # custom registered structure; graph built separately
+
+    init_name = config["prompt_init"]["name"]
+    update_name = config["prompt_update"]["name"]
+    agents = [
+        AgentConfig(
+            count=1,
+            personality=p["name"],
+            prompt_init=init_name,
+            prompt_update=update_name,
+        )
+        for p in config["personalities"]
+    ]
+
+    return ExperimentConfig(
+        population=PopulationConfig(
+            network_structure=net,
+            n_cliques=config.get("n_cliques", 2),
+            agents=agents,
+        ),
+        backend=BackendConfig(
+            kind=_DICT_BACKEND_TAGS.get(config.get("llm_backend"), Backend.none),
+            model=config.get("model"),
+            access_url=config.get("access_url") or "",
+            hf_cache_dir=config.get("hf_cache_dir"),
+        ),
+        generation=GenerationConfig(temperature=config.get("temperature", 0.8)),
+        n_timesteps=config["n_timesteps"],
+        n_seeds=config.get("n_seeds", 1),
+        output=str(Path("results", "experiments", config["output_name"])),
+        debug=config.get("debug", False),
+    )
