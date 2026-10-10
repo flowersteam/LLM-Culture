@@ -473,13 +473,11 @@ def display_graph(network_structure):
     pos = nx.spring_layout(network_structure)  # positions for all nodes
 
     nx.draw_networkx_nodes(network_structure, pos, node_size=700)
-    nx.draw_networkx_edges(
-        network_structure, 
-        pos,
-        arrowstyle='->',
-        arrowsize=30  # Increase the arrowsize value
-    )
-    
+    # Arrow styling only applies to directed graphs (drawn as FancyArrowPatches);
+    # for undirected graphs networkx draws a LineCollection and warns if we pass it.
+    edge_kwargs = {"arrows": True, "arrowstyle": "->", "arrowsize": 30} if network_structure.is_directed() else {}
+    nx.draw_networkx_edges(network_structure, pos, **edge_kwargs)
+
     nx.draw_networkx_labels(network_structure, pos, font_size=20, font_family='sans-serif')
 
     plt.axis('off')
