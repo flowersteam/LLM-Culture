@@ -75,3 +75,27 @@ def test_custom_network_name_uses_placeholder_enum():
     # is built from the raw name elsewhere.
     cfg = experiment_config_from_dict(_base_config(network_structure="custom_graph"))
     assert cfg.population.network_structure is Network.fully_connected
+
+
+def test_accepts_notebook_dataclass_equivalently():
+    from llm_culture.config import NotebookConfig, Prompt
+    nb = NotebookConfig(
+        n_agents=5,
+        n_timesteps=3,
+        n_seeds=2,
+        network_structure="fully_connected",
+        prompt_init=Prompt("kid", "..."),
+        prompt_update=Prompt("Combine2", "..."),
+        personalities=[Prompt("empty", "")] * 5,
+        output_name="test_experiment",
+        llm_backend="llama.cpp",
+        model="unsloth/SmolLM2-135M-Instruct-GGUF",
+        temperature=0.8,
+    )
+    from_dc = experiment_config_from_dict(nb)
+    from_dict = experiment_config_from_dict(_base_config())
+    # the typed dataclass path yields the same ExperimentConfig as the dict path
+    assert from_dc == from_dict
+    assert from_dc.backend.kind is Backend.llama_cpp
+    assert from_dc.population.n_agents == 5
+

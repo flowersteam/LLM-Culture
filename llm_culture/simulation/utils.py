@@ -8,7 +8,7 @@ from huggingface_hub import snapshot_download
 
 from llm_culture.simulation.agent import Agent
 from llm_culture.simulation.server_answer import get_answers_batch
-from llm_culture.config import experiment_config_from_dict
+from llm_culture.config import experiment_config_from_dict, _as_config_dict
 from llm_culture.paths import PARAMS_DIR, PROMPT_INIT_JSON, PROMPT_UPDATE_JSON, PERSONALITIES_JSON
 
 
@@ -319,11 +319,12 @@ def build_network_structure(structure, n_agents, n_cliques=2):
     return g, sequence
 
 def run_experiment(config, repo_dir=None, hf_cache_dir=None):
-    '''Run a full LLM-Culture simulation (all seeds) for the given CONFIG dict.
+    '''Run a full LLM-Culture simulation (all seeds) for the given config.
 
-    :param config: a CONFIG-shaped dict (see section 4)
+    :param config: a NotebookConfig or a CONFIG-shaped dict
     :return: path to the results folder (str)
     '''
+    config = _as_config_dict(config)
     # 1. Register prompts / personalities into the framework's own parameter files
     register_entry(PROMPT_INIT_JSON, config["prompt_init"]["name"], config["prompt_init"]["prompt"])
     register_entry(PROMPT_UPDATE_JSON, config["prompt_update"]["name"], config["prompt_update"]["prompt"])

@@ -12,7 +12,7 @@ Layout: related knobs are grouped into small sub-configs
 the top level. The population is described as agent *groups* (AgentConfig), not a
 per-agent list, so `population.n_agents` is derived rather than a field to sync.
 """
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -271,21 +271,72 @@ def validate_experiment(cfg: ExperimentConfig) -> None:
 _DICT_BACKEND_TAGS = {"vllm": Backend.vllm, "llama.cpp": Backend.llama_cpp}
 
 
-def experiment_config_from_dict(config: dict) -> ExperimentConfig:
-    """Build an ExperimentConfig from a notebook-style CONFIG dict.
+@dataclass
+class Prompt:
+    """A named prompt or personality: a registered name + its text."""
+    name: str
+    prompt: str = ""
 
-    One agent group per entry in ``config['personalities']`` (so a mixed
-    population is expressed naturally); the shared ``prompt_init`` / ``prompt_update``
-    names apply to every agent. Prompt/personality *names* must already be
-    registered in data/parameters/*.json (the notebook helper registers inline
-    ones first). A custom (non-enum) ``network_structure`` name is kept as a
-    placeholder enum here — build the real graph from the raw name separately.
+
+@dataclass
+class NotebookConfig:
+    """Flat, typed experiment config for notebooks — a type-checked, autocompleting
+    alternative to the raw CONFIG dict. Pass it straight to
+    ``run_experiment(cfg)``/``experiment_config_from_dict(cfg)``; edit fields by
+    attribute (and ``copy.deepcopy`` it for variants) instead of dict keys.
+    """
+    n_agents: int = 2
+    n_timesteps: int = 3
+    n_seeds: int = 1
+    # 'sequence' | 'fully_connected' | 'circle' | 'caveman' | a custom registered name
+    network_structure: str = "fully_connected"
+    n_cliques: int = 2  # only used when network_structure == 'caveman'
+    prompt_init: Prompt = field(
+        default_factory=lambda: Prompt(
+            "kid",
+            "Imagine that you are telling a story to your kid. What would that story "
+            "be? Just output the story, nothing else.",
+        )
+    )
+    prompt_update: Prompt = field(
+        default_factory=lambda: Prompt(
+            "Combine2",
+            "Combine the stories you have received into a single story. Just output "
+            "the story, nothing else.",
+        )
+    )
+    # one entry per agent (len == n_agents); several distinct entries => a mixed population
+    personalities: List[Prompt] = field(default_factory=lambda: [Prompt("empty", "")])
+    output_name: str = "experiment"  # results saved under results/experiments/<output_name>/
+    debug: bool = False
+    llm_backend: str = "llama.cpp"  # 'llama.cpp' (local) | 'vllm' (Linux GPU) | None (remote)
+    model: Optional[str] = "unsloth/SmolLM2-135M-Instruct-GGUF"  # HF repo id or local path
+    access_url: Optional[str] = None  # remote OpenAI-compatible server URL (llm_backend=None)
+    temperature: float = 0.8  # copying fidelity (low) vs. innovation (high)
+    plots: Optional[List[str]] = None  # subset of plot names (None -> all defaults)
+
+
+def _as_config_dict(config) -> dict:
+    """Accept either a NotebookConfig or a plain CONFIG dict; return a plain dict."""
+    return asdict(config) if isinstance(config, NotebookConfig) else config
+
+
+def experiment_config_from_dict(config) -> ExperimentConfig:
+    """Build an ExperimentConfig from a NotebookConfig or a notebook-style CONFIG dict.
+
+    One agent group per entry in ``personalities`` (so a mixed population is
+    expressed naturally); the shared ``prompt_init`` / ``prompt_update`` names apply
+    to every agent. Prompt/personality *names* must already be registered in
+    data/parameters/*.json (the notebook helper registers inline ones first). A
+    custom (non-enum) ``network_structure`` name is kept as a placeholder enum here —
+    build the real graph from the raw name separately.
 
     Example::
 
         cfg = experiment_config_from_dict(CONFIG)
         run_simulation_from_config(cfg)   # dataclass-native run (built-in networks)
     """
+    config = _as_config_dict(config)
     try:
         net = Network(config["network_structure"])
     except ValueError:
