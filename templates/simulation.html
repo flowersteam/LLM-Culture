@@ -29,14 +29,6 @@ function toggleModelFields() {
     }
 }
 
-function applyModelPreset() {
-    const preset = document.getElementById("model_preset").value;
-    // Empty value = "Custom": leave whatever the user typed.
-    if (preset) {
-        document.getElementById("model_source").value = preset;
-    }
-}
-
 function showProgressModal() {
     document.getElementById("progress-modal").style.display = "flex";
 }
@@ -195,7 +187,6 @@ window.onload = function() {
     generateAgentsInput();
     toggleCliques();
     toggleModelFields();
-    applyModelPreset();
 
     document.getElementById('simulation-form').addEventListener('submit', function(event) {
         const submitter = event.submitter;
@@ -391,16 +382,12 @@ window.onload = function() {
     </div>
 
     <div id="local_model_container" style="display: none; flex-direction: column;">
-        <label for="model_preset" style="margin-top: 10px;">Pick a model to download (or choose Custom):</label>
-        <select id="model_preset" name="model_preset" onchange="applyModelPreset()">
-            {% for preset in model_presets %}
-            <option value="{{ preset.value }}">{{ preset.label }}</option>
-            {% endfor %}
-            <option value="">Custom — type a path or repo id below</option>
-        </select>
-
         <label for="model_source" style="margin-top: 10px;">Local model path or Hugging Face repo id:</label>
         <input type="text" id="model_source" name="model_source" placeholder="models/mistral-7b-instruct-v0.2.Q4_K_M.gguf or mistralai/Mistral-7B-Instruct-v0.2">
+        <small style="margin-top: 6px;">
+            Not sure what to put here?
+            <a href="{{ url_for('local_model_help') }}" target="_blank" rel="noopener">How to choose a local model →</a>
+        </small>
 
         <label for="hf_cache_dir" style="margin-top: 10px;">Hugging Face cache directory:</label>
         <input type="text" id="hf_cache_dir" name="hf_cache_dir" value="~/.cache/huggingface">

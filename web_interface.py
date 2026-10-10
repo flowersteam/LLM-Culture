@@ -22,15 +22,6 @@ COMPARISON_DIR = 'results/experiments_comparisons'
 SIMULATION_JOBS = {}
 SIMULATION_JOBS_LOCK = threading.Lock()
 
-# Ready-to-use models for the "Local model" mode (Hugging Face GGUF repo ids).
-# The tiny SmolLM2 matches the default config preset and runs on a laptop CPU.
-LOCAL_MODEL_PRESETS = [
-    {"label": "SmolLM2-135M Instruct — tiny, CPU-friendly", "value": "unsloth/SmolLM2-135M-Instruct-GGUF"},
-    {"label": "SmolLM2-360M Instruct — small", "value": "unsloth/SmolLM2-360M-Instruct-GGUF"},
-    {"label": "SmolLM2-1.7B Instruct — small", "value": "unsloth/SmolLM2-1.7B-Instruct-GGUF"},
-    {"label": "Mistral-7B Instruct v0.2 — ~4.4 GB", "value": "TheBloke/Mistral-7B-Instruct-v0.2-GGUF"},
-]
-
 
 # Home Page
 @app.route('/')
@@ -40,6 +31,12 @@ def index():
     :return: index.html
     """
     return render_template('index.html')
+
+# Help: choosing a local model
+@app.route('/local_model_help')
+def local_model_help():
+    """Didactic page explaining how to pick a local LLM."""
+    return render_template('local_model_help.html')
 
 # Run simulation
 @app.route('/simulation', methods=['GET', 'POST'])
@@ -113,7 +110,7 @@ def simulation():
   
     prompt_options = _get_prompt_options()
 
-    return render_template('simulation.html', prompt_options=prompt_options, model_presets=LOCAL_MODEL_PRESETS)
+    return render_template('simulation.html', prompt_options=prompt_options)
 
 
 @app.route('/simulation/run', methods=['POST'])
