@@ -29,6 +29,14 @@ function toggleModelFields() {
     }
 }
 
+function applyModelPreset() {
+    const preset = document.getElementById("model_preset").value;
+    // Empty value = "Custom": leave whatever the user typed.
+    if (preset) {
+        document.getElementById("model_source").value = preset;
+    }
+}
+
 function showProgressModal() {
     document.getElementById("progress-modal").style.display = "flex";
 }
@@ -53,7 +61,7 @@ function updateProgressModal(job) {
     progressFill.style.width = `${percent}%`;
 }
 
-function pollJobStatus(jobId) {
+function pollJobStatus(jobId, redirectUrl) {
     const intervalId = window.setInterval(async function() {
         try {
             const response = await fetch(`/simulation/status/${jobId}`);
@@ -64,7 +72,7 @@ function pollJobStatus(jobId) {
             if (job.status === "completed") {
                 window.clearInterval(intervalId);
                 hideProgressModal();
-                window.location.href = "{{ url_for('analyze') }}";
+                window.location.href = redirectUrl;
             } else if (job.status === "error") {
                 window.clearInterval(intervalId);
                 document.getElementById("progress-status").textContent = `Error: ${job.message}`;
@@ -187,6 +195,7 @@ window.onload = function() {
     generateAgentsInput();
     toggleCliques();
     toggleModelFields();
+    applyModelPreset();
 
     document.getElementById('simulation-form').addEventListener('submit', function(event) {
         const submitter = event.submitter;
@@ -195,6 +204,9 @@ window.onload = function() {
 
             const formData = new FormData(event.target);
             showProgressModal();
+
+            const experimentName = formData.get('name') || '';
+            const analyzeUrl = "{{ url_for('analyze') }}?result_dir=" + encodeURIComponent(experimentName);
 
             fetch('/simulation/run', {
                 method: 'POST',
@@ -214,7 +226,7 @@ window.onload = function() {
                     completed_generations: 0,
                     total_generations: 0,
                 });
-                pollJobStatus(payload.job_id);
+                pollJobStatus(payload.job_id, analyzeUrl);
             })
             .catch(function(error) {
                 document.getElementById("progress-status").textContent = `Error: ${error.message}`;
@@ -379,6 +391,14 @@ window.onload = function() {
     </div>
 
     <div id="local_model_container" style="display: none; flex-direction: column;">
+        <label for="model_preset" style="margin-top: 10px;">Pick a model to download (or choose Custom):</label>
+        <select id="model_preset" name="model_preset" onchange="applyModelPreset()">
+            {% for preset in model_presets %}
+            <option value="{{ preset.value }}">{{ preset.label }}</option>
+            {% endfor %}
+            <option value="">Custom — type a path or repo id below</option>
+        </select>
+
         <label for="model_source" style="margin-top: 10px;">Local model path or Hugging Face repo id:</label>
         <input type="text" id="model_source" name="model_source" placeholder="models/mistral-7b-instruct-v0.2.Q4_K_M.gguf or mistralai/Mistral-7B-Instruct-v0.2">
 

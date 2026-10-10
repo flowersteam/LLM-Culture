@@ -1,10 +1,9 @@
-import os 
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from llm_culture.analysis.plot_utils import setup_axes, save_figure
+from llm_culture.analysis.plot_utils import setup_axes, save_figure, PLOT_LOCK
 
 PAD = 20
 LABEL_PAD = 10
@@ -334,22 +333,23 @@ def normalize_comparison_plot_names(plot_names=None):
 
 
 def run_configured_comparison_plots(data, plot, sizes, saving_folder=None, scale_y_axis=False, plot_names=None):
-    for plot_name in normalize_comparison_plot_names(plot_names):
-        plot_config = COMPARISON_PLOT_REGISTRY.get(plot_name)
-        if plot_config is None:
-            raise KeyError(f"Unknown comparison plot: {plot_name!r}")
+    with PLOT_LOCK:
+        for plot_name in normalize_comparison_plot_names(plot_names):
+            plot_config = COMPARISON_PLOT_REGISTRY.get(plot_name)
+            if plot_config is None:
+                raise KeyError(f"Unknown comparison plot: {plot_name!r}")
 
-        if plot_config["group"] == "seed":
-            for folder in data:
-                for seed in range(len(data[folder]["all_seeds_similarity_matrix"])):
-                    kwargs = plot_config["build_kwargs"](data[folder], saving_folder, plot, sizes, seed=seed)
-                    plot_config["function"](**kwargs)
-        else:
-            kwargs = plot_config["build_kwargs"](data, saving_folder, plot, sizes)
-            if plot_name == "compare_init_generation_similarity_evolution":
-                kwargs["scale_y_axis"] = scale_y_axis
-            elif plot_name == "compare_within_generation_similarity_evolution":
-                kwargs["scale_y_axis"] = scale_y_axis
-            elif plot_name == "compare_successive_generations_similarities":
-                kwargs["scale_y_axis"] = scale_y_axis
-            plot_config["function"](**kwargs)
+            if plot_config["group"] == "seed":
+                for folder in data:
+                    for seed in range(len(data[folder]["all_seeds_similarity_matrix"])):
+                        kwargs = plot_config["build_kwargs"](data[folder], saving_folder, plot, sizes, seed=seed)
+                        plot_config["function"](**kwargs)
+            else:
+                kwargs = plot_config["build_kwargs"](data, saving_folder, plot, sizes)
+                if plot_name == "compare_init_generation_similarity_evolution":
+                    kwargs["scale_y_axis"] = scale_y_axis
+                elif plot_name == "compare_within_generation_similarity_evolution":
+                    kwargs["scale_y_axis"] = scale_y_axis
+                elif plot_name == "compare_successive_generations_similarities":
+                    kwargs["scale_y_axis"] = scale_y_axis
+                plot_config["function"](**kwargs)

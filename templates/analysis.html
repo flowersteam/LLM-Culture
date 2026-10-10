@@ -28,7 +28,7 @@ window.onload = function() {
     <label for="dir">Experiment directory</label>
     <select name="result_dir">
         {% for dir in result_dirs %}
-        <option value="{{ dir }}">{{ dir }}</option>
+        <option value="{{ dir }}" {% if dir == selected_dir %}selected{% endif %}>{{ dir }}</option>
         {% endfor %}
     </select>
 

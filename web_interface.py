@@ -22,6 +22,15 @@ COMPARISON_DIR = 'results/experiments_comparisons'
 SIMULATION_JOBS = {}
 SIMULATION_JOBS_LOCK = threading.Lock()
 
+# Ready-to-use models for the "Local model" mode (Hugging Face GGUF repo ids).
+# The tiny SmolLM2 matches the default config preset and runs on a laptop CPU.
+LOCAL_MODEL_PRESETS = [
+    {"label": "SmolLM2-135M Instruct — tiny, CPU-friendly", "value": "unsloth/SmolLM2-135M-Instruct-GGUF"},
+    {"label": "SmolLM2-360M Instruct — small", "value": "unsloth/SmolLM2-360M-Instruct-GGUF"},
+    {"label": "SmolLM2-1.7B Instruct — small", "value": "unsloth/SmolLM2-1.7B-Instruct-GGUF"},
+    {"label": "Mistral-7B Instruct v0.2 — ~4.4 GB", "value": "TheBloke/Mistral-7B-Instruct-v0.2-GGUF"},
+]
+
 
 # Home Page
 @app.route('/')
@@ -98,13 +107,13 @@ def simulation():
                 hf_cache_dir=hf_cache_dir,
             )
 
-            # Update the results dir with the new experiment and redirect to comparison
+            # Update the results dir with the new experiment and redirect to analysis
             result_dirs = _get_results_dir()
-            return render_template('analysis.html', result_dirs=result_dirs)
+            return render_template('analysis.html', result_dirs=result_dirs, selected_dir=experiment_name)
   
     prompt_options = _get_prompt_options()
 
-    return render_template('simulation.html', prompt_options=prompt_options)
+    return render_template('simulation.html', prompt_options=prompt_options, model_presets=LOCAL_MODEL_PRESETS)
 
 
 @app.route('/simulation/run', methods=['POST'])
@@ -153,7 +162,8 @@ def analyze():
         # Redirect to the new route that serves the generated plots
         return redirect(url_for('plots', dir_name=directory))
 
-    return render_template('analysis.html', result_dirs=result_dirs)
+    selected_dir = request.args.get('result_dir')
+    return render_template('analysis.html', result_dirs=result_dirs, selected_dir=selected_dir)
 
 # Run analysis
 @app.route('/comparison_analysis', methods=['GET', 'POST'])

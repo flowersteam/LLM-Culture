@@ -5,7 +5,7 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 
-from llm_culture.analysis.plot_utils import setup_axes, save_figure
+from llm_culture.analysis.plot_utils import setup_axes, save_figure, PLOT_LOCK
 
 
 def plot_similarity_matrix(similarity_matrix, n_gen, n_agents, folder, plot, sizes, save=True, seed = 0):
@@ -597,15 +597,16 @@ def normalize_plot_names(plot_names=None):
 
 def run_configured_plots(analysis_data, folder, plot=False, sizes=None, plot_names=None):
     sizes = sizes or {"ticks": 12, "labels": 14, "title": 16}
-    for plot_name in normalize_plot_names(plot_names):
-        plot_config = PLOT_REGISTRY.get(plot_name)
-        if plot_config is None:
-            raise KeyError(f"Unknown plot: {plot_name!r}")
+    with PLOT_LOCK:
+        for plot_name in normalize_plot_names(plot_names):
+            plot_config = PLOT_REGISTRY.get(plot_name)
+            if plot_config is None:
+                raise KeyError(f"Unknown plot: {plot_name!r}")
 
-        if plot_config["group"] == "seed":
-            for seed in range(analysis_data["n_seeds"]):
-                kwargs = plot_config["build_kwargs"](analysis_data, folder, plot, sizes, seed=seed)
+            if plot_config["group"] == "seed":
+                for seed in range(analysis_data["n_seeds"]):
+                    kwargs = plot_config["build_kwargs"](analysis_data, folder, plot, sizes, seed=seed)
+                    plot_config["function"](**kwargs)
+            else:
+                kwargs = plot_config["build_kwargs"](analysis_data, folder, plot, sizes)
                 plot_config["function"](**kwargs)
-        else:
-            kwargs = plot_config["build_kwargs"](analysis_data, folder, plot, sizes)
-            plot_config["function"](**kwargs)
