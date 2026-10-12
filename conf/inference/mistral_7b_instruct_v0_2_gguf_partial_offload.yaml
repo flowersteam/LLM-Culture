@@ -9,7 +9,10 @@
 # Rough memory intuition for a 7B Q4_K_M model (~4.4 GB of weights):
 #   - a layer is roughly weights / n_layers (a 7B model has ~32 layers)
 #   - VRAM used ≈ (n_gpu_layers / n_layers) * weight_size  +  KV cache
-#   - KV cache grows with n_ctx; shrink n_ctx if you are tight on memory
+#   - the KV cache is reserved UP FRONT from n_ctx (~128 KB/token for Mistral-7B, so
+#     8192 ≈ 1 GB); shrink n_ctx if you are tight on memory
+#   - sizing n_ctx: an agent's prompt holds ALL its neighbours' stories, so you need
+#     roughly (n_neighbours + 1) x generation.max_tokens
 # So on a ~6 GB GPU, start around n_gpu_layers: 20 and adjust (watch for CUDA OOM).
 #
 # vLLM equivalent (Linux/GPU): see mistral_7b_instruct_v0_2_vllm_gpu.yaml.
@@ -18,5 +21,5 @@ model: TheBloke/Mistral-7B-Instruct-v0.2-GGUF
 llama_cpp:
   gguf_filename: q4_k_m   # pick the Q4_K_M quant from the multi-file GGUF repo
   n_gpu_layers: 20        # offload ~20 of ~32 layers to the GPU; raise/lower to fit VRAM
-  n_ctx: 4096             # lower (e.g. 2048) to shrink the KV cache if memory is tight
+  n_ctx: 8192             # ~1 GB of KV cache; lower to 4096 if memory is tight (see above)
   flash_attn: true        # reduces KV-cache memory (if your llama.cpp build supports it)

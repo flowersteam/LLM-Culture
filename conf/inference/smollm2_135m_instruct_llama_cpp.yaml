@@ -9,3 +9,11 @@
 # New to backends/GGUF/quantization? See docs/llm_for_researchers.md.
 kind: llama_cpp
 model: unsloth/SmolLM2-135M-Instruct-GGUF
+llama_cpp:
+  # An agent's prompt contains ALL its neighbours' stories, so the context has to hold
+  # roughly (n_neighbours + 1) x generation.max_tokens. A 10-agent fully_connected run
+  # at max_tokens 512 needs ~5.5k tokens, so 4096 is not enough — see the "Context
+  # window" section of docs/llm_for_researchers.md for the sizing rule.
+  # 8192 is this model's maximum trained context. The KV cache it reserves is only tens
+  # of MB at this model size, so there is no reason to run tighter.
+  n_ctx: 8192

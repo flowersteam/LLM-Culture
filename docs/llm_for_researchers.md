@@ -89,14 +89,50 @@ quality cost). Instead of 16 bits per parameter you might use ~4. A 7B model the
 
 The **context window** (`n_ctx` for llama.cpp, `max_model_len` for vLLM) is how many
 **tokens** the model can look at in one go — the prompt (all the neighbour stories plus
-instructions) **plus** the story it generates. If your stories are long or an agent has
-many neighbours, the context must be big enough to hold them all; otherwise text gets
-truncated.
+instructions) **plus** the story it generates. If it is too small the run **crashes**
+with a "requested tokens exceed context window" error.
 
-The catch: the model reserves memory for the whole context (this reservation is called
-the **KV cache**), so a bigger context window costs more memory. If you run out of
-memory, lowering the context window is the first and cheapest thing to try. `4096`
-tokens is a comfortable default for short stories.
+Sizing it is not guesswork, because an agent's prompt contains *every* neighbour's
+story:
+
+> tokens needed ≈ (number of neighbours + 1) × `generation.max_tokens`
+
+The `+ 1` is the story being written. In a `fully_connected` population every agent has
+`n_agents - 1` neighbours, which is the demanding case: 10 agents at `max_tokens: 512`
+needs ≈ 10 × 512 ≈ 5k tokens, so `4096` is **not** enough — use `8192`. A `sequence`
+chain has a single neighbour and needs very little. If a run crashes, either raise the
+context window or lower `generation.max_tokens`; the product of the two is what matters.
+
+**In words.** Measured on this framework's own output, a token is ~0.77 words (1.3
+tokens per word), so:
+
+| tokens | ≈ words |
+| --- | --- |
+| `max_tokens: 256` | ~200 words (a long paragraph) |
+| `max_tokens: 512` | ~390 words (a page) |
+| `n_ctx: 4096` | ~3,100 words |
+| `n_ctx: 8192` | ~6,300 words |
+
+So the 10-agent example is asking each agent to read ~3,500 words of neighbour stories
+before writing its own ~390 — which is why it needs a big window.
+
+**The memory cost, and when it is paid.** The memory a context window needs is called
+the **KV cache**, and the two backends treat it differently:
+
+- **llama.cpp reserves it up front.** The whole `n_ctx` worth of KV cache is allocated
+  when the model loads, whether or not your prompts ever get that long. So `n_ctx` is a
+  direct, immediate memory cost: Mistral-7B needs ~128 KB per token, i.e. ~0.5 GB at
+  4096 and ~1 GB at 8192. (At SmolLM2-135M scale it is only tens of MB.) This is why
+  lowering `n_ctx` is the first thing to try when you run out of memory.
+- **vLLM reserves a pool up front, then pages out of it.** At startup it claims
+  `gpu_memory_utilization` of your VRAM as one big KV-cache pool, and each sequence is
+  given 16-token blocks from that pool on demand. `max_model_len` is therefore a *cap*
+  per sequence, not a preallocation — raising it does not by itself consume more memory,
+  though vLLM refuses to start if the pool cannot hold at least one sequence of that
+  length. The lever that controls vLLM's footprint is `gpu_memory_utilization`.
+
+Note you cannot raise the context window indefinitely: each model has a maximum it was
+trained for (8192 for SmolLM2, 32768 for Mistral-7B).
 
 ### Where models are stored
 
