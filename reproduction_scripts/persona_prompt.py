@@ -12,7 +12,7 @@ from _repro import load_base, run_experiment_set, AgentConfig
 def _single(personality: str, label: str):
     exp = load_base("repro_persona_prompt")
     exp.population.agents[0].personality = personality
-    exp.output = f"results/experiments/persona_{label}"
+    exp.output = f"{exp.output}_{label}"
     return exp, label
 
 
@@ -23,7 +23,7 @@ def _mixed():
         AgentConfig(count=half, personality="Creative", prompt_init="simple", prompt_update="CombineTwo"),
         AgentConfig(count=half, personality="NotCreative", prompt_init="simple", prompt_update="CombineTwo"),
     ]
-    exp.output = "results/experiments/persona_mixed"
+    exp.output = f"{exp.output}_mixed"
     return exp, "mixed"
 
 

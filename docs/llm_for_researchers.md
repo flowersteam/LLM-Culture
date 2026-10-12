@@ -1,23 +1,21 @@
-# LLMs for cultural-evolution researchers
+# Running an LLM: a plain-language primer
 
-A plain-language primer on the LLM concepts behind LLM-Culture. It assumes you know
-your own field (transmission chains, iterated learning, populations, drift) but not how
-language models are run. The goal is that the words in the config files — *backend*,
-*GGUF*, *quantization*, *context window*, *temperature* — stop being magic, so you can
-make sensible choices for your hardware and your experiment.
+The LLM concepts behind LLM-Culture, for anyone who hasn't run a language model before.
+No machine-learning background assumed. The goal is that the words in the config
+files — *backend*, *GGUF*, *quantization*, *context window*, *temperature* — stop being
+magic, so you can make sensible choices for your hardware and your runs.
 
 You do not need any of this for the quickstart. Read it when you want to run a *real*
 model, understand a setting, or decide where to run your experiment.
 
 ---
 
-## 1. What the LLM is doing in an experiment
+## 1. What the model is actually doing
 
-In LLM-Culture an LLM plays the role of a **participant** in a transmission study. On
-each generation, an agent is shown the stories of its network neighbours and asked
-(via its prompts) to produce a new story. The LLM is the thing that turns "here are
-some stories, now write one" into actual text. Everything below is about *which* model
-does that and *how* it writes.
+In LLM-Culture the model is the thing that writes the text. An agent is shown the
+stories of its network neighbours and asked, via its prompts, to write a new one — the
+model is what turns "here are some stories, now write one" into actual text. Everything
+below is about *which* model does that and *how* it writes.
 
 **Tokens.** Models don't read characters or words; they read **tokens** — chunks of
 text, roughly ¾ of a word on average ("transmission" might be 2–3 tokens). This matters
@@ -137,13 +135,10 @@ every possible next token, and a **sampling** rule picks one. The `generation.*`
 settings control that rule — and the same values apply to **every** backend, so you can
 tune generation once and switch where the model runs freely.
 
-- **`temperature`** — the randomness of each choice, and the setting you'll care about
-  most as an experimentalist. At `0` the model always takes the most likely token
-  (faithful, near-deterministic copying). Higher values flatten the probabilities so
-  less-likely tokens get chosen more often, adding variation. In cultural-evolution
-  terms it behaves like a **copying-fidelity / mutation-rate** dial: low temperature =
-  high-fidelity transmission, high temperature = more innovation and noise introduced at
-  each generation. `0.7–1.0` is a typical range; above ~1.3 text starts to degrade.
+- **`temperature`** — how random each choice is. At `0` the model always takes the most
+  likely token, so it stays close to its input and is near-deterministic. Higher values
+  flatten the probabilities so less-likely tokens get picked more often, adding variation
+  to each rewrite. `0.7–1.0` is a typical range; above ~1.3 text starts to degrade.
 
 - **`top_p`** (nucleus sampling) — a safety rail on randomness. The model considers only
   the most probable tokens whose probabilities add up to `p` (e.g. `0.95` = the top 95%
@@ -156,7 +151,3 @@ tune generation once and switch where the model runs freely.
 
 - **`instruct`** — whether to use the model's chat/instruction interface (see §1). Leave
   `true` for instruct models (the usual case); set `false` only for a raw base model.
-
-If you want transmission to be faithful (studying drift, loss, convergence), use a low
-temperature. If you want agents to innovate more aggressively, raise it. That single
-knob is often the most interesting independent variable in an LLM transmission study.

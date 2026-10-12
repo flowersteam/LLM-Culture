@@ -81,7 +81,7 @@ The fields that define your experimental design:
 | `population.network_structure` | who talks to whom: `sequence` (a transmission chain), `fully_connected` (a closed group where everyone reads everyone), `circle` (a ring), `caveman` (sub-groups joined by a bridge) |
 | `population.agents` | the agents, as a list of **groups** — each `{count, personality, prompt_init, prompt_update}`. One group = a homogeneous population; several groups = a mixed one |
 | `population.n_cliques` | number of sub-groups (for `caveman` only) |
-| `generation.temperature` | how faithfully agents copy vs. innovate (0 = faithful, higher = more variation each step) |
+| `generation.temperature` | how much each rewrite varies (0 = near-deterministic, higher = more variation each step) |
 | `generation.max_tokens` | maximum story length |
 | `n_timesteps` | number of generations |
 | `n_seeds` | number of independent repeats of the whole run |
@@ -163,9 +163,8 @@ commented to guide the choice.
 
 The same sampling knobs apply to every backend:
 
-- `generation.temperature` — randomness of each rewrite. Think of it as copying fidelity
-  vs. mutation rate: `0` is faithful/deterministic, higher values add more variation per
-  generation.
+- `generation.temperature` — randomness of each rewrite: `0` keeps the model close to its
+  input and is near-deterministic, higher values add more variation per generation.
 - `generation.max_tokens` — maximum length of a generated story.
 
 `generation.top_p` and `generation.instruct` can usually stay at their defaults; see the

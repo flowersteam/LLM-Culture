@@ -17,7 +17,7 @@ def build_variants():
     for name in UPDATE_VARIANTS:
         exp = load_base("repro_transformation_prompt")
         exp.population.agents[0].prompt_update = name
-        exp.output = f"results/experiments/transformation_{name}"
+        exp.output = f"{exp.output}_{name}"
         variants.append((exp, name))
     return variants
 

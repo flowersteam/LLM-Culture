@@ -16,7 +16,7 @@ def build_variants():
     for structure in STRUCTURES:
         exp = load_base("repro_network")
         exp.population.network_structure = Network(structure)
-        exp.output = f"results/experiments/network_{structure}"
+        exp.output = f"{exp.output}_{structure}"
         variants.append((exp, structure))
     return variants
 

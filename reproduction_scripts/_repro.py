@@ -28,10 +28,21 @@ COMPARISON_SIZES = {"ticks": 16, "labels": 18, "legend": 16, "title": 23, "matri
 
 
 def load_base(preset: str) -> ExperimentConfig:
-    """Compose conf/experiment/<preset>.yaml into a typed ExperimentConfig."""
+    """Compose conf/experiment/<preset>.yaml into a typed ExperimentConfig.
+
+    Extra Hydra overrides may be passed on the command line, and `experiment=<name>`
+    replaces the script's default preset:
+        python network.py experiment=repro_network_mistral n_seeds=3
+    """
+    experiment, overrides = preset, []
+    for arg in sys.argv[1:]:
+        if arg.startswith("experiment="):
+            experiment = arg.split("=", 1)[1]
+        else:
+            overrides.append(arg)
     GlobalHydra.instance().clear()
     with initialize(version_base=None, config_path="../conf"):
-        cfg = compose(config_name="config", overrides=[f"experiment={preset}"])
+        cfg = compose(config_name="config", overrides=[f"experiment={experiment}", *overrides])
     return OmegaConf.to_object(cfg)
 
 
