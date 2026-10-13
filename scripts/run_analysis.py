@@ -51,8 +51,6 @@ def _compute_analysis_data(folder, font_sizes, embedding):
     all_seeds_similarity_matrix = get_similarity_matrix(all_seeds_flat_stories, embedder)
     all_seeds_between_gen_similarity_matrix = compute_between_gen_similarities(all_seeds_similarity_matrix, n_gen, n_agents)
     all_seeds_polarities, all_seeds_subjectivities = get_polarities_subjectivities(all_seeds_stories)
-    # all_seeds_creativities = get_creativity_indexes(all_seeds_stories, folder)
-    # embedding_points = plot_embedding(folder, False, sizes=font_sizes, save=False)
 
     return {
         'n_seeds': n_seeds,
@@ -67,8 +65,6 @@ def _compute_analysis_data(folder, font_sizes, embedding):
         'all_seeds_between_gen_similarity_matrix': all_seeds_between_gen_similarity_matrix,
         # 'all_seeds_polarities': all_seeds_polarities,
         # 'all_seeds_subjectivities': all_seeds_subjectivities,
-        # 'all_seeds_creativities': all_seeds_creativities,
-        # 'embedding_points': embedding_points,
     }
 
 

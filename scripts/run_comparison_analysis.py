@@ -55,7 +55,6 @@ def run_comparison_analysis(folders, plot, scale_y_axis, labels, sizes, plot_con
         all_seed_similarity_matrix = get_similarity_matrix(all_seed_flat_stories, embedder)
         all_seed_between_gen_similarity_matrix = compute_between_gen_similarities(all_seed_similarity_matrix, n_gen, n_agents)
         all_seed_polarities, all_seed_subjectivities = get_polarities_subjectivities(all_seeds_stories)
-        # all_seed_creativities = get_creativity_indexes(all_seeds_stories, folder)
         label = labels[i]
         data[folder] = {
             'all_seed_stories': all_seeds_stories,
@@ -69,7 +68,6 @@ def run_comparison_analysis(folders, plot, scale_y_axis, labels, sizes, plot_con
             'all_seeds_between_gen_similarity_matrix': all_seed_between_gen_similarity_matrix,
             # 'all_seeds_positivities': all_seed_polarities,
             # 'all_seeds_subjectivities': all_seed_subjectivities,
-            # 'all_seeds_creativity_indices': all_seed_creativities,
             'label': label
             }
    

@@ -18,13 +18,6 @@ from llm_culture.analysis.embedders import make_embedder
 from textblob import TextBlob
 
 
-# # Download an NLP model to preprocess the text
-# nltk.download('punkt')
-# nltk.download('punkt_tab')
-# nltk.download('wordnet')
-# nltk.download('stopwords')
-# # nlp = spacy.load('en_core_web_sm')
-# nlp = None
 
 stemmer = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
@@ -192,14 +185,6 @@ def preprocess(text):
             
     return result
 
-# def word_to_vector(word, model=nlp):
-#     """Convert a word to a vector
-#
-#     :param word: word to convert
-#     :param model: nlp model, defaults to nlp
-#     :return: vector of the word
-#     """
-#     return model(word).vector
 
 def get_similarity(vec1, vec2):
     """Compute the similarity between two vectors
@@ -285,61 +270,4 @@ def get_polarities_subjectivities(all_seed_stories):
         all_seeds_subjectivities.append(subjectivities)
     return all_seeds_polarities, all_seeds_subjectivities
 
-# # Pretty long to compute 
-# def get_creativity_indexes_single_seed(stories, folder, seed=0):
-#     """Compute the creativity indexes of stories for a single seed.
-#
-#     :param stories: list of stories for a single seed
-#     :param folder: folder to save or load the creativity indexes
-#     :param seed: seed number, defaults to 0
-#     :return: list of creativity indexes for each generation
-#     """
-#     def story_creativity_index(story_input):
-#         words_story = story_input.lower().split()
-#         word_vectors = [word_to_vector(word) for word in words_story]
-#         non_zero_word_vectors = [vector for vector in word_vectors if np.mean(vector) != 0]
-#
-#         similarity_scores = []
-#         for vector1 in non_zero_word_vectors:
-#             for vector2 in non_zero_word_vectors:
-#                 similarity = get_similarity(vector1, vector2)
-#                 similarity_scores.append(similarity)
-#         
-#         ## Handle the case of an empty story
-#         if similarity_scores:
-#             return np.mean(similarity_scores)
-#         else:
-#             return 0.0
-#     try:
-#         # Load existing data 
-#         file = open(f"{folder}/creativities"+str(seed)+".obj",'rb')
-#         creativities = pickle.load(file)
-#         file.close()
-#     except:
-#         # Compute creativity idx and save it 
-#         print(f"Computing creativity indexes of stories for {folder} dir, seed = {seed}...")
-#         creativities = []
-#         for gen in stories:
-#             gen_creativity = []
-#             for story in gen:
-#                 gen_creativity.append(story_creativity_index(story))
-#             creativities.append(gen_creativity)
-#
-#         # Save the results in the texts folder
-#         filehandler = open(f"{folder}/creativities"+str(seed)+".obj","wb")
-#         pickle.dump(creativities, filehandler)
-#         filehandler.close()
-#     return creativities
-#
-# def get_creativity_indexes(all_seed_stories, folder):
-#     """Compute the creativity indexes of stories for all seeds.
-#
-#     :param all_seed_stories: list of stories for each seed
-#     :param folder: folder to save or load the creativity indexes
-#     :return: list of creativity indexes for each seed
-#     """
-#     creativities = []
-#     for seed, stories in enumerate(all_seed_stories):
-#         creativities.append(get_creativity_indexes_single_seed(stories, folder, seed))
-#     return creativities
 

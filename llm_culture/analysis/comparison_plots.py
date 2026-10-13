@@ -186,52 +186,6 @@ def compare_subjectivity_evolution(data, plot, sizes, saving_folder=None, scale_
         plt.show()
 
 
-# def compare_creativity_evolution(data, plot, sizes, saving_folder=None, scale_y_axis=False):
-#     plt.figure(figsize=(10, 6))
-#     plt.title('Evolution of creativity within generations', fontsize=sizes['title'], pad=PAD)
-#     plt.xlabel('Generations', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-#     plt.ylabel('Creativity index', fontsize=sizes['labels'], labelpad=LABEL_PAD)
-#     
-#     max_num_ticks = 0 
-#
-#     for folder in data:
-#         num_ticks = data[folder]['all_seeds_between_gen_similarity_matrix'][0].shape[0]
-#         if num_ticks > max_num_ticks:
-#             max_num_ticks = num_ticks
-#             x_ticks_space = data[folder]['x_ticks_space']
-#
-#     if scale_y_axis:
-#         plt.ylim(0, 1)
-#         plt.yticks(np.linspace(0, 1, 11), fontsize=sizes['ticks'])
-#
-#     plt.xticks(range(0, max_num_ticks, x_ticks_space), fontsize=sizes['ticks'])
-#     plt.grid()
-#
-#     for folder in data:
-#         all_seeds_creativity_indices = data[folder]['all_seeds_creativity_indices']
-#         all_seeds_gen_creativities = []
-#         for creativity_indices in all_seeds_creativity_indices:
-#             gen_creativities = [1 - np.mean(gen_creativity) for gen_creativity in creativity_indices]
-#             all_seeds_gen_creativities.append(gen_creativities)
-#
-#         label = data[folder]['label']
-#         print(len(all_seeds_gen_creativities))
-#         print(np.std(all_seeds_gen_creativities, axis=0))
-#         plt.plot(np.mean(all_seeds_gen_creativities, axis=0), label=label)
-#         plt.fill_between(range(0, len(all_seeds_gen_creativities[0])), np.mean(all_seeds_gen_creativities, axis=0) - np.std(all_seeds_gen_creativities, axis=0), np.mean(all_seeds_gen_creativities, axis=0) + np.std(all_seeds_gen_creativities, axis=0), alpha=0.3)
-#
-#     plt.legend(fontsize=sizes['legend'])
-#     
-#     if saving_folder:
-#         saving_name = '/creativity_gen_comparison.png'
-#         os.makedirs(f"{COMPARISON_DIR}/{saving_folder}", exist_ok=True)
-#         plt.savefig(f"{COMPARISON_DIR}/{saving_folder}/{saving_name}")
-#         print(f"Saved {saving_name}")
-#     
-#     if plot:
-#         plt.show()
-
-
 
 def compare_similarity_matrix(similarity_matrix, n_gen, n_agents, plot, sizes, saving_folder=None, seed = 0):
     plt.figure(figsize=(sizes['matrix'], sizes['matrix']))
