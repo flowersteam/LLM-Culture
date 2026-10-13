@@ -2,6 +2,20 @@
 
 A framework for studying the **cultural evolution of text in populations of LLMs**.
 
+> **Looking for the paper's code?** This branch is the updated version of the code for the
+> [Cultural evolution in populations of Large Language Models](https://arxiv.org/abs/2403.08882)
+> paper. You can find the original one here in the 
+> [`arxiv_paper_version`](https://github.com/flowersteam/LLM-Culture/tree/arxiv_paper_version)
+> branch:
+>
+> ```bash
+> git checkout arxiv_paper_version
+> ```
+>
+> Use that branch to reproduce the published results as-is. This new one
+> keeps the same methods but adds easier configuration, and more LLM serving
+> and generation options.
+
 Agents are organized into a network. Each agent reads the stories of its neighbours
 and rewrites them according to a *personality* and a *transformation prompt*. Repeating
 this over many generations lets you watch stories evolve — drifting, converging, or
