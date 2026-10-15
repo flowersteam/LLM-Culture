@@ -1,0 +1,33 @@
+# @package _global_
+#
+# Linux / NVIDIA GPU preset — run a ~7-8B model with vLLM.
+# The backend/vLLM tuning lives in conf/inference/mistral_7b_instruct_v0_2_vllm_gpu.yaml.
+#
+#   uv run python run_experiment.py experiment=linux_gpu
+
+defaults:
+  - /inference: mistral_7b_instruct_v0_2_vllm_gpu   # WHERE the model runs (conf/inference/)
+  - _self_
+
+# WHO runs + how they're wired.
+population:
+  network_structure: fully_connected
+  agents:
+    - { count: 5, personality: Fantasy }
+    - { count: 5, personality: SciFi }
+
+# HOW text is generated (same knobs, every backend).
+generation:
+  temperature: 0.8
+  max_tokens: 256
+  batch: true                      # generate a timestep's agents together (vLLM continuous batching)
+
+# Schedule / output.
+n_timesteps: 4                     # non-sequence: independent of agent count
+n_seeds: 1
+verbose: true
+output: results/linux_gpu
+
+analysis:
+  run: true
+  plot: false

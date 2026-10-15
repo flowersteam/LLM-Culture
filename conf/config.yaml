@@ -1,0 +1,39 @@
+# Hydra entrypoint config for run_experiment.py.
+#
+# Field defaults live in the ExperimentConfig dataclass (llm_culture/config.py);
+# this file wires that schema in, composes a runnable default preset, and sets
+# Hydra runtime behavior.
+#
+# A BARE run uses the `base` preset below (a small local llama.cpp smoke test):
+#   uv run python run_experiment.py
+#
+# Override any field with `key=value`:
+#   uv run python run_experiment.py backend.model=... n_timesteps=5
+#
+# Switch to a different preset from conf/experiment/ with `experiment=<name>`
+# (no leading `+` — the `experiment` group already has a default here):
+#   uv run python run_experiment.py experiment=big_model_small_gpu
+#
+# The backend/inference setup is its own config group (conf/inference/). Each
+# experiment preset pulls one in via its `defaults` list; swap it independently:
+#   uv run python run_experiment.py experiment=mac_mx inference=mistral_7b_instruct_v0_2_vllm_gpu
+#
+# Enum fields accept their string values:
+#   backend: none | vllm | llama_cpp
+#   network_structure: sequence | fully_connected | circle | caveman
+
+defaults:
+  - experiment_schema
+  - experiment: base
+  - _self_
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+
+hydra:
+  run:
+    dir: .
+  sweep:
+    dir: multirun/${now:%Y-%m-%d_%H-%M-%S}
+  output_subdir: null
+  job:
+    chdir: false

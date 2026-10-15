@@ -1,2 +1,0 @@
-data
-llm_culture

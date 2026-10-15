@@ -1,0 +1,42 @@
+# @package _global_
+#
+# Base experiment preset — a small local llama.cpp smoke test (the default).
+# Copy this file (e.g. conf/experiment/my_run.yaml), edit the fields, and run it:
+#
+#   uv run python run_experiment.py experiment=my_run
+#
+# Any field from llm_culture/config.py:ExperimentConfig can be set here. The
+# inference/backend setup is a separate config group (conf/inference/) pulled in
+# via the defaults list below — swap it without editing this file, e.g.:
+#   uv run python run_experiment.py inference=mistral_7b_instruct_v0_2_gguf_metal
+
+defaults:
+  - /inference: smollm2_135m_instruct_llama_cpp   # WHERE the model runs (conf/inference/)
+  - _self_
+
+# WHO runs + how they're wired. The population is a list of agent *groups*; each
+# group is `count` agents sharing a persona + prompts. n_agents is the sum of the
+# counts (here 4). For a `sequence` network the chain runs one generation per
+# agent, so n_timesteps below must equal the agent count.
+population:
+  network_structure: sequence        # sequence | fully_connected | circle | caveman
+  agents:
+    - count: 4
+      personality: Empty             # persona name (data/parameters/personalities.json)
+      prompt_init: kid               # seed-story prompt name
+      prompt_update: kid             # transformation-prompt name
+
+# HOW text is generated.
+generation:
+  temperature: 0.8
+
+# Schedule / output (top-level scalars).
+n_timesteps: 4                       # == agent count, required for a sequence chain
+n_seeds: 1
+verbose: true
+output: results/base_experiment
+
+# Post-run analysis.
+analysis:
+  run: true
+  plot: false

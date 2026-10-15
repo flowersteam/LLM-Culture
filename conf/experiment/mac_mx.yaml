@@ -1,0 +1,36 @@
+# @package _global_
+#
+# Apple Silicon preset — run a real ~7B model locally on any M-series Mac.
+# The backend/hardware tuning lives in conf/inference/mistral_7b_instruct_v0_2_gguf_metal.yaml.
+#
+#   uv run python run_experiment.py experiment=mac_mx
+#
+# Mix in a different backend without editing this file:
+#   uv run python run_experiment.py experiment=mac_mx inference=mistral_7b_instruct_v0_2_vllm_gpu
+
+defaults:
+  - /inference: mistral_7b_instruct_v0_2_gguf_metal   # WHERE the model runs (conf/inference/)
+  - _self_
+
+# WHO runs + how they're wired. Small, well-mixed population so a local run stays
+# quick; edit freely. (fully_connected => every agent rewrites every other each step.)
+population:
+  network_structure: fully_connected
+  agents:
+    - { count: 2, personality: Creative }
+    - { count: 2, personality: NotCreative }
+
+# HOW text is generated.
+generation:
+  temperature: 0.8
+  max_tokens: 256           # keep stories short so a fanless Mac finishes a run quickly
+
+# Schedule / output.
+n_timesteps: 3              # non-sequence: independent of agent count (4 agents × 3 steps = 12 generations)
+n_seeds: 1
+verbose: true
+output: results/mac_mx
+
+analysis:
+  run: true
+  plot: false

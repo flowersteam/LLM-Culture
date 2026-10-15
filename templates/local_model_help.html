@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>How to choose a local model</title>
+<style>
+    .help-page { max-width: 820px; margin: 0 auto; text-align: left; line-height: 1.55; }
+    .help-page h1 { margin-bottom: 6px; }
+    .help-page h2 { margin-top: 34px; }
+    .help-page code {
+        background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 6px;
+        font-size: 0.95em;
+    }
+    .help-page table { border-collapse: collapse; width: 100%; margin: 14px 0; }
+    .help-page th, .help-page td {
+        border: 1px solid rgba(0,0,0,0.15); padding: 8px 10px; text-align: left;
+    }
+    .help-page th { background: rgba(0,0,0,0.05); }
+    .help-page .pick {
+        background: #f7f4ef; border: 1px solid rgba(0,0,0,0.12);
+        border-radius: 10px; padding: 14px 16px; margin: 10px 0;
+    }
+    .help-page .pick code { background: rgba(0,0,0,0.08); }
+    .help-page .note { font-size: 0.92em; opacity: 0.85; }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="help-page">
+
+<h1>How to choose a local model</h1>
+<p class="note">A "local model" runs the language model on <em>your own computer</em> — no
+API key, no internet account, nothing sent to a company's server. You just tell the app
+which model to use, and it downloads it once.</p>
+
+<h2>Where models come from</h2>
+<p>
+Open language models are published on the <strong>Hugging Face Hub</strong> — think of it
+as a huge public library of models (a bit like GitHub, but for AI models). Each model lives
+at an address called a <strong>repo id</strong>, written as <code>author/model-name</code>,
+for example <code>unsloth/SmolLM2-135M-Instruct-GGUF</code>.
+</p>
+<p>
+To use a model here, you copy its repo id into the <em>"Local model path or Hugging Face
+repo id"</em> box. The <strong>first</strong> run downloads it to your computer; after that
+it is cached and loads instantly.
+</p>
+
+<h2>The three things to look for</h2>
+<ol>
+    <li>
+        <strong>"GGUF" in the name.</strong> This app's local engine reads a file format
+        called <code>GGUF</code>. Pick a repo whose name ends in <code>-GGUF</code> (e.g.
+        <code>...-Instruct-GGUF</code>). The app automatically picks a good compressed
+        version inside it, so you don't have to choose a file.
+    </li>
+    <li>
+        <strong>"Instruct" (or "Chat") in the name.</strong> These models are trained to
+        <em>follow instructions</em> (your prompts). Plain "base" models just continue text
+        and are usually not what you want for agents that rewrite stories.
+    </li>
+    <li>
+        <strong>A size that fits your machine.</strong> Model size is measured in
+        <strong>parameters</strong> (M = million, B = billion). Bigger = writes better, but
+        needs more memory (RAM) and runs slower. See the table below.
+    </li>
+</ol>
+
+<h2>How big a model can I run?</h2>
+<p>
+The rough rule: the model needs about its "size in GB" of free memory, plus a bit. On a
+normal laptop <strong>without</strong> a dedicated graphics card, stay small. If you have a
+recent Mac (M1/M2/M3/M4) or an NVIDIA GPU, you can comfortably go to ~7–8B.
+</p>
+<table>
+    <tr><th>Model size</th><th>Memory needed (approx.)</th><th>Speed</th><th>Good for</th></tr>
+    <tr><td>100–400M</td><td>under 1 GB</td><td>very fast</td><td>quick tests, any laptop</td></tr>
+    <tr><td>1–2B</td><td>~1–2 GB</td><td>fast</td><td>small real experiments</td></tr>
+    <tr><td>7–8B</td><td>~5 GB</td><td>moderate</td><td>better writing (Mac/GPU recommended)</td></tr>
+    <tr><td>13B+</td><td>8 GB and up</td><td>slow</td><td>only with a capable GPU / lots of RAM</td></tr>
+</table>
+<p class="note">
+Tip: start with the smallest model to check your experiment runs end to end, then switch to
+a bigger one for the "real" run — just by changing the name in the box.
+</p>
+
+<h2>Safe choices to copy-paste</h2>
+<p>Not sure where to start? Any of these work. Copy the line into the model box.</p>
+
+<div class="pick">
+    <strong>Tiny — runs anywhere, instant download</strong><br>
+    <code>unsloth/SmolLM2-135M-Instruct-GGUF</code>
+    <div class="note">The same tiny model the app uses for its built-in test run.</div>
+</div>
+<div class="pick">
+    <strong>Small — still light, noticeably better writing</strong><br>
+    <code>unsloth/SmolLM2-360M-Instruct-GGUF</code><br>
+    <code>unsloth/SmolLM2-1.7B-Instruct-GGUF</code>
+</div>
+<div class="pick">
+    <strong>Medium — good quality, needs a Mac (M-series) or a GPU</strong><br>
+    <code>TheBloke/Mistral-7B-Instruct-v0.2-GGUF</code>
+</div>
+
+<h2>Finding your own</h2>
+<p>
+Browse <a class="styled-link" href="https://huggingface.co/models?library=gguf&amp;sort=trending"
+target="_blank" rel="noopener">huggingface.co/models</a> (filter by the <code>GGUF</code>
+library). Open a model page, and copy the repo id from the top of the page
+(<code>author/model-name</code>). Prefer models with many downloads — they are usually the
+reliable, well-tested ones.
+</p>
+
+<p style="margin-top: 30px;">
+    <a class="styled-link" href="{{ url_for('simulation') }}">← Back to the simulation page</a>
+</p>
+
+</div>
+{% endblock %}
